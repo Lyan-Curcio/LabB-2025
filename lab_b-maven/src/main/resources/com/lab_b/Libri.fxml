@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bookrecommender.controls.ListaLibricom">
+   <children>
+      <ListView fx:id="myListView" layoutX="323.0" layoutY="157.0" prefHeight="343.0" prefWidth="438.0" />
+      <Label alignment="CENTER" layoutX="245.0" layoutY="14.0" prefHeight="59.0" prefWidth="595.0" text="Lista di libri">
+         <font>
+            <Font size="41.0" />
+         </font>
+      </Label>
+      <TextField fx:id="TfRicerca" layoutX="330.0" layoutY="105.0" prefHeight="40.0" prefWidth="240.0" promptText="Cerca un libro" />
+      <Button fx:id="ButtonResearch" layoutX="636.0" layoutY="105.0" mnemonicParsing="false" onAction="#BtnReaserch" prefHeight="40.0" prefWidth="99.0" text="Cerca" />
+      <Label fx:id="InfoBook" alignment="CENTER" layoutX="231.0" layoutY="524.0" prefHeight="40.0" prefWidth="621.0" text="Informazioni libro">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <Pane layoutY="-7.0" prefHeight="608.0" prefWidth="200.0" style="-fx-background-color: grey;">
+         <children>
+            <VBox layoutX="-3.0" layoutY="14.0" prefHeight="206.0" prefWidth="200.0">
+               <children>
+                  <Button fx:id="BtnCreaLib" mnemonicParsing="false" onAction="#BtnClickCreaLib" prefHeight="40.0" prefWidth="208.0" style="-fx-background-color: grey;" text="Crea una libreria" />
+                  <Button fx:id="BtnRicercaLib" mnemonicParsing="false" onAction="#BtnClickRicercaLib" prefHeight="40.0" prefWidth="208.0" style="-fx-background-color: grey;" text="Ricerca libreria" />
+                  <Button fx:id="BtnTueLib" mnemonicParsing="false" onAction="#BtnClickTueLib" prefHeight="40.0" prefWidth="208.0" style="-fx-background-color: grey;" text="Le tue librerie" />
+                  <Button fx:id="BtnLogout" mnemonicParsing="false" onAction="#BtnClickLogout" prefHeight="40.0" prefWidth="208.0" style="-fx-background-color: grey;" text="Logout" />
+               </children>
+            </VBox>
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

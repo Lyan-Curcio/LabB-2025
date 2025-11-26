@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="524.0" prefWidth="875.0" style="-fx-background-color: #0c1238; -fx-border-color: #f5a133; -fx-border-width: 3;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bookrecommender.controls.Regcontrols">
+   <children>
+      <Label alignment="CENTER" layoutX="14.0" layoutY="21.0" prefHeight="57.0" prefWidth="850.0" text="Registrazione" textFill="#5fff1a">
+         <font>
+            <Font name="Courier New" size="32.0" />
+         </font>
+      </Label>
+      <Label layoutX="69.0" layoutY="78.0" text="Nome" textFill="#9ff110">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="459.0" layoutY="78.0" text="Cognome" textFill="#9ff110">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="459.0" layoutY="169.0" text="Codice fiscale" textFill="#9ff110">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="68.0" layoutY="169.0" text="Userid" textFill="#9ff110">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="69.0" layoutY="262.0" text="Crea password" textFill="#9ff110">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="69.0" layoutY="348.0" text="Conferma password" textFill="#9ff110">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Button layoutX="374.0" layoutY="448.0" mnemonicParsing="false" onAction="#BtnClick" prefHeight="46.0" prefWidth="128.0" style="-fx-background-color: yellow;" text="Registrati">
+         <font>
+            <Font size="21.0" />
+         </font></Button>
+      <Label layoutX="459.0" layoutY="262.0" text="Email" textFill="#9ff110">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Button fx:id="ButtonReturn" layoutY="-2.0" mnemonicParsing="false" onAction="#BtnReturn" prefHeight="46.0" prefWidth="78.0" style="-fx-background-color: yellow;" text="&lt;--">
+         <font>
+            <Font size="24.0" />
+         </font></Button>
+      <TextField fx:id="Tfnome" layoutX="68.0" layoutY="116.0" prefHeight="31.0" prefWidth="271.0" />
+      <TextField fx:id="Tfcognome" layoutX="459.0" layoutY="116.0" prefHeight="31.0" prefWidth="271.0" />
+      <TextField fx:id="TfUserid" layoutX="69.0" layoutY="209.0" prefHeight="31.0" prefWidth="271.0" />
+      <TextField fx:id="TfCodiceFiscale" layoutX="459.0" layoutY="209.0" prefHeight="31.0" prefWidth="271.0" />
+      <TextField fx:id="TfEmail" layoutX="459.0" layoutY="302.0" prefHeight="31.0" prefWidth="271.0" />
+      <TextField fx:id="TfCreaPassword" layoutX="68.0" layoutY="302.0" prefHeight="31.0" prefWidth="271.0" />
+      <TextField fx:id="TfConfermaPassword" layoutX="69.0" layoutY="387.0" prefHeight="31.0" prefWidth="271.0" />
+   </children>
+</AnchorPane>
