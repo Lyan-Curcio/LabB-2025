@@ -1,0 +1,24 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "ClientApplication",
+            "request": "launch",
+            "mainClass": "com.lab_b.ClientApplication",
+            "projectName": "lab_b-maven"
+        },
+        {
+            "type": "java",
+            "name": "Launch JavaFX App",
+            "request": "launch",
+            "mainClass": "App",
+            "windows": {
+                "vmArgs": "--module-path \"C:\\percorso\\al\\tuo\\javafx-sdk-21\\lib\" --add-modules javafx.controls,javafx.fxml"
+            },
+            "linux": {
+                "vmArgs": "--module-path /home/tuonome/javafx-sdk-21/lib --add-modules javafx.controls,javafx.fxml"
+            }
+        }
+    ]
+}
