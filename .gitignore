@@ -19,8 +19,11 @@ buildNumber.properties
 *.tar.gz
 *.rar
 
+# --- IDEs (VS Code) ---
+.vscode/
 # You can uncomment the lines below if you want to share launch configurations with teammates:
-!.vscode/tasks.json
+!.vscode/launch.json
+# !.vscode/tasks.json
 
 # --- Other IDEs (Just in case) ---
 .idea/
