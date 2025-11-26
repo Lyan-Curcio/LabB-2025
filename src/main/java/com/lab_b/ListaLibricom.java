@@ -1,8 +1,7 @@
-package bookrecommender.controls;
+package com.lab_b;
 
 import java.io.IOException;
 
-import bookrecommender.App;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

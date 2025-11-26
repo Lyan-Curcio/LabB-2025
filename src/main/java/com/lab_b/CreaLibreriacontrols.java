@@ -1,4 +1,4 @@
-package bookrecommender.controls;
+package com.lab_b;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
