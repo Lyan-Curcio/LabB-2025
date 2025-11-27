@@ -14,10 +14,10 @@
             "request": "launch",
             "mainClass": "App",
             "windows": {
-                "vmArgs": "--module-path \"C:\\percorso\\al\\tuo\\javafx-sdk-21\\lib\" --add-modules javafx.controls,javafx.fxml"
+                "vmArgs": "--module-path \"~\\javafx-sdk-21\\lib\" --add-modules javafx.controls,javafx.fxml"
             },
             "linux": {
-                "vmArgs": "--module-path /home/tuonome/javafx-sdk-21/lib --add-modules javafx.controls,javafx.fxml"
+                "vmArgs": "--module-path ~/javafx-sdk-21/lib --add-modules javafx.controls,javafx.fxml"
             }
         }
     ]
