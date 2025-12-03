@@ -1,4 +1,4 @@
-package com.lab_b;
+package com.lab_b.client.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -7,7 +7,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import java.io.IOException;
 
-public class Logincon {
+public class LoginController {
 
     @FXML private TextField UserID;
     @FXML private PasswordField Password;

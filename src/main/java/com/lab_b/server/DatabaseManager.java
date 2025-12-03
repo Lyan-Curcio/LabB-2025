@@ -1,4 +1,4 @@
-package main.java.server;
+package com.lab_b.server;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

@@ -50,11 +50,12 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
-        <version>3.7.1</version> <configuration>
+        <version>3.7.1</version> 
+        <configuration>
             <descriptorRefs>
                 <descriptorRef>jar-with-dependencies</descriptorRef>
             </descriptorRefs>
-             </configuration>
+        </configuration>
         <executions>
             <execution>
                 <id>make-assembly</id>
@@ -71,7 +72,7 @@
           <artifactId>javafx-maven-plugin</artifactId>
           <version>0.0.8</version>
           <configuration>
-              <mainClass>com.lab_b.ClientApplication</mainClass>
+              <mainClass>com.lab_b.client.ClientApplication</mainClass>
           </configuration>
       </plugin>
     </plugins>

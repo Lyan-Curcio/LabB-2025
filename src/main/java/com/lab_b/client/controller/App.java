@@ -1,4 +1,4 @@
-package com.lab_b;
+package com.lab_b.client.controller;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

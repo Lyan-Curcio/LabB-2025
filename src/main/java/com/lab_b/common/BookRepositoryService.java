@@ -1,4 +1,4 @@
-package main.java.com.lab_b.common;
+package com.lab_b.common;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -17,9 +17,6 @@ public interface BookRepositoryService extends Remote {
     /** Ricerca per autore e anno */
     List<Book> cercaLibroPerAutoreEAnno(String autore, int anno) throws RemoteException;
     
-    /** Recupera info complete libro, incluse valutazioni aggregate */
-    BookDetails visualizzaLibro(int libroId) throws RemoteException;
-
 
     // --- Funzionalità Utenti Registrati [cite: 106, 122, 135, 148] ---
     

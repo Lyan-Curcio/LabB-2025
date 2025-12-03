@@ -1,5 +1,6 @@
-package main.java.server;
+package com.lab_b.server;
 
+import com.lab_b.common.BookRepositoryService;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
@@ -8,6 +9,7 @@ public class ServerMain {
         try {
             // 1. Inizializza DB
             System.out.println("Connessione al Database...");
+            // Assicurati che DatabaseManager gestisca le eccezioni internamente o aggiungi try/catch
             DatabaseManager.getInstance();
 
             // 2. Crea istanza del servizio

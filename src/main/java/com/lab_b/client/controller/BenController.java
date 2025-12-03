@@ -1,11 +1,11 @@
-package com.lab_b;
+package com.lab_b.client.controller;
 
 import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
-public class Bencontrols {
+public class BenController {
 
     @FXML private Button ButtonResearch;
 

@@ -1,16 +1,16 @@
-package main.java.com.lab_b.client.controller;
+package com.lab_b.client.controller; // ERRORE: c'era "main.java."
 
-import common.BookRepositoryService;
+import com.lab_b.common.BookRepositoryService; // ERRORE: c'era "main.java."
+import com.lab_b.common.Book; 
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 public class ClientController {
     private BookRepositoryService server;
-    private String currentUserSessionID; // Per tracciare l'utente loggato
+    private String currentUserSessionID; 
 
     public ClientController() {
         try {
-            // Connessione al server RMI
             Registry registry = LocateRegistry.getRegistry("localhost", 1099);
             server = (BookRepositoryService) registry.lookup("BookRecommenderService");
         } catch (Exception e) {
@@ -24,7 +24,6 @@ public class ClientController {
             if (success) {
                 this.currentUserSessionID = user;
                 System.out.println("Login effettuato!");
-                // Apri Dashboard utente
             } else {
                 System.out.println("Credenziali errate.");
             }
@@ -32,6 +31,4 @@ public class ClientController {
             e.printStackTrace();
         }
     }
-    
-    // Metodi wrapper per chiamare le funzioni del server dalla GUI
 }

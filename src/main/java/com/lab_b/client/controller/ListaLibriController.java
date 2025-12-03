@@ -1,4 +1,4 @@
-package com.lab_b;
+package com.lab_b.client.controller;
 
 import java.io.IOException;
 
@@ -9,7 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 
-public class ListaLibricom {
+public class ListaLibriController {
 
     @FXML
     private ListView<?> myListView;
@@ -46,7 +46,7 @@ public class ListaLibricom {
     void BtnClickLogout(ActionEvent event) throws IOException 
     {
         App m = new App();
-        m.changeScene("Benvenu.fxml");
+        m.changeScene("Benvenuto.fxml");
     }
 
     @FXML

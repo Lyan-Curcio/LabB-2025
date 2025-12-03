@@ -1,11 +1,11 @@
-package com.lab_b;
+package com.lab_b.client.controller;
 
 import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
-public class Regcontrols {
+public class RegController {
 
     @FXML private TextField Tfnome;
     @FXML private TextField Tfcognome;

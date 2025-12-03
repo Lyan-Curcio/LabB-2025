@@ -1,10 +1,10 @@
-package com.lab_b;
+package com.lab_b.client.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
-public class CreaLibreriacontrols {
+public class CreaLibreriaController {
 
     @FXML
     private Button BtnLeTueLib;

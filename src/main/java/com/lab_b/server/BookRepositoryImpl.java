@@ -1,6 +1,10 @@
-package main.java.server;
+package com.lab_b.server;
 
-import common.*;
+import com.lab_b.common.BookRepositoryService;
+import com.lab_b.common.Book;
+import com.lab_b.common.Rating;
+import com.lab_b.common.User;
+
 import java.rmi.server.UnicastRemoteObject;
 import java.rmi.RemoteException;
 import java.sql.*;
@@ -18,27 +22,66 @@ public class BookRepositoryImpl extends UnicastRemoteObject implements BookRepos
         List<Book> risultati = new ArrayList<>();
         String query = "SELECT * FROM Libri WHERE LOWER(titolo) LIKE LOWER(?)";
         
-        try (PreparedStatement pstmt = DatabaseManager.getInstance().getConnection().prepareStatement(query)) {
+        try (Connection conn = DatabaseManager.getInstance().getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
             pstmt.setString(1, "%" + titolo + "%");
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
-                // Mapping ResultSet -> Oggetto Book
-                // risultati.add(new Book(...));
+                // TODO: Mapping
             }
         } catch (SQLException e) {
+            System.err.println("Errore SQL: " + e.getMessage());
             throw new RemoteException("Errore Database", e);
         }
         return risultati;
     }
 
+    // --- NUOVO METODO AGGIUNTO (cercaLibroPerAutore) ---
+    @Override
+    public List<Book> cercaLibroPerAutore(String autore) throws RemoteException {
+        List<Book> risultati = new ArrayList<>();
+        System.out.println("Ricerca per solo autore: " + autore);
+        // TODO: Implementare query SELECT * FROM Libri WHERE autore LIKE ?
+        return risultati;
+    }
+
+    @Override
+    public List<Book> cercaLibroPerAutoreEAnno(String autore, int anno) throws RemoteException {
+        List<Book> risultati = new ArrayList<>();
+        System.out.println("Ricerca per autore: " + autore + " e anno: " + anno);
+        return risultati;
+    }
+
     @Override
     public boolean inserisciValutazioneLibro(Rating v) throws RemoteException {
-        // Implementazione query INSERT INTO ValutazioniLibri ...
-        // Calcolo automatico della media arrotondata prima dell'inserimento
-        int votoFinale = v.getVotoFinale();
-        // ... Logica SQL
+        return true; 
+    }
+
+    @Override
+    public boolean inserisciSuggerimentoLibro(String userId, int bookId, List<Integer> ratings) throws RemoteException {
         return true;
     }
-    
-    // ... Implementazione degli altri metodi dell'interfaccia ...
+
+    @Override
+    public boolean aggiungiLibroALibreria(String userId, int libreriaId, int bookId) throws RemoteException {
+        return true;
+    }
+
+    @Override
+    public boolean registraLibreria(String userId, String nomeLibreria) throws RemoteException {
+        return true;
+    }
+
+    @Override
+    public boolean login(String user, String pass) throws RemoteException {
+        System.out.println("Login chiamato per: " + user);
+        return true; 
+    }
+
+    @Override
+    public boolean registrazione(User user, String password) throws RemoteException {
+        System.out.println("Registrazione chiamata per utente: " + user); 
+        return true;
+    }
 }
