@@ -1,3 +1,31 @@
+### To Do
+1. bisogna far partire prima server (controllare maven) (controllare aservermain)
+2. prima lavoriamo su server: verificare connessione db (databasemanager), scriver equery (bookrepositoryimpl)
+3. common: aggiungere classi mancanti, ovvero libreria e consigli
+4. poi su client: bisogna capire che pagine dell'interfaccia mancano (informazioni libro) e implementare
+5. migliorare interfaccia grafica e renderla unificata
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ### 1. La divisione tra "Main" e "Test" (`src/main` vs `src/test`)
 Questa è la distinzione più importante.
 * **`src/main`**: Qui ci va il codice che finirà nel programma finale (quello che dai al cliente).
@@ -54,3 +82,5 @@ Utilizza il comando `mvn clean javafx:run` direttamente nel terminale del proget
 2. Utilizza poi `git init`;
 3. Poi `git config --global user.name "il tuo nome di github"` e `git config --global user.email "la tua mail github"`;
 4. Poi non ricordo (da aggiungere)
+
+
