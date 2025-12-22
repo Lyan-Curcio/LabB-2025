@@ -14,6 +14,8 @@ public class BenController {
     @FXML
     private SplitMenuButton TipiDiRicerca;
 
+    private String scelta;
+
     //sezione per la selezione del tipo di ricerca
     @FXML
     void RicercaAutore(ActionEvent event)
