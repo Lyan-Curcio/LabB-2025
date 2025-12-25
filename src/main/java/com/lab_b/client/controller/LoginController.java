@@ -33,7 +33,7 @@ public class LoginController {
         // Simulazione login (da sostituire con DB in futuro)
         if("Sergio".equals(uid) && "123".equals(pwd)) {
             System.out.println("Successo");
-            // m.changeScene("Libri.fxml"); // Decommentare quando esiste Libri.fxml
+            m.changeScene("Libri.fxml"); // Decommentare quando esiste Libri.fxml
         } else if (uid.isEmpty() || pwd.isEmpty()) {
             System.out.println("Per favore inserire i dati");
         } else {

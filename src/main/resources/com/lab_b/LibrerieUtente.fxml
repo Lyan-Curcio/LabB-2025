@@ -9,24 +9,39 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: #451B15;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Pane prefHeight="600.0" prefWidth="200.0" style="-fx-background-color: grey;">
+      <Pane prefHeight="600.0" prefWidth="200.0" style="-fx-background-color: #451B15;">
          <children>
-            <VBox prefHeight="206.0" prefWidth="200.0">
+            <VBox prefHeight="195.0" prefWidth="200.0" style="-fx-background-color: yellow; -fx-border-color: black; -fx-border-width: 4;">
                <children>
-                  <Button fx:id="BtnReg" mnemonicParsing="false" onAction="#Registrati" prefHeight="40.0" prefWidth="208.0" style="-fx-background-color: grey;" text="Crea una libreria" />
-                  <Button fx:id="BtnAcc" mnemonicParsing="false" onAction="#Accedi" prefHeight="40.0" prefWidth="208.0" style="-fx-background-color: grey;" text="Ricerca libreria" />
-                  <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="208.0" style="-fx-background-color: grey;" text="Ricerca libri" />
-                  <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="208.0" style="-fx-background-color: grey;" text="Logout" />
+                  <Button fx:id="BtnReg" mnemonicParsing="false" onAction="#Registrati" prefHeight="47.0" prefWidth="208.0" style="-fx-background-color: yellow;" text="Crea una libreria">
+                     <font>
+                        <Font size="15.0" />
+                     </font></Button>
+                  <Button fx:id="BtnAcc" mnemonicParsing="false" onAction="#Accedi" prefHeight="47.0" prefWidth="208.0" style="-fx-background-color: yellow;" text="Ricerca libreria">
+                     <font>
+                        <Font size="15.0" />
+                     </font></Button>
+                  <Button mnemonicParsing="false" prefHeight="47.0" prefWidth="208.0" style="-fx-background-color: yellow;" text="Ricerca libri">
+                     <font>
+                        <Font size="15.0" />
+                     </font></Button>
+                  <Button mnemonicParsing="false" prefHeight="47.0" prefWidth="208.0" style="-fx-background-color: yellow;" text="Logout">
+                     <font>
+                        <Font size="15.0" />
+                     </font></Button>
                </children>
             </VBox>
          </children>
       </Pane>
-      <ListView layoutX="327.0" layoutY="190.0" prefHeight="302.0" prefWidth="423.0" />
-      <TextField layoutX="327.0" layoutY="121.0" prefHeight="31.0" prefWidth="230.0" promptText="cerca nelle tue librerie" />
-      <Button layoutX="618.0" layoutY="121.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="100.0" text="Cerca" />
-      <Label alignment="CENTER" layoutX="255.0" layoutY="24.0" prefHeight="59.0" prefWidth="595.0" text="Le tue librerie" AnchorPane.bottomAnchor="517.0" AnchorPane.leftAnchor="255.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="24.0">
+      <ListView layoutX="327.0" layoutY="190.0" prefHeight="302.0" prefWidth="423.0" style="-fx-background-color: yellow;" />
+      <TextField layoutX="327.0" layoutY="121.0" prefHeight="31.0" prefWidth="230.0" promptText="cerca nelle tue librerie" style="-fx-background-color: yellow; -fx-border-color: black; -fx-border-width: 4; -fx-background-radius: 7; -fx-border-radius: 4; -fx-font-size: 14;" />
+      <Button layoutX="618.0" layoutY="121.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="100.0" style="-fx-background-color: yellow; -fx-background-insets: 0; -fx-effect: dropshadow(gaussian, rgba(0,0,3,2.4), 6, 0.3, 3, 2);" text="Cerca">
+         <font>
+            <Font size="18.0" />
+         </font></Button>
+      <Label alignment="CENTER" layoutX="255.0" layoutY="24.0" prefHeight="59.0" prefWidth="595.0" text="Le tue librerie" textFill="#5fff1a" AnchorPane.bottomAnchor="517.0" AnchorPane.leftAnchor="255.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="24.0">
          <font>
             <Font size="41.0" />
          </font>

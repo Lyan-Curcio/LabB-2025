@@ -54,7 +54,7 @@ public class ListaLibriController {
     void BtnClickCreaLib(ActionEvent event) throws IOException 
     {
         App m = new App();
-        m.changeScene("Login.fxml");
+        m.changeScene("CreaLibreria.fxml");
     }
 
     @FXML

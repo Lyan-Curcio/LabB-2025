@@ -8,6 +8,7 @@ import java.io.IOException;
 
 /**
  * Classe di supporto per la navigazione tra le scene.
+ * I metodi return servono a tornare alle schermate precedenti.
  */
 public class App {
 
@@ -23,7 +24,7 @@ public class App {
         Parent root = loader.load();
         
         if (stage.getScene() == null) {
-            stage.setScene(new Scene(root, 800, 600)); // Dimensioni default
+            stage.setScene(new Scene(root, 900, 600)); // Dimensioni default
         } else {
             stage.getScene().setRoot(root);
         }
