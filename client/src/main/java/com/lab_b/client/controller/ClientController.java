@@ -1,7 +1,7 @@
 package com.lab_b.client.controller; // ERRORE: c'era "main.java."
 
 import com.lab_b.common.BookRepositoryService; // ERRORE: c'era "main.java."
-import com.lab_b.common.Book; 
+
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
