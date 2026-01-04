@@ -32,7 +32,7 @@ public class RegController {
 
     @FXML
     void BtnReturn(ActionEvent event) throws IOException {
-        App m = new App();
+        App m = App.getInstance();
         m.changeScene("Benvenuto.fxml");
     }
 }

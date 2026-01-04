@@ -7,7 +7,6 @@ import java.util.List;
 public interface BookRepositoryService extends Remote {
 
     // --- Funzionalità Accesso Libero [cite: 86] ---
-    
     /** Ricerca per titolo (case insensitive, sottostringhe) */
     List<Book> cercaLibroPerTitolo(String titolo) throws RemoteException;
 

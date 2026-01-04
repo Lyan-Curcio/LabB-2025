@@ -53,28 +53,28 @@ public class ListaLibriController {
     @FXML
     void BtnClickCreaLib(ActionEvent event) throws IOException 
     {
-        App m = new App();
+        App m = App.getInstance();
         m.changeScene("CreaLibreria.fxml");
     }
 
     @FXML
     void BtnClickLogout(ActionEvent event) throws IOException 
     {
-        App m = new App();
+        App m = App.getInstance();
         m.changeScene("Benvenuto.fxml");
     }
 
     @FXML
     void BtnClickRicercaLib(ActionEvent event) throws IOException 
     {
-        App m = new App();
+        App m = App.getInstance();
         m.changeScene("RicercheLibrerie.fxml");
     }
 
     @FXML
     void BtnClickTueLib(ActionEvent event) throws IOException 
     {
-        App m = new App();
+        App m = App.getInstance();
         m.changeScene("LibrerieUtente.fxml");
     }
 
@@ -83,6 +83,5 @@ public class ListaLibriController {
     {
 
     }
-
 }
 

@@ -10,7 +10,7 @@ public class ClientApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         // Inizializziamo la classe di utilità App con lo Stage principale
-        App app = new App();
+        App app = App.getInstance();
         app.setStage(stage);
         
         // Carichiamo la prima scena (Benvenuto)

@@ -4,6 +4,7 @@ import com.lab_b.common.BookRepositoryService;
 import com.lab_b.common.Book;
 import com.lab_b.common.Rating;
 import com.lab_b.common.User;
+import com.lab_b.server.queries.BookQueries;
 
 import java.rmi.server.UnicastRemoteObject;
 import java.rmi.RemoteException;
@@ -13,28 +14,22 @@ import java.util.List;
 
 public class BookRepositoryImpl extends UnicastRemoteObject implements BookRepositoryService {
 
+    private final Connection pgsqlConn;
+
     public BookRepositoryImpl() throws RemoteException {
         super();
+        pgsqlConn = DatabaseManager.getInstance().getPgsqlConn();
     }
+
 
     @Override
     public List<Book> cercaLibroPerTitolo(String titolo) throws RemoteException {
-        List<Book> risultati = new ArrayList<>();
-        String query = "SELECT * FROM Libri WHERE LOWER(titolo) LIKE LOWER(?)";
-        
-        try (Connection conn = DatabaseManager.getInstance().getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
-            
-            pstmt.setString(1, "%" + titolo + "%");
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                // TODO: Mapping
-            }
+        try {
+            return BookQueries.searchByTitle(titolo);
         } catch (SQLException e) {
             System.err.println("Errore SQL: " + e.getMessage());
             throw new RemoteException("Errore Database", e);
         }
-        return risultati;
     }
 
     // --- NUOVO METODO AGGIUNTO (cercaLibroPerAutore) ---

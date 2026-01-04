@@ -21,14 +21,14 @@ public class LoginController {
 
     @FXML
     void BtnReturn(ActionEvent event) throws IOException {
-        App m = new App();
+        App m = App.getInstance();
         m.changeScene("Benvenuto.fxml");
     }
     
     private void CheckLogin() throws IOException {
         String uid = UserID.getText();
         String pwd = Password.getText();
-        App m = new App();
+        App m = App.getInstance();
 
         // Simulazione login (da sostituire con DB in futuro)
         if("Sergio".equals(uid) && "123".equals(pwd)) {
