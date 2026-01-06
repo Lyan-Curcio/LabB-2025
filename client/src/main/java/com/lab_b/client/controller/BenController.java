@@ -2,9 +2,7 @@ package com.lab_b.client.controller;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
-import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -95,15 +93,17 @@ public class BenController {
                 int anno = 0;
                 try
                 {
-                    anno = Integer.parseInt(TfRicercaAnno.getText()); // TODO gestire eccezioni
+                    anno = Integer.parseInt(TfRicercaAnno.getText());
                 }
                 catch (NumberFormatException e)
                 {
+                    ListaLibri.getItems().clear();
                     ListLabel.setText("L'anno cercato non è valido!");
                     return;
                 }
                 if (anno < 0 || anno > LocalDate.now().getYear())
                 {
+                    ListaLibri.getItems().clear();
                     ListLabel.setText("L'anno cercato non è valido!");
                     return;
                 }
@@ -111,10 +111,11 @@ public class BenController {
                 libri = App.getInstance().bookRepository.cercaLibroPerAutoreEAnno(TfRicerca.getText(), anno);
             }
         }
-        catch (RemoteException | SQLException e)
+        catch (RemoteException e)
         {
             ListaLibri.getItems().clear();
             ListLabel.setText("C'è stato un errore durante la ricerca!");
+            e.printStackTrace();
             return;
         }
 

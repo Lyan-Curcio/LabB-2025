@@ -9,13 +9,13 @@ public interface BookRepositoryService extends Remote {
 
     // --- Funzionalità Accesso Libero [cite: 86] ---
     /** Ricerca per titolo (case insensitive, sottostringhe) */
-    List<Book> cercaLibroPerTitolo(String titolo) throws RemoteException, SQLException;
+    List<Book> cercaLibroPerTitolo(String titolo) throws RemoteException;
 
     /** Ricerca per autore */
-    List<Book> cercaLibroPerAutore(String autore) throws RemoteException, SQLException;
+    List<Book> cercaLibroPerAutore(String autore) throws RemoteException;
 
     /** Ricerca per autore e anno */
-    List<Book> cercaLibroPerAutoreEAnno(String autore, int anno) throws RemoteException, SQLException;
+    List<Book> cercaLibroPerAutoreEAnno(String autore, int anno) throws RemoteException;
     
 
     // --- Funzionalità Utenti Registrati [cite: 106, 122, 135, 148] ---

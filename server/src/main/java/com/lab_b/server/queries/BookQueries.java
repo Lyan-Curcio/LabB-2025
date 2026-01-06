@@ -8,42 +8,43 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 
 public class BookQueries {
-    public static LinkedList<Book> selectAll() throws SQLException {
+    public static LinkedList<Book> selectAll() {
         @Language("PostgreSQL")
         String query = "SELECT * FROM Libri";
         return DatabaseManager.getInstance().executeQuery(
             query,
-            Book::new
+            Book::new,
+            null
         );
     }
 
-    public static LinkedList<Book> searchByTitle(String title) throws SQLException {
+    public static LinkedList<Book> searchByTitle(String title) {
         @Language("PostgreSQL")
         String query = "SELECT * FROM Libri WHERE titolo ILIKE '%'||?||'%'";
         return DatabaseManager.getInstance().executeQuery(
             query,
             Book::new,
-            new String[] {title}
+            new Object[] {title}
         );
     }
 
-    public static LinkedList<Book> searchByAuthor(String author) throws SQLException {
+    public static LinkedList<Book> searchByAuthor(String author) {
         @Language("PostgreSQL")
         String query = "SELECT * FROM libri WHERE autori ILIKE '%'||?||'%'";
         return DatabaseManager.getInstance().executeQuery(
             query,
             Book::new,
-            new String[] {author}
+            new Object[] {author}
         );
     }
 
-    public static LinkedList<Book> searchByAuthorAndYear(String author, int year) throws SQLException {
+    public static LinkedList<Book> searchByAuthorAndYear(String author, int year) {
         @Language("PostgreSQL")
         String query = "SELECT * FROM libri WHERE autori ILIKE '%'||?||'%' AND anno_pubblicazione = ?";
         return DatabaseManager.getInstance().executeQuery(
             query,
             Book::new,
-            new String[] {author, Integer.toString(year)}
+            new Object[] {author, year}
         );
     }
 }

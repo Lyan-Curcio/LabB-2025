@@ -45,42 +45,33 @@ public class DatabaseManager {
     }
 
     public <T> LinkedList<T> executeQuery(
-            String query,
-            Function<ResultSet, T> resultConstructor
-    ) throws SQLException {
-        PreparedStatement statement = pgsqlConn.prepareStatement(query);
-
-        ResultSet rs = statement.executeQuery();
-        LinkedList<T> result = new LinkedList<>();
-
-        while (rs.next()) {
-            result.add(resultConstructor.apply(rs));
-        }
-
-        return result;
-    }
-
-    public <T> LinkedList<T> executeQuery(
             @Untainted @Language("PostgreSQL")
             String query,
             Function<ResultSet, T> resultConstructor,
-            String[] args
-    ) throws SQLException {
-        PreparedStatement statement = pgsqlConn.prepareStatement(query);
-        if (args != null) {
-            for (int i = 0; i < args.length; ++i) {
-                statement.setString(i + 1, args[i]);
+            Object[] args
+    ) {
+        try {
+            PreparedStatement statement = pgsqlConn.prepareStatement(query);
+            if (args != null) {
+                for (int i = 0; i < args.length; ++i) {
+                    statement.setObject(i + 1, args[i]);
+                }
             }
+
+            ResultSet rs = statement.executeQuery();
+            LinkedList<T> result = new LinkedList<>();
+
+            while (rs.next()) {
+                result.add(resultConstructor.apply(rs));
+            }
+
+            return result;
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
         }
 
-        ResultSet rs = statement.executeQuery();
-        LinkedList<T> result = new LinkedList<>();
-
-        while (rs.next()) {
-            result.add(resultConstructor.apply(rs));
-        }
-
-        return result;
+        return null;
     }
     
     // Metodi per chiudere connessione, gestire transazioni, ecc.

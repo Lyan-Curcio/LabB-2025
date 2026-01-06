@@ -23,20 +23,18 @@ public class BookRepositoryImpl extends UnicastRemoteObject implements BookRepos
 
 
     @Override
-    public List<Book> cercaLibroPerTitolo(String titolo) throws RemoteException, SQLException {
+    public List<Book> cercaLibroPerTitolo(String titolo) throws RemoteException {
         return BookQueries.searchByTitle(titolo);
     }
 
     @Override
-    public List<Book> cercaLibroPerAutore(String autore) throws RemoteException, SQLException {
+    public List<Book> cercaLibroPerAutore(String autore) throws RemoteException {
         return BookQueries.searchByAuthor(autore);
     }
 
     @Override
     public List<Book> cercaLibroPerAutoreEAnno(String autore, int anno) throws RemoteException {
-        List<Book> risultati = new ArrayList<>();
-        System.out.println("Ricerca per autore: " + autore + " e anno: " + anno);
-        return risultati;
+        return BookQueries.searchByAuthorAndYear(autore, anno);
     }
 
     @Override
