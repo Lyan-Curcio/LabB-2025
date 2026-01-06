@@ -2,19 +2,20 @@ package com.lab_b.common;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.sql.SQLException;
 import java.util.List;
 
 public interface BookRepositoryService extends Remote {
 
     // --- Funzionalità Accesso Libero [cite: 86] ---
     /** Ricerca per titolo (case insensitive, sottostringhe) */
-    List<Book> cercaLibroPerTitolo(String titolo) throws RemoteException;
+    List<Book> cercaLibroPerTitolo(String titolo) throws RemoteException, SQLException;
 
     /** Ricerca per autore */
-    List<Book> cercaLibroPerAutore(String autore) throws RemoteException;
+    List<Book> cercaLibroPerAutore(String autore) throws RemoteException, SQLException;
 
     /** Ricerca per autore e anno */
-    List<Book> cercaLibroPerAutoreEAnno(String autore, int anno) throws RemoteException;
+    List<Book> cercaLibroPerAutoreEAnno(String autore, int anno) throws RemoteException, SQLException;
     
 
     // --- Funzionalità Utenti Registrati [cite: 106, 122, 135, 148] ---

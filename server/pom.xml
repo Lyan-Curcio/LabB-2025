@@ -28,6 +28,21 @@
             <artifactId>postgresql</artifactId>
             <version>42.7.8</version>
         </dependency>
+
+        <!-- For passing around safe SQL Strings -->
+        <!-- Used @Language("PostgreSQL") -->
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>26.0.2</version>
+        </dependency>
+        <!-- For passing around safe SQL Strings -->
+        <!-- Used @Untained -->
+        <dependency>
+            <groupId>org.checkerframework</groupId>
+            <artifactId>checker-qual</artifactId>
+            <version>3.39.0</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -14,7 +14,7 @@ Ecco le entità richieste con i relativi campi obbligatori e opzionali derivati 
         - `Autori`
         - `AnnoPubblicazione`
         - `Editore` (Opzionale)
-        - `Categoria` (Opzionale)
+        - `Categorie` (Opzionale)
 - **UtentiRegistrati**
     - Rappresenta gli utenti che hanno effettuato l'iscrizione.
     - **Attributi:**
@@ -88,7 +88,7 @@ Contiene il repository dei libri importati dal dataset.
 - **`autori`** (VARCHAR): Elenco degli autori (stringa, come da CSV originale)
 - **`anno_pubblicazione`** (INTEGER): Anno di pubblicazione
 - **`editore`** (VARCHAR): Nome dell'editore (opzionale)
-- **`categoria`** (VARCHAR): Categoria del libro (opzionale)
+- **`categorie`** (VARCHAR): Categorie del libro (opzionale)
 
 ### 2. Tabella `UtentiRegistrati`
 
@@ -190,7 +190,7 @@ CREATE TABLE Libri (
     autori              VARCHAR(500),       -- Lista autori come stringa dal CSV
     anno_pubblicazione  INTEGER,
     editore             VARCHAR(200),       -- Campo opzionale
-    categoria           VARCHAR(200)        -- Campo opzionale
+    categorie           VARCHAR(200)        -- Campo opzionale
 );
 
 -- =============================================================================

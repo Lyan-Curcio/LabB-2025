@@ -3,4 +3,6 @@ module com.lab_b.server {
     requires java.rmi;
     requires java.sql;
     requires org.postgresql.jdbc;
+    requires org.jetbrains.annotations;
+    requires org.checkerframework.checker.qual;
 }

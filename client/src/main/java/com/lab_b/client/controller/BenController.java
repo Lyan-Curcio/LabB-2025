@@ -2,17 +2,17 @@ package com.lab_b.client.controller;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.lab_b.common.Book;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.SplitMenuButton;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
 public class BenController {
 
@@ -26,6 +26,8 @@ public class BenController {
     private SplitMenuButton TipiDiRicerca;
     @FXML
     private Label ListLabel;
+    @FXML
+    private ListView<String> ListaLibri;
 
     private enum TipoDiRicerca {
         TITOLO,
@@ -109,20 +111,29 @@ public class BenController {
                 libri = App.getInstance().bookRepository.cercaLibroPerAutoreEAnno(TfRicerca.getText(), anno);
             }
         }
-        catch (RemoteException e)
+        catch (RemoteException | SQLException e)
         {
+            ListaLibri.getItems().clear();
             ListLabel.setText("C'è stato un errore durante la ricerca!");
             return;
         }
 
-        if (libri != null && libri.isEmpty())
+        if (libri == null || libri.isEmpty())
         {
+            ListaLibri.getItems().clear();
             ListLabel.setText("Nessun libro trovato");
+            return;
         }
-        else
-        {
-            // Pulisci il messaggio nel caso fosse "sporco"
-            ListLabel.setText("");
-        }
+
+        // Pulisci il messaggio nel caso fosse "sporco"
+        ListLabel.setText("");
+
+        ListaLibri.setItems(
+            FXCollections.observableArrayList(
+                libri.stream()
+                    .map(Book::toStringInfo)
+                    .collect(Collectors.toList())
+            )
+        );
     }
 }

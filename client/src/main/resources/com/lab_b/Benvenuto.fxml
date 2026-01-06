@@ -45,7 +45,7 @@
          </font></Button>
       <Pane layoutX="348.0" layoutY="159.0" prefHeight="340.0" prefWidth="440.0">
          <children>
-            <ListView fx:id="myListView" prefHeight="340.0" prefWidth="440.0" style="-fx-background-color: yellow;" />
+            <ListView fx:id="ListaLibri" prefHeight="340.0" prefWidth="440.0" style="-fx-background-color: yellow;" />
             <Label fx:id="ListLabel" alignment="CENTER" prefHeight="340.0" prefWidth="440.0">
                <font>
                   <Font size="24.0" />

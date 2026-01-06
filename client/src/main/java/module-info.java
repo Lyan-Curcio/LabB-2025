@@ -4,6 +4,7 @@ module com.lab_b.client {
     requires com.lab_b.common;
     requires java.rmi;
     requires java.desktop;
+    requires java.sql;
 
     opens com.lab_b.client to javafx.fxml;
     opens com.lab_b.client.controller to javafx.fxml;

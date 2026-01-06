@@ -1,5 +1,8 @@
 package com.lab_b.server;
 
+import org.checkerframework.checker.tainting.qual.Untainted;
+import org.intellij.lang.annotations.Language;
+
 import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
@@ -58,6 +61,7 @@ public class DatabaseManager {
     }
 
     public <T> LinkedList<T> executeQuery(
+            @Untainted @Language("PostgreSQL")
             String query,
             Function<ResultSet, T> resultConstructor,
             String[] args

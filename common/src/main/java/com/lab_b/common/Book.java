@@ -59,11 +59,17 @@ public class Book implements Serializable {
         this.editore = _editore;
         this.categorie = _categorie;
     }
-    
-    // toString per visualizzazione in liste
-    @Override
-    public String toString() {
-        return titolo + " (" + annoPubblicazione + ")";
+
+    public String toStringDebug() {
+        return id + ": " + titolo +
+            "\n\t" + String.join(", ", autori) +
+            "\n\t" + annoPubblicazione +
+            "\n\t" + editore +
+            "\n\t" + String.join(", ", categorie);
+    }
+
+    public String toStringInfo() {
+        return titolo + " - Da: " + String.join(", ", autori) + " - (" + annoPubblicazione + ")";
     }
 
 

@@ -23,22 +23,13 @@ public class BookRepositoryImpl extends UnicastRemoteObject implements BookRepos
 
 
     @Override
-    public List<Book> cercaLibroPerTitolo(String titolo) throws RemoteException {
-        try {
-            return BookQueries.searchByTitle(titolo);
-        } catch (SQLException e) {
-            System.err.println("Errore SQL: " + e.getMessage());
-            throw new RemoteException("Errore Database", e);
-        }
+    public List<Book> cercaLibroPerTitolo(String titolo) throws RemoteException, SQLException {
+        return BookQueries.searchByTitle(titolo);
     }
 
-    // --- NUOVO METODO AGGIUNTO (cercaLibroPerAutore) ---
     @Override
-    public List<Book> cercaLibroPerAutore(String autore) throws RemoteException {
-        List<Book> risultati = new ArrayList<>();
-        System.out.println("Ricerca per solo autore: " + autore);
-        // TODO: Implementare query SELECT * FROM Libri WHERE autore LIKE ?
-        return risultati;
+    public List<Book> cercaLibroPerAutore(String autore) throws RemoteException, SQLException {
+        return BookQueries.searchByAuthor(autore);
     }
 
     @Override
