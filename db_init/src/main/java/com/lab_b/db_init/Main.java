@@ -2,6 +2,8 @@ package com.lab_b.db_init;
 
 import com.lab_b.server.DatabaseManager;
 import org.intellij.lang.annotations.Language;
+import org.postgresql.PGConnection;
+import org.postgresql.copy.CopyManager;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,8 +24,37 @@ public class Main
         System.out.println("Creazione delle tabelle...");
         for (@Language("PostgreSQL") String s : readSqlFileFromRes("create-tables.sql"))
         {
-            System.out.println("Esecuzione di: " + s + "\n");
             dbm.executeQuery(s, null, null);
+        }
+
+        System.out.println("Caricamento dei dati...");
+        loadFromCsv("BooksDatasetClean.csv");
+    }
+
+    public static void loadFromCsv(String path) {
+        if (path == null) return;
+
+        try (InputStream is = Main.class
+            .getClassLoader()
+            .getResourceAsStream(path)
+        ) {
+            if (is == null) {
+                System.err.println("Impossibile trovare il file " + path + " nelle risorse!");
+                System.exit(1);
+            }
+
+            CopyManager copyManager = ((PGConnection) DatabaseManager.getInstance().getPgsqlConn()).getCopyAPI();
+
+            @Language("PostgreSQL")
+            String sql = "COPY libri (titolo, autori, anno_pubblicazione, editore, categorie) FROM STDIN WITH (FORMAT csv, HEADER true)";
+
+            long rows = copyManager.copyIn(sql, is);
+            System.out.println("Importate " + rows + " righe");
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            System.exit(1);
         }
     }
 
