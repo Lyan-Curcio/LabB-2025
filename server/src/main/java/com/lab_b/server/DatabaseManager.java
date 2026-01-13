@@ -5,7 +5,6 @@ import org.intellij.lang.annotations.Language;
 
 import java.sql.*;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.function.Function;
 
 public class DatabaseManager {
@@ -58,14 +57,22 @@ public class DatabaseManager {
                 }
             }
 
-            ResultSet rs = statement.executeQuery();
-            LinkedList<T> result = new LinkedList<>();
+            if (resultConstructor != null)
+            {
+                ResultSet rs = statement.executeQuery();
+                LinkedList<T> result = new LinkedList<>();
 
-            while (rs.next()) {
-                result.add(resultConstructor.apply(rs));
+                while (rs.next()) {
+                    result.add(resultConstructor.apply(rs));
+                }
+
+                return result;
             }
-
-            return result;
+            else
+            {
+                statement.execute();
+                return null;
+            }
         }
         catch (SQLException e) {
             e.printStackTrace();
