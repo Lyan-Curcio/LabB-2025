@@ -82,7 +82,7 @@ public class Main
                 }
             }
 
-            // Split on semicolons (;) to get individual statements
+            // Separa gli statement
             return sql.toString().trim().split(";");
         }
         catch (Exception e)
