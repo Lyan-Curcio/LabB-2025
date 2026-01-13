@@ -1,6 +1,7 @@
 package com.lab_b.client.controller; // ERRORE: c'era "main.java."
 
 import com.lab_b.common.BookRepositoryService; // ERRORE: c'era "main.java."
+import com.lab_b.common.enums.auth.LoginResult;
 
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -20,8 +21,8 @@ public class ClientController {
 
     public void eseguiLogin(String user, String pass) {
         try {
-            boolean success = server.login(user, pass);
-            if (success) {
+            LoginResult result = server.login(user, pass);
+            if (result == LoginResult.OK) {
                 this.currentUserSessionID = user;
                 System.out.println("Login effettuato!");
             } else {

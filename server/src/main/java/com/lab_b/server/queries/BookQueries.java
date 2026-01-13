@@ -1,10 +1,9 @@
 package com.lab_b.server.queries;
 
-import com.lab_b.common.Book;
+import com.lab_b.common.dto.Book;
 import com.lab_b.server.DatabaseManager;
 import org.intellij.lang.annotations.Language;
 
-import java.sql.SQLException;
 import java.util.LinkedList;
 
 public class BookQueries {

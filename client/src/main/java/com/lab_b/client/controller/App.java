@@ -43,11 +43,20 @@ public class App {
         stage = s;
     }
 
-    public void changeScene(String fxml) throws IOException {
+    public void changeScene(String fxml) {
         // Carica il file FXML dalla cartella resources/com/lab_b/
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/lab_b/" + fxml));
-        Parent root = loader.load();
-        
+        Parent root;
+        try
+        {
+            root = loader.load();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+            return;
+        }
+
         if (stage.getScene() == null) {
             stage.setScene(new Scene(root, 900, 600)); // Dimensioni default
         } else {

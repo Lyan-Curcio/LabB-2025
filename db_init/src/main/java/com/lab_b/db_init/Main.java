@@ -6,14 +6,10 @@ import org.postgresql.PGConnection;
 import org.postgresql.copy.CopyManager;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-/**
- * Hello world!
- *
- */
+
 public class Main
 {
     static void main()
@@ -21,14 +17,19 @@ public class Main
         System.out.println("Connessione al Database...");
         DatabaseManager dbm = DatabaseManager.getInstance();
 
+        System.out.println("Abilitando l'estensione 'pgcrypto'...");
+        dbm.execute("CREATE EXTENSION IF NOT EXISTS pgcrypto", null);
+
         System.out.println("Creazione delle tabelle...");
         for (@Language("PostgreSQL") String s : readSqlFileFromRes("create-tables.sql"))
         {
-            dbm.executeQuery(s, null, null);
+            dbm.execute(s, null);
         }
 
         System.out.println("Caricamento dei dati...");
         loadFromCsv("BooksDatasetClean.csv");
+
+        System.out.println("FATTO!");
     }
 
     public static void loadFromCsv(String path) {

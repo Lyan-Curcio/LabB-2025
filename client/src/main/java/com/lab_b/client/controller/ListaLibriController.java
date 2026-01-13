@@ -58,21 +58,21 @@ public class ListaLibriController {
     }
 
     @FXML
-    void BtnClickLogout(ActionEvent event) throws IOException 
+    void BtnClickLogout(ActionEvent event)
     {
         App m = App.getInstance();
         m.changeScene("Benvenuto.fxml");
     }
 
     @FXML
-    void BtnClickRicercaLib(ActionEvent event) throws IOException 
+    void BtnClickRicercaLib(ActionEvent event)
     {
         App m = App.getInstance();
         m.changeScene("RicercheLibrerie.fxml");
     }
 
     @FXML
-    void BtnClickTueLib(ActionEvent event) throws IOException 
+    void BtnClickTueLib(ActionEvent event)
     {
         App m = App.getInstance();
         m.changeScene("LibrerieUtente.fxml");

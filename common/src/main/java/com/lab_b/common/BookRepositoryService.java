@@ -1,8 +1,13 @@
 package com.lab_b.common;
 
+import com.lab_b.common.dto.Book;
+import com.lab_b.common.dto.Rating;
+import com.lab_b.common.dto.User;
+import com.lab_b.common.enums.auth.LoginResult;
+import com.lab_b.common.enums.auth.RegisterResult;
+
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.sql.SQLException;
 import java.util.List;
 
 public interface BookRepositoryService extends Remote {
@@ -21,10 +26,10 @@ public interface BookRepositoryService extends Remote {
     // --- Funzionalità Utenti Registrati [cite: 106, 122, 135, 148] ---
     
     /** Registra un nuovo utente. Ritorna true se successo. */
-    boolean registrazione(User utente, String password) throws RemoteException;
+    RegisterResult registrazione(User utente, String password) throws RemoteException;
 
     /** Login. Ritorna true se credenziali valide. */
-    boolean login(String userId, String password) throws RemoteException;
+    LoginResult login(String userId, String password) throws RemoteException;
 
     /** Crea una nuova libreria per l'utente */
     boolean registraLibreria(String userId, String nomeLibreria) throws RemoteException;

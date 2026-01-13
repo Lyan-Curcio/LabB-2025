@@ -15,17 +15,17 @@ public class LoginController {
     @FXML private Button ButtonReturn;
     public static Utente user = Utente.OSPITE;
     @FXML
-    private void BtnclickLog(ActionEvent event) throws IOException {
+    private void BtnClickLog(ActionEvent event) {
         CheckLogin();   
     }
 
     @FXML
-    private void BtnReturn(ActionEvent event) throws IOException {
+    private void BtnReturn(ActionEvent event) {
         App m = App.getInstance();
         m.changeScene("Benvenuto.fxml");
     }
     
-    private void CheckLogin() throws IOException {
+    private void CheckLogin() {
         String uid = UserID.getText();
         String pwd = Password.getText();
         App m = App.getInstance();
@@ -34,7 +34,7 @@ public class LoginController {
         if("Sergio".equals(uid) && "123".equals(pwd)) {
             System.out.println("Successo");
             user = Utente.REGISTRATO;
-            m.changeScene("Benvenuto.fxml"); // Decommentare quando esiste Libri.fxml
+            m.changeScene("Benvenuto.fxml");
         } else if (uid.isEmpty() || pwd.isEmpty()) {
             System.out.println("Per favore inserire i dati");
         } else {

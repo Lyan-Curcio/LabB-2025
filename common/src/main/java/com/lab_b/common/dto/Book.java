@@ -1,4 +1,4 @@
-package com.lab_b.common;
+package com.lab_b.common.dto;
 
 import java.io.Serial;
 import java.io.Serializable;

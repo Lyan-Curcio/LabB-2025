@@ -1,15 +1,17 @@
 package com.lab_b.server;
 
 import com.lab_b.common.BookRepositoryService;
-import com.lab_b.common.Book;
-import com.lab_b.common.Rating;
-import com.lab_b.common.User;
+import com.lab_b.common.dto.Book;
+import com.lab_b.common.dto.Rating;
+import com.lab_b.common.dto.User;
+import com.lab_b.common.enums.auth.LoginResult;
+import com.lab_b.common.enums.auth.RegisterResult;
+import com.lab_b.server.queries.AuthQueries;
 import com.lab_b.server.queries.BookQueries;
 
 import java.rmi.server.UnicastRemoteObject;
 import java.rmi.RemoteException;
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class BookRepositoryImpl extends UnicastRemoteObject implements BookRepositoryService {
@@ -58,14 +60,12 @@ public class BookRepositoryImpl extends UnicastRemoteObject implements BookRepos
     }
 
     @Override
-    public boolean login(String user, String pass) throws RemoteException {
-        System.out.println("Login chiamato per: " + user);
-        return true; 
+    synchronized public LoginResult login(String userid, String pass) throws RemoteException {
+        return AuthQueries.login(userid, pass);
     }
 
     @Override
-    public boolean registrazione(User user, String password) throws RemoteException {
-        System.out.println("Registrazione chiamata per utente: " + user); 
-        return true;
+    synchronized public RegisterResult registrazione(User user, String password) throws RemoteException {
+        return AuthQueries.register(user, password);
     }
 }

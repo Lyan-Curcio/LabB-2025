@@ -58,28 +58,40 @@ public class DatabaseManager {
                 }
             }
 
-            if (resultConstructor != null)
-            {
-                ResultSet rs = statement.executeQuery();
-                LinkedList<T> result = new LinkedList<>();
+            ResultSet rs = statement.executeQuery();
+            LinkedList<T> result = new LinkedList<>();
 
-                while (rs.next()) {
-                    result.add(resultConstructor.apply(rs));
-                }
+            while (rs.next()) {
+                result.add(resultConstructor.apply(rs));
+            }
 
-                return result;
-            }
-            else
-            {
-                statement.execute();
-                return null;
-            }
+            return result;
         }
         catch (SQLException e) {
             e.printStackTrace();
         }
 
         return null;
+    }
+
+    public void execute(
+        @Untainted @Language("PostgreSQL")
+        String query,
+        Object[] args
+    ) {
+        try {
+            PreparedStatement statement = pgsqlConn.prepareStatement(query);
+            if (args != null) {
+                for (int i = 0; i < args.length; ++i) {
+                    statement.setObject(i + 1, args[i]);
+                }
+            }
+
+            statement.execute();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
     
     // Metodi per chiudere connessione, gestire transazioni, ecc.

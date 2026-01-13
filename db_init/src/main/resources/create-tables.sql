@@ -20,7 +20,7 @@ CREATE TABLE utenti (
     userid          VARCHAR(50) PRIMARY KEY, -- UserID scelto dall'utente
     nome            VARCHAR(50) NOT NULL,
     cognome         VARCHAR(50) NOT NULL,
-    codice_fiscale  CHAR(16) NOT NULL,
+    codice_fiscale  CHAR(16) NOT NULL UNIQUE,
     email           VARCHAR(100) NOT NULL UNIQUE,
     password        VARCHAR(256) NOT NULL -- Lunghezza sufficiente per hash (es. SHA-256)
 );
