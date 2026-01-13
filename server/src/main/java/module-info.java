@@ -5,4 +5,6 @@ module com.lab_b.server {
     requires org.postgresql.jdbc;
     requires org.jetbrains.annotations;
     requires org.checkerframework.checker.qual;
+
+    exports com.lab_b.server;
 }

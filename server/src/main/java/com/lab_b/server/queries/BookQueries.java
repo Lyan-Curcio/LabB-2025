@@ -10,7 +10,7 @@ import java.util.LinkedList;
 public class BookQueries {
     public static LinkedList<Book> selectAll() {
         @Language("PostgreSQL")
-        String query = "SELECT * FROM Libri";
+        String query = "SELECT * FROM libri";
         return DatabaseManager.getInstance().executeQuery(
             query,
             Book::new,
@@ -20,7 +20,7 @@ public class BookQueries {
 
     public static LinkedList<Book> searchByTitle(String title) {
         @Language("PostgreSQL")
-        String query = "SELECT * FROM Libri WHERE titolo ILIKE '%'||?||'%'";
+        String query = "SELECT * FROM libri WHERE titolo ILIKE '%'||?||'%'";
         return DatabaseManager.getInstance().executeQuery(
             query,
             Book::new,
