@@ -4,38 +4,45 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
+import java.io.IOException;
+
 public class CreaLibreriaController {
 
     @FXML
-    private Button BtnLeTueLib;
+    private Button btnLeTueLib;
 
     @FXML
-    private Button BtnRicercaLibreria;
+    private Button btnRicercaLibreria;
 
     @FXML
-    private Button BtnRicercaLib;
+    private Button btnRicercaLib;
 
     @FXML
-    private Button BtnLogout;
+    private Button btnLogout;
 
     @FXML
-    void BtnClickLogout(ActionEvent event) {
-
+    void btnClickLogout(ActionEvent event) throws IOException
+    {
+        LoginController.user = Utente.OSPITE;
+        App.getInstance().changeScene("Benvenuto.fxml");
     }
 
     @FXML
-    void BtnClickRicercaLib(ActionEvent event) {
-
+    void btnClickRicercaLib(ActionEvent event) throws IOException
+    {
+        App.getInstance().changeScene("Benvenuto.fxml");
     }
 
     @FXML
-    void BtnClickRicercaLibreria(ActionEvent event) {
-
+    void btnClickRicercaLibreria(ActionEvent event) throws IOException
+    {
+        App.getInstance().changeScene("RicercheLibrerie.fxml");
     }
 
     @FXML
-    void BtnClickTueLib(ActionEvent event) {
-
+    void btnClickTueLib(ActionEvent event) throws IOException
+    {
+        App.getInstance().changeScene("LibrerieUtente.fxml");
     }
 
 }

@@ -11,21 +11,33 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 
 public class BenController {
 
-    @FXML 
-    private Button ButtonResearch;
+    @FXML private VBox buttonList;
+    @FXML private Button btnAcc, btnReg;    //bottoni che appaiono nella sezione ospite
+    @FXML private Button btnCreaLib, btnRicercaLib, btnLeTueLib,btnLogout; //bottoni che appaiono nella sezione registrato
+    @FXML private TextField tfRicerca;
+    @FXML private TextField tfRicercaAnno;
+    @FXML private SplitMenuButton tipiDiRicerca;
+    @FXML private Label listLabel;
+    @FXML private ListView<String> listaLibri;
+
     @FXML
-    private TextField TfRicerca;
-    @FXML
-    private TextField TfRicercaAnno;
-    @FXML
-    private SplitMenuButton TipiDiRicerca;
-    @FXML
-    private Label ListLabel;
-    @FXML
-    private ListView<String> ListaLibri;
+    private void initialize()
+    {
+        if(LoginController.user == Utente.REGISTRATO)
+        {
+            listLabel.setText("registrato");
+            buttonList.getChildren().removeAll(btnAcc, btnReg);
+        }
+        else
+        {
+            listLabel.setText("ospite");
+            buttonList.getChildren().removeAll(btnCreaLib, btnRicercaLib, btnLeTueLib,btnLogout);
+        }
+    }
 
     private enum TipoDiRicerca {
         TITOLO,
@@ -36,45 +48,29 @@ public class BenController {
 
     //sezione per la selezione del tipo di ricerca
     @FXML
-    void RicercaAutore(ActionEvent event)
+    void ricercaAutore(ActionEvent event)
     {
         tipoDiRicerca = TipoDiRicerca.AUTORE;
-        TipiDiRicerca.setText("Autore");
-        TfRicercaAnno.setDisable(true);
+        tipiDiRicerca.setText("Autore");
+        tfRicercaAnno.setDisable(true);
     }
     @FXML
-    void RicercaTitolo(ActionEvent event)
+    void ricercaTitolo(ActionEvent event)
     {
         tipoDiRicerca = TipoDiRicerca.TITOLO;
-        TipiDiRicerca.setText("Titolo");
-        TfRicercaAnno.setDisable(true);
+        tipiDiRicerca.setText("Titolo");
+        tfRicercaAnno.setDisable(true);
     }
     @FXML
-    void RicercaAutoreEAnno(ActionEvent event)
+    void ricercaAutoreEAnno(ActionEvent event)
     {
         tipoDiRicerca = TipoDiRicerca.AUTORE_E_ANNO;
-        TipiDiRicerca.setText("Autore e anno");
-        TfRicercaAnno.setDisable(false);
+        tipiDiRicerca.setText("Autore e anno");
+        tfRicercaAnno.setDisable(false);
     }
-
-
-    //bottoni di navigazione
+    //ricerca del libro
     @FXML
-    void Accedi(ActionEvent event) throws IOException
-    {
-        App m = App.getInstance();
-        m.changeScene("Login.fxml");
-    }
-    
-    @FXML
-    void Registrati(ActionEvent event) throws IOException
-    {
-        App m = App.getInstance();
-        m.changeScene("Registrazione.fxml");
-    }
-
-    @FXML
-    void BtnResearch(ActionEvent event)
+    void btnClickResearch(ActionEvent event)
     {
         List<Book> libri = null;
 
@@ -82,59 +78,96 @@ public class BenController {
         {
             if (tipoDiRicerca == TipoDiRicerca.TITOLO)
             {
-                libri = App.getInstance().bookRepository.cercaLibroPerTitolo(TfRicerca.getText());
+                libri = App.getInstance().bookRepository.cercaLibroPerTitolo(tfRicerca.getText());
             }
             else if (tipoDiRicerca == TipoDiRicerca.AUTORE)
             {
-                libri = App.getInstance().bookRepository.cercaLibroPerAutore(TfRicerca.getText());
+                libri = App.getInstance().bookRepository.cercaLibroPerAutore(tfRicerca.getText());
             }
             else if (tipoDiRicerca == TipoDiRicerca.AUTORE_E_ANNO)
             {
                 int anno = 0;
                 try
                 {
-                    anno = Integer.parseInt(TfRicercaAnno.getText());
+                    anno = Integer.parseInt(tfRicercaAnno.getText());
                 }
                 catch (NumberFormatException e)
                 {
-                    ListaLibri.getItems().clear();
-                    ListLabel.setText("L'anno cercato non è valido!");
+                    listaLibri.getItems().clear();
+                    listLabel.setText("L'anno cercato non è valido!");
                     return;
                 }
                 if (anno < 0 || anno > LocalDate.now().getYear())
                 {
-                    ListaLibri.getItems().clear();
-                    ListLabel.setText("L'anno cercato non è valido!");
+                    listaLibri.getItems().clear();
+                    listLabel.setText("L'anno cercato non è valido!");
                     return;
                 }
 
-                libri = App.getInstance().bookRepository.cercaLibroPerAutoreEAnno(TfRicerca.getText(), anno);
+                libri = App.getInstance().bookRepository.cercaLibroPerAutoreEAnno(tfRicerca.getText(), anno);
             }
         }
         catch (RemoteException e)
         {
-            ListaLibri.getItems().clear();
-            ListLabel.setText("C'è stato un errore durante la ricerca!");
+            listaLibri.getItems().clear();
+            listLabel.setText("C'è stato un errore durante la ricerca!");
             e.printStackTrace();
             return;
         }
 
         if (libri == null || libri.isEmpty())
         {
-            ListaLibri.getItems().clear();
-            ListLabel.setText("Nessun libro trovato");
+            listaLibri.getItems().clear();
+            listLabel.setText("Nessun libro trovato");
             return;
         }
 
         // Pulisci il messaggio nel caso fosse "sporco"
-        ListLabel.setText("");
+        listLabel.setText("");
 
-        ListaLibri.setItems(
+        listaLibri.setItems(
             FXCollections.observableArrayList(
                 libri.stream()
                     .map(Book::toStringInfo)
                     .collect(Collectors.toList())
             )
         );
+    }
+    //bottoni di navigazione se si è ospite
+    @FXML
+    void accedi(ActionEvent event) throws IOException
+    {
+        App m = App.getInstance();
+        m.changeScene("Login.fxml");
+    }
+
+    @FXML
+    void registrati(ActionEvent event) throws IOException
+    {
+        App m = App.getInstance();
+        m.changeScene("Registrazione.fxml");
+    }
+
+    //bottoni di navigazione se si è registrato
+    @FXML
+    void btnClickCreaLib(ActionEvent event) throws IOException
+    {
+        App.getInstance().changeScene("CreaLibreria.fxml");
+    }
+    @FXML
+    void btnClickRicercaLib(ActionEvent event) throws IOException
+    {
+        App.getInstance().changeScene("RicercheLibrerie.fxml");
+    }
+    @FXML
+    void btnClickLeTueLib(ActionEvent event) throws IOException
+    {
+        App.getInstance().changeScene("LibrerieUtente.fxml");
+    }
+    @FXML
+    void btnClickLogout(ActionEvent event) throws IOException
+    {
+        LoginController.user = Utente.OSPITE;
+        App.getInstance().changeScene("Benvenuto.fxml");
     }
 }

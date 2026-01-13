@@ -18,7 +18,6 @@ import java.rmi.registry.Registry;
 public class App {
 
     private static App instance;
-
     public final BookRepositoryService bookRepository;
     private Stage stage;
 

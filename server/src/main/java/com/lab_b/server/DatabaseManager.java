@@ -28,6 +28,7 @@ public class DatabaseManager {
             System.exit(1);
         }
         catch (SQLException e) {
+            e.printStackTrace();
             System.err.println("Errore durante la connessione al database!");
             System.exit(1);
         }
