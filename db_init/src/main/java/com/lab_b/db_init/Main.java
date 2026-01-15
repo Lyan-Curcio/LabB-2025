@@ -21,10 +21,7 @@ public class Main
         dbm.execute("CREATE EXTENSION IF NOT EXISTS pgcrypto", null);
 
         System.out.println("Creazione delle tabelle...");
-        for (@Language("PostgreSQL") String s : readSqlFileFromRes("create-tables.sql"))
-        {
-            dbm.execute(s, null);
-        }
+        dbm.execute(readSqlFileFromRes("create-tables.sql"), null);
 
         System.out.println("Caricamento dei dati...");
         loadFromCsv("BooksDatasetClean.csv");
@@ -47,7 +44,7 @@ public class Main
             CopyManager copyManager = ((PGConnection) DatabaseManager.getInstance().getPgsqlConn()).getCopyAPI();
 
             @Language("PostgreSQL")
-            String sql = "COPY libri (titolo, autori, anno_pubblicazione, editore, categorie) FROM STDIN WITH (FORMAT csv, HEADER true)";
+            String sql = "COPY \"Libri\" (titolo, autori, anno_pubblicazione, editore, categorie) FROM STDIN WITH (FORMAT csv, HEADER true)";
 
             long rows = copyManager.copyIn(sql, is);
             System.out.println("Importate " + rows + " righe");
@@ -59,7 +56,7 @@ public class Main
         }
     }
 
-    public static String[] readSqlFileFromRes(String path) {
+    public static String readSqlFileFromRes(String path) {
         if (path == null) return null;
 
         try (InputStream is = Main.class
@@ -84,7 +81,7 @@ public class Main
             }
 
             // Separa gli statement
-            return sql.toString().trim().split(";");
+            return sql.toString();
         }
         catch (Exception e)
         {

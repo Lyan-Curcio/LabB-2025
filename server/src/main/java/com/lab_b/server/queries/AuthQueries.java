@@ -17,9 +17,9 @@ public class AuthQueries {
         @Language("PostgreSQL")
         String sql = """
             SELECT
-                EXISTS(SELECT 1 FROM utenti WHERE userid = ?) AS uid_ex,
-                EXISTS(SELECT 1 FROM utenti WHERE codice_fiscale = ?) AS cf_ex,
-                EXISTS(SELECT 1 FROM utenti WHERE email = ?) AS email_ex
+                EXISTS(SELECT 1 FROM "UtentiRegistrati" WHERE userid = ?) AS uid_ex,
+                EXISTS(SELECT 1 FROM "UtentiRegistrati" WHERE codice_fiscale = ?) AS cf_ex,
+                EXISTS(SELECT 1 FROM "UtentiRegistrati" WHERE email = ?) AS email_ex
         """;
 
         LinkedList<Boolean[]> result = DatabaseManager.getInstance().executeQuery(
@@ -51,7 +51,7 @@ public class AuthQueries {
         //
         // Inserimento
         sql = """
-            INSERT INTO utenti (userid, nome, cognome, codice_fiscale, email, password)
+            INSERT INTO "UtentiRegistrati" (userid, nome, cognome, codice_fiscale, email, password)
                 VALUES (?, ?, ?, ?, ?, crypt(?, gen_salt('bf')))
         """;
         DatabaseManager.getInstance().execute(
@@ -72,7 +72,7 @@ public class AuthQueries {
                     WHEN password = crypt(?, password) THEN 2
                     ELSE 1
                  END
-                 FROM utenti
+                 FROM "UtentiRegistrati"
                  WHERE userid = ?
                 ),
                 0

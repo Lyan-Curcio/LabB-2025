@@ -9,7 +9,7 @@ import java.util.LinkedList;
 public class BookQueries {
     public static LinkedList<Book> selectAll() {
         @Language("PostgreSQL")
-        String query = "SELECT * FROM libri";
+        String query = "SELECT * FROM \"Libri\"";
         return DatabaseManager.getInstance().executeQuery(
             query,
             Book::new,
@@ -19,7 +19,7 @@ public class BookQueries {
 
     public static LinkedList<Book> searchByTitle(String title) {
         @Language("PostgreSQL")
-        String query = "SELECT * FROM libri WHERE titolo ILIKE '%'||?||'%'";
+        String query = "SELECT * FROM \"Libri\" WHERE titolo ILIKE '%'||?||'%'";
         return DatabaseManager.getInstance().executeQuery(
             query,
             Book::new,
@@ -29,7 +29,7 @@ public class BookQueries {
 
     public static LinkedList<Book> searchByAuthor(String author) {
         @Language("PostgreSQL")
-        String query = "SELECT * FROM libri WHERE autori ILIKE '%'||?||'%'";
+        String query = "SELECT * FROM \"Libri\" WHERE autori ILIKE '%'||?||'%'";
         return DatabaseManager.getInstance().executeQuery(
             query,
             Book::new,
@@ -39,7 +39,7 @@ public class BookQueries {
 
     public static LinkedList<Book> searchByAuthorAndYear(String author, int year) {
         @Language("PostgreSQL")
-        String query = "SELECT * FROM libri WHERE autori ILIKE '%'||?||'%' AND anno_pubblicazione = ?";
+        String query = "SELECT * FROM \"Libri\" WHERE autori ILIKE '%'||?||'%' AND anno_pubblicazione = ?";
         return DatabaseManager.getInstance().executeQuery(
             query,
             Book::new,
