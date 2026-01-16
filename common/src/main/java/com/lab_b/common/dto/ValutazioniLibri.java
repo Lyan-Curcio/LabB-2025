@@ -2,7 +2,7 @@ package com.lab_b.common.dto;
 
 import java.io.Serializable;
 
-public class Rating implements Serializable {
+public class ValutazioniLibri implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private int libroId;
@@ -14,6 +14,7 @@ public class Rating implements Serializable {
     private int gradevolezza;
     private int originalita;
     private int edizione;
+    private int finale;
     
     // Note testuali (max 256 char)
     private String noteStile;
@@ -21,12 +22,7 @@ public class Rating implements Serializable {
     private String noteGradevolezza;
     private String noteOriginalita;
     private String noteEdizione;
+    private String noteFinale;
 
-    // Metodo di utilità per il calcolo della media [cite: 35]
-    public int getVotoFinale() {
-        double media = (stile + contenuto + gradevolezza + originalita + edizione) / 5.0;
-        return (int) Math.round(media);
-    }
-    
     // Costruttori, Getters e Setters
 }

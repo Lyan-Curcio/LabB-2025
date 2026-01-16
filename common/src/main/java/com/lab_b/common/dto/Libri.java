@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class Book implements Serializable {
+public class Libri implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -17,7 +17,7 @@ public class Book implements Serializable {
     public final String[] categorie;
 
     // Costruttori, Getters e Setters
-    public Book(int id, String titolo, String[] autori, int anno, String editore, String[] categorie) {
+    public Libri(int id, String titolo, String[] autori, int anno, String editore, String[] categorie) {
         this.id = id;
         this.titolo = titolo;
         this.autori = autori;
@@ -26,7 +26,7 @@ public class Book implements Serializable {
         this.categorie = categorie;
     }
 
-    public Book(ResultSet rs) {
+    public Libri(ResultSet rs) {
         int _id;
         String _titolo;
         String[] _autori;

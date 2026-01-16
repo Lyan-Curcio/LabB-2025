@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class User implements Serializable {
+public class UtentiRegistrati implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -18,7 +18,7 @@ public class User implements Serializable {
     // ma gestita separatamente durante il login.
 
     // Costruttori, Getters e Setters
-    public User(String userId, String nome, String cognome, String codiceFiscale, String email)
+    public UtentiRegistrati(String userId, String nome, String cognome, String codiceFiscale, String email)
     {
         this.userId = userId;
         this.nome = nome;
@@ -27,7 +27,7 @@ public class User implements Serializable {
         this.email = email;
     }
 
-    public User(ResultSet rs) {
+    public UtentiRegistrati(ResultSet rs) {
         String _userId;
         String _nome;
         String _cognome;

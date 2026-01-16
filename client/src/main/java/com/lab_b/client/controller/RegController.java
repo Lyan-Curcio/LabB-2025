@@ -2,7 +2,7 @@ package com.lab_b.client.controller;
 
 import java.rmi.RemoteException;
 
-import com.lab_b.common.dto.User;
+import com.lab_b.common.dto.UtentiRegistrati;
 import com.lab_b.common.enums.auth.RegisterResult;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -28,7 +28,7 @@ public class RegController {
             return;
         }
 
-        User newUser = new User(
+        UtentiRegistrati newUser = new UtentiRegistrati(
             TfUserid.getText(),
             Tfnome.getText(),
             Tfcognome.getText(),

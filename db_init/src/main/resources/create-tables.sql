@@ -27,7 +27,7 @@ CREATE TABLE "UtentiRegistrati" (
     cognome         VARCHAR(50) NOT NULL,
     codice_fiscale  CHAR(16) NOT NULL UNIQUE,
     email           VARCHAR(100) NOT NULL UNIQUE,
-    password        VARCHAR(256) NOT NULL -- Lunghezza sufficiente per hash (es. SHA-256)
+    password_hash   VARCHAR(256) NOT NULL
 );
 
 -- =============================================================================
@@ -95,15 +95,14 @@ CREATE TABLE "ValutazioniLibri" (
     gradevolezza    INTEGER NOT NULL CHECK (gradevolezza BETWEEN 1 AND 5),
     originalita     INTEGER NOT NULL CHECK (originalita BETWEEN 1 AND 5),
     edizione        INTEGER NOT NULL CHECK (edizione BETWEEN 1 AND 5),
-    voto_finale     INTEGER NOT NULL CHECK (voto_finale BETWEEN 1 AND 5),
 
-    -- Note opzionali (max 256 caratteri come da specifiche)
+    -- Note opzionali
     note_stile          VARCHAR(256),
     note_contenuto      VARCHAR(256),
     note_gradevolezza   VARCHAR(256),
     note_originalita    VARCHAR(256),
     note_edizione       VARCHAR(256),
-    note_voto_finale    VARCHAR(256),
+    note_finale         VARCHAR(256),
 
     -- Vincolo: Un utente può valutare lo stesso libro una sola volta
     CONSTRAINT unique_valutazione_utente_libro UNIQUE (userid, libro_id),

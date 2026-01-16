@@ -1,9 +1,9 @@
 package com.lab_b.server;
 
 import com.lab_b.common.BookRepositoryService;
-import com.lab_b.common.dto.Book;
-import com.lab_b.common.dto.Rating;
-import com.lab_b.common.dto.User;
+import com.lab_b.common.dto.Libri;
+import com.lab_b.common.dto.ValutazioniLibri;
+import com.lab_b.common.dto.UtentiRegistrati;
 import com.lab_b.common.enums.auth.LoginResult;
 import com.lab_b.common.enums.auth.RegisterResult;
 import com.lab_b.server.queries.AuthQueries;
@@ -25,22 +25,27 @@ public class BookRepositoryImpl extends UnicastRemoteObject implements BookRepos
 
 
     @Override
-    public List<Book> cercaLibroPerTitolo(String titolo) throws RemoteException {
+    public List<Libri> cercaLibroPerTitolo(String titolo) throws RemoteException {
         return BookQueries.searchByTitle(titolo);
     }
 
     @Override
-    public List<Book> cercaLibroPerAutore(String autore) throws RemoteException {
+    public List<Libri> cercaLibroPerAutore(String autore) throws RemoteException {
         return BookQueries.searchByAuthor(autore);
     }
 
     @Override
-    public List<Book> cercaLibroPerAutoreEAnno(String autore, int anno) throws RemoteException {
+    public List<Libri> cercaLibroPerAutoreEAnno(String autore, int anno) throws RemoteException {
         return BookQueries.searchByAuthorAndYear(autore, anno);
     }
 
     @Override
-    public boolean inserisciValutazioneLibro(Rating v) throws RemoteException {
+    public void logout(String userid) throws RemoteException {
+
+    }
+
+    @Override
+    public boolean inserisciValutazioneLibro(ValutazioniLibri v) throws RemoteException {
         return true; 
     }
 
@@ -55,7 +60,18 @@ public class BookRepositoryImpl extends UnicastRemoteObject implements BookRepos
     }
 
     @Override
-    public boolean registraLibreria(String userId, String nomeLibreria) throws RemoteException {
+    public boolean creaLibreria(String userId, String nomeLibreria) throws RemoteException {
+        return true;
+    }
+    /** Rimuove un libro a una libreria specifica */
+    @Override
+    public boolean rimuoviLibroDaLibreria(String userId, int libreriaId, int libroId) throws RemoteException {
+        return true;
+    }
+
+    /** Elimina una libreria dell'utente */
+    @Override
+    public boolean eliminaLibreria(String userId, String nomeLibreria) throws RemoteException {
         return true;
     }
 
@@ -65,7 +81,7 @@ public class BookRepositoryImpl extends UnicastRemoteObject implements BookRepos
     }
 
     @Override
-    synchronized public RegisterResult registrazione(User user, String password) throws RemoteException {
+    synchronized public RegisterResult registrazione(UtentiRegistrati user, String password) throws RemoteException {
         return AuthQueries.register(user, password);
     }
 }

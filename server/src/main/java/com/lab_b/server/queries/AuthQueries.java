@@ -1,6 +1,6 @@
 package com.lab_b.server.queries;
 
-import com.lab_b.common.dto.User;
+import com.lab_b.common.dto.UtentiRegistrati;
 import com.lab_b.common.enums.auth.LoginResult;
 import com.lab_b.common.enums.auth.RegisterResult;
 import com.lab_b.server.DatabaseManager;
@@ -11,7 +11,7 @@ import java.util.LinkedList;
 
 public class AuthQueries {
 
-    synchronized public static RegisterResult register(User user, String password) {
+    synchronized public static RegisterResult register(UtentiRegistrati user, String password) {
         //
         // Controllo vincoli
         @Language("PostgreSQL")
@@ -51,7 +51,7 @@ public class AuthQueries {
         //
         // Inserimento
         sql = """
-            INSERT INTO "UtentiRegistrati" (userid, nome, cognome, codice_fiscale, email, password)
+            INSERT INTO "UtentiRegistrati" (userid, nome, cognome, codice_fiscale, email, password_hash)
                 VALUES (?, ?, ?, ?, ?, crypt(?, gen_salt('bf')))
         """;
         DatabaseManager.getInstance().execute(
@@ -69,7 +69,7 @@ public class AuthQueries {
         String query = """
             SELECT COALESCE(
                 (SELECT CASE
-                    WHEN password = crypt(?, password) THEN 2
+                    WHEN password_hash = crypt(?, password_hash) THEN 2
                     ELSE 1
                  END
                  FROM "UtentiRegistrati"
