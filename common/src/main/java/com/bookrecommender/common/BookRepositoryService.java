@@ -57,10 +57,20 @@ public interface BookRepositoryService extends Remote {
 
     /** Elimina una libreria dell'utente */
     boolean eliminaLibreria(String userId, String nomeLibreria) throws RemoteException;
-    
-    /** Inserisce valutazione (solo se libro presente in libreria utente) */
+
+    //
+    // Valutazioni
+    /** Inserisce una valutazione */
     boolean inserisciValutazioneLibro(ValutazioniLibri valutazione) throws RemoteException;
-    
-    /** Inserisce consigli (max 3 libri) */
-    boolean inserisciSuggerimentoLibro(String userId, int libroSorgenteId, List<Integer> libriConsigliatiIds) throws RemoteException;
+
+    /** Rimuove una valutazione */
+    boolean rimuoviValutazioneLibro(int valutazioneId) throws RemoteException;
+
+    //
+    // Suggerimenti
+    /** Inserisce un consiglio */
+    boolean inserisciSuggerimentoLibro(String userId, int libroSorgenteId, int libroConsigliatiId) throws RemoteException;
+
+    /** Rimuove un consiglio */
+    boolean rimuoviSuggerimentoLibro(String userId, int libroSorgenteId, int libroConsigliatiId) throws RemoteException;
 }

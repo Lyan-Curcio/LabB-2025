@@ -16,14 +16,16 @@ import java.util.List;
 
 public class BookRepositoryImpl extends UnicastRemoteObject implements BookRepositoryService {
 
-    private final Connection pgsqlConn;
-
     public BookRepositoryImpl() throws RemoteException {
         super();
-        pgsqlConn = DatabaseManager.getInstance().getPgsqlConn();
     }
 
+    //
+    // Accesso libero
+    //
 
+    //
+    // Ricerca libri
     @Override
     public List<Libri> cercaLibroPerTitolo(String titolo) throws RemoteException {
         return BookQueries.searchByTitle(titolo);
@@ -40,17 +42,33 @@ public class BookRepositoryImpl extends UnicastRemoteObject implements BookRepos
     }
 
     @Override
+    public LoginResult login(String userid, String pass) throws RemoteException {
+        return AuthQueries.login(userid, pass);
+    }
+
+    //
+    // Autenticazione
+    @Override
+    public RegisterResult registrazione(UtentiRegistrati user, String password) throws RemoteException {
+        return AuthQueries.register(user, password);
+    }
+
+
+    //
+    // Funzionalità Utenti Registrati
+    //
+
+    //
+    // Autenticazione
+    @Override
     public void logout(String userid) throws RemoteException {
 
     }
 
+    //
+    // Librerie
     @Override
-    public boolean inserisciValutazioneLibro(ValutazioniLibri v) throws RemoteException {
-        return true; 
-    }
-
-    @Override
-    public boolean inserisciSuggerimentoLibro(String userId, int bookId, List<Integer> ratings) throws RemoteException {
+    public boolean creaLibreria(String userId, String nomeLibreria) throws RemoteException {
         return true;
     }
 
@@ -60,28 +78,36 @@ public class BookRepositoryImpl extends UnicastRemoteObject implements BookRepos
     }
 
     @Override
-    public boolean creaLibreria(String userId, String nomeLibreria) throws RemoteException {
-        return true;
-    }
-    /** Rimuove un libro a una libreria specifica */
-    @Override
     public boolean rimuoviLibroDaLibreria(String userId, int libreriaId, int libroId) throws RemoteException {
         return true;
     }
 
-    /** Elimina una libreria dell'utente */
     @Override
     public boolean eliminaLibreria(String userId, String nomeLibreria) throws RemoteException {
         return true;
     }
 
+    //
+    // Valutazioni
     @Override
-    synchronized public LoginResult login(String userid, String pass) throws RemoteException {
-        return AuthQueries.login(userid, pass);
+    public boolean inserisciValutazioneLibro(ValutazioniLibri v) throws RemoteException {
+        return true;
     }
 
     @Override
-    synchronized public RegisterResult registrazione(UtentiRegistrati user, String password) throws RemoteException {
-        return AuthQueries.register(user, password);
+    public boolean rimuoviValutazioneLibro(int valutazioneId) throws RemoteException {
+        return true;
+    }
+
+    //
+    // Suggerimenti
+    @Override
+    public boolean inserisciSuggerimentoLibro(String userId, int bookId, int consiglioId) throws RemoteException {
+        return true;
+    }
+
+    @Override
+    public boolean rimuoviSuggerimentoLibro(String userId, int bookId, int consiglioId) throws RemoteException {
+        return true;
     }
 }
