@@ -1,0 +1,43 @@
+package com.bookrecommender.client.controller;
+
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+
+public class LoginController {
+
+    @FXML private TextField UserID;
+    @FXML private PasswordField Password;
+    @FXML private Button BLogin;
+    @FXML private Button ButtonReturn;
+    public static Utente user = Utente.OSPITE;
+    @FXML
+    private void BtnClickLog(ActionEvent event) {
+        CheckLogin();   
+    }
+
+    @FXML
+    private void BtnReturn(ActionEvent event) {
+        App m = App.getInstance();
+        m.changeScene("Benvenuto.fxml");
+    }
+    
+    private void CheckLogin() {
+        String uid = UserID.getText();
+        String pwd = Password.getText();
+        App m = App.getInstance();
+
+        // Simulazione login (da sostituire con DB in futuro)
+        if("Sergio".equals(uid) && "123".equals(pwd)) {
+            System.out.println("Successo");
+            user = Utente.REGISTRATO;
+            m.changeScene("Benvenuto.fxml");
+        } else if (uid.isEmpty() || pwd.isEmpty()) {
+            System.out.println("Per favore inserire i dati");
+        } else {
+            System.out.println("Nome utente o password errati");
+        }
+    }
+}

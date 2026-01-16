@@ -2,7 +2,7 @@
   <configuration default="false" name="DB init" type="Application" factoryName="Application">
     <option name="ALTERNATIVE_JRE_PATH" value="25" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
-    <option name="MAIN_CLASS_NAME" value="com.lab_b.db_init.Main" />
+    <option name="MAIN_CLASS_NAME" value="com.bookrecommender.db_init.Main" />
     <module name="db_init" />
     <method v="2">
       <option name="Make" enabled="true" />
