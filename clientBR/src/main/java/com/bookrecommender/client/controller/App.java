@@ -1,5 +1,6 @@
 package com.bookrecommender.client.controller;
 
+import com.bookrecommender.common.AuthedBookRepositoryService;
 import com.bookrecommender.common.BookRepositoryService;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -19,6 +20,7 @@ public class App {
 
     private static App instance;
     public final BookRepositoryService bookRepository;
+    public AuthedBookRepositoryService authedBookRepository;
     private Stage stage;
 
     private App() {

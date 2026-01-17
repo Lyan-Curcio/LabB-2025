@@ -1,6 +1,7 @@
 package com.bookrecommender.server;
 
 import com.bookrecommender.common.BookRepositoryService;
+
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 

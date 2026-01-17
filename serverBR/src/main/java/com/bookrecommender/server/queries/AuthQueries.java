@@ -11,11 +11,11 @@ import java.util.LinkedList;
 
 public class AuthQueries {
 
-    synchronized public static RegisterResult register(UtentiRegistrati user, String password) {
+    public static RegisterResult register(UtentiRegistrati user, String password) {
         //
         // Controllo vincoli
         @Language("PostgreSQL")
-        String sql = """
+        String query = """
             SELECT
                 EXISTS(SELECT 1 FROM "UtentiRegistrati" WHERE userid = ?) AS uid_ex,
                 EXISTS(SELECT 1 FROM "UtentiRegistrati" WHERE codice_fiscale = ?) AS cf_ex,
@@ -23,7 +23,7 @@ public class AuthQueries {
         """;
 
         LinkedList<Boolean[]> result = DatabaseManager.getInstance().executeQuery(
-            sql,
+            query,
             rs -> {
                 try
                 {
@@ -50,30 +50,31 @@ public class AuthQueries {
 
         //
         // Inserimento
-        sql = """
+        query = """
             INSERT INTO "UtentiRegistrati" (userid, nome, cognome, codice_fiscale, email, password_hash)
                 VALUES (?, ?, ?, ?, ?, crypt(?, gen_salt('bf')))
         """;
-        DatabaseManager.getInstance().execute(
-            sql,
+        if (!DatabaseManager.getInstance().execute(
+            query,
             new Object[] {user.userId, user.nome, user.cognome, user.codiceFiscale, user.email, password}
-        );
+        )) return RegisterResult.UNEXPECTED_ERROR;
 
         return RegisterResult.OK;
     }
 
-    synchronized public static LoginResult login(String userid, String password) {
+    public static LoginResult login(String userid, String password) {
         //
         // Controllo password
         @Language("PostgreSQL")
         String query = """
             SELECT COALESCE(
-                (SELECT CASE
-                    WHEN password_hash = crypt(?, password_hash) THEN 2
-                    ELSE 1
-                 END
-                 FROM "UtentiRegistrati"
-                 WHERE userid = ?
+                (
+                    SELECT CASE
+                        WHEN password_hash = crypt(?, password_hash) THEN 2
+                        ELSE 1
+                    END
+                    FROM "UtentiRegistrati"
+                    WHERE userid = ?
                 ),
                 0
             ) AS n

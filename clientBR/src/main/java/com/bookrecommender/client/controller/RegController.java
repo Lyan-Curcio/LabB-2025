@@ -2,6 +2,8 @@ package com.bookrecommender.client.controller;
 
 import java.rmi.RemoteException;
 
+import com.bookrecommender.common.AuthedBookRepositoryService;
+import com.bookrecommender.common.Pair;
 import com.bookrecommender.common.dto.UtentiRegistrati;
 import com.bookrecommender.common.enums.auth.RegisterResult;
 import javafx.event.ActionEvent;
@@ -40,13 +42,14 @@ public class RegController {
         // Per ora stampiamo solo a video
         System.out.println("Tentativo registrazione:\n" + newUser.toStringDebug());
 
-        RegisterResult result = App.getInstance().bookRepository.registrazione(newUser, password);
+        Pair<RegisterResult, AuthedBookRepositoryService> result = App.getInstance().bookRepository.registrazione(newUser, password);
 
         // TODO rimuovere log
         System.out.println(result);
 
-        if (result == RegisterResult.OK)
+        if (result.first() == RegisterResult.OK)
         {
+            App.getInstance().authedBookRepository = result.second();
             // TODO pulisci errore e porta a schermata nuova
         }
         else

@@ -1,28 +1,24 @@
 package com.bookrecommender.server;
 
+import com.bookrecommender.common.AuthedBookRepositoryService;
 import com.bookrecommender.common.BookRepositoryService;
+import com.bookrecommender.common.Pair;
 import com.bookrecommender.common.dto.Libri;
-import com.bookrecommender.common.dto.ValutazioniLibri;
 import com.bookrecommender.common.dto.UtentiRegistrati;
 import com.bookrecommender.common.enums.auth.LoginResult;
 import com.bookrecommender.common.enums.auth.RegisterResult;
 import com.bookrecommender.server.queries.AuthQueries;
 import com.bookrecommender.server.queries.BookQueries;
 
-import java.rmi.server.UnicastRemoteObject;
 import java.rmi.RemoteException;
-import java.sql.*;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
 public class BookRepositoryImpl extends UnicastRemoteObject implements BookRepositoryService {
 
-    public BookRepositoryImpl() throws RemoteException {
+    protected BookRepositoryImpl() throws RemoteException {
         super();
     }
-
-    //
-    // Accesso libero
-    //
 
     //
     // Ricerca libri
@@ -41,73 +37,16 @@ public class BookRepositoryImpl extends UnicastRemoteObject implements BookRepos
         return BookQueries.searchByAuthorAndYear(autore, anno);
     }
 
-    @Override
-    public LoginResult login(String userid, String pass) throws RemoteException {
-        return AuthQueries.login(userid, pass);
-    }
-
     //
     // Autenticazione
     @Override
-    public RegisterResult registrazione(UtentiRegistrati user, String password) throws RemoteException {
-        return AuthQueries.register(user, password);
-    }
-
-
-    //
-    // Funzionalità Utenti Registrati
-    //
-
-    //
-    // Autenticazione
-    @Override
-    public void logout(String userid) throws RemoteException {
-
-    }
-
-    //
-    // Librerie
-    @Override
-    public boolean creaLibreria(String userId, String nomeLibreria) throws RemoteException {
-        return true;
+    public Pair<RegisterResult, AuthedBookRepositoryService> registrazione(UtentiRegistrati user, String password) throws RemoteException {
+        return new Pair<>(AuthQueries.register(user, password), new AuthedBookRepositoryImpl(user.userId) {
+        });
     }
 
     @Override
-    public boolean aggiungiLibroALibreria(String userId, int libreriaId, int bookId) throws RemoteException {
-        return true;
-    }
-
-    @Override
-    public boolean rimuoviLibroDaLibreria(String userId, int libreriaId, int libroId) throws RemoteException {
-        return true;
-    }
-
-    @Override
-    public boolean eliminaLibreria(String userId, String nomeLibreria) throws RemoteException {
-        return true;
-    }
-
-    //
-    // Valutazioni
-    @Override
-    public boolean inserisciValutazioneLibro(ValutazioniLibri v) throws RemoteException {
-        return true;
-    }
-
-    @Override
-    public boolean rimuoviValutazioneLibro(int valutazioneId) throws RemoteException {
-        return true;
-    }
-
-    //
-    // Suggerimenti
-    @Override
-    public boolean inserisciSuggerimentoLibro(String userId, int bookId, int consiglioId) throws RemoteException {
-        return true;
-    }
-
-    @Override
-    public boolean rimuoviSuggerimentoLibro(String userId, int bookId, int consiglioId) throws RemoteException {
-        return true;
+    public Pair<LoginResult, AuthedBookRepositoryService> login(String userid, String pass) throws RemoteException {
+        return new Pair<>(AuthQueries.login(userid, pass), new AuthedBookRepositoryImpl(userid));
     }
 }

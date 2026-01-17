@@ -74,7 +74,7 @@ public class DatabaseManager {
         return null;
     }
 
-    public void execute(
+    public boolean execute(
         @Untainted @Language("PostgreSQL")
         String query,
         Object[] args
@@ -91,7 +91,10 @@ public class DatabaseManager {
         }
         catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
+
+        return true;
     }
     
     // Metodi per chiudere connessione, gestire transazioni, ecc.
