@@ -17,8 +17,8 @@ public class Libri implements Serializable {
     public final String[] categorie;
 
     // Costruttori, Getters e Setters
-    public Libri(int id, String titolo, String[] autori, int anno, String editore, String[] categorie) {
-        this.id = id;
+    public Libri(String titolo, String[] autori, int anno, String editore, String[] categorie) {
+        this.id = -1;
         this.titolo = titolo;
         this.autori = autori;
         this.annoPubblicazione = anno;

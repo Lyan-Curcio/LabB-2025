@@ -1,14 +1,14 @@
 package com.bookrecommender.common;
 
-import com.bookrecommender.common.dto.Libri;
-import com.bookrecommender.common.dto.ValutazioniLibri;
-import com.bookrecommender.common.dto.UtentiRegistrati;
-import com.bookrecommender.common.enums.auth.LoginResult;
-import com.bookrecommender.common.enums.auth.RegisterResult;
+import com.bookrecommender.common.dto.Valutazione;
 import com.bookrecommender.common.enums.library.AddBookToLibResult;
 import com.bookrecommender.common.enums.library.CreateLibResult;
 import com.bookrecommender.common.enums.library.DeleteLibResult;
 import com.bookrecommender.common.enums.library.RemoveBookFromLibResult;
+import com.bookrecommender.common.enums.rating.CreateRatingResult;
+import com.bookrecommender.common.enums.rating.DeleteRatingResult;
+import com.bookrecommender.common.enums.suggestion.AddSuggestionResult;
+import com.bookrecommender.common.enums.suggestion.RemoveSuggestionResult;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -39,16 +39,16 @@ public interface AuthedBookRepositoryService extends Remote {
     //
     // Valutazioni
     /** Inserisce una valutazione */
-    boolean inserisciValutazioneLibro(ValutazioniLibri valutazione) throws RemoteException;
+    CreateRatingResult inserisciValutazioneLibro(Valutazione valutazione) throws RemoteException;
 
     /** Rimuove una valutazione */
-    boolean rimuoviValutazioneLibro(int valutazioneId) throws RemoteException;
+    DeleteRatingResult rimuoviValutazioneLibro(int valutazioneId) throws RemoteException;
 
     //
     // Suggerimenti
     /** Inserisce un consiglio */
-    boolean inserisciSuggerimentoLibro(int libroSorgenteId, int libroConsigliatiId) throws RemoteException;
+    AddSuggestionResult inserisciSuggerimentoLibro(int libroSorgenteId, int libroConsigliatoId) throws RemoteException;
 
     /** Rimuove un consiglio */
-    boolean rimuoviSuggerimentoLibro(int libroSorgenteId, int libroConsigliatiId) throws RemoteException;
+    RemoveSuggestionResult rimuoviSuggerimentoLibro(int libroSorgenteId, int libroConsigliatoId) throws RemoteException;
 }

@@ -1,12 +1,18 @@
 package com.bookrecommender.server;
 
 import com.bookrecommender.common.AuthedBookRepositoryService;
-import com.bookrecommender.common.dto.ValutazioniLibri;
+import com.bookrecommender.common.dto.Valutazione;
 import com.bookrecommender.common.enums.library.AddBookToLibResult;
 import com.bookrecommender.common.enums.library.CreateLibResult;
 import com.bookrecommender.common.enums.library.DeleteLibResult;
 import com.bookrecommender.common.enums.library.RemoveBookFromLibResult;
+import com.bookrecommender.common.enums.rating.CreateRatingResult;
+import com.bookrecommender.common.enums.rating.DeleteRatingResult;
+import com.bookrecommender.common.enums.suggestion.AddSuggestionResult;
+import com.bookrecommender.common.enums.suggestion.RemoveSuggestionResult;
 import com.bookrecommender.server.queries.LibraryQueries;
+import com.bookrecommender.server.queries.RatingQueries;
+import com.bookrecommender.server.queries.SuggestionQueries;
 
 import java.rmi.server.UnicastRemoteObject;
 import java.rmi.RemoteException;
@@ -53,24 +59,24 @@ public class AuthedBookRepositoryImpl extends UnicastRemoteObject implements Aut
     //
     // Valutazioni
     @Override
-    public boolean inserisciValutazioneLibro(ValutazioniLibri v) throws RemoteException {
-        return true;
+    public CreateRatingResult inserisciValutazioneLibro(Valutazione v) throws RemoteException {
+        return RatingQueries.createRating(loggedUserId, v);
     }
 
     @Override
-    public boolean rimuoviValutazioneLibro(int valutazioneId) throws RemoteException {
-        return true;
+    public DeleteRatingResult rimuoviValutazioneLibro(int valutazioneId) throws RemoteException {
+        return RatingQueries.deleteRating(loggedUserId, valutazioneId);
     }
 
     //
     // Suggerimenti
     @Override
-    public boolean inserisciSuggerimentoLibro(int bookId, int consiglioId) throws RemoteException {
-        return true;
+    public AddSuggestionResult inserisciSuggerimentoLibro(int libroSorgenteId, int libroConsigliatoId) throws RemoteException {
+        return SuggestionQueries.createRating(loggedUserId, libroSorgenteId, libroConsigliatoId);
     }
 
     @Override
-    public boolean rimuoviSuggerimentoLibro(int bookId, int consiglioId) throws RemoteException {
-        return true;
+    public RemoveSuggestionResult rimuoviSuggerimentoLibro(int libroSorgenteId, int libroConsigliatoId) throws RemoteException {
+        return SuggestionQueries.deleteRating(loggedUserId, libroSorgenteId, libroConsigliatoId);
     }
 }

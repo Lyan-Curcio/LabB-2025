@@ -1,6 +1,5 @@
 package com.bookrecommender.server.queries;
 
-import com.bookrecommender.common.dto.Libri;
 import com.bookrecommender.common.enums.library.AddBookToLibResult;
 import com.bookrecommender.common.enums.library.CreateLibResult;
 import com.bookrecommender.common.enums.library.DeleteLibResult;
@@ -8,7 +7,6 @@ import com.bookrecommender.common.enums.library.RemoveBookFromLibResult;
 import com.bookrecommender.server.DatabaseManager;
 import org.intellij.lang.annotations.Language;
 
-import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.LinkedList;
 
