@@ -41,12 +41,23 @@ public class BookRepositoryImpl extends UnicastRemoteObject implements BookRepos
     // Autenticazione
     @Override
     public Pair<RegisterResult, AuthedBookRepositoryService> registrazione(UtentiRegistrati user, String password) throws RemoteException {
-        return new Pair<>(AuthQueries.register(user, password), new AuthedBookRepositoryImpl(user.userId) {
-        });
+        RegisterResult result = AuthQueries.register(user, password);
+        return new Pair<>(
+            result,
+            result == RegisterResult.OK
+                ? new AuthedBookRepositoryImpl(user.userId)
+                : null
+        );
     }
 
     @Override
     public Pair<LoginResult, AuthedBookRepositoryService> login(String userid, String pass) throws RemoteException {
-        return new Pair<>(AuthQueries.login(userid, pass), new AuthedBookRepositoryImpl(userid));
+        LoginResult result = AuthQueries.login(userid, pass);
+        return new Pair<>(
+            result,
+            result == LoginResult.OK
+                ? new AuthedBookRepositoryImpl(userid)
+                : null
+        );
     }
 }
