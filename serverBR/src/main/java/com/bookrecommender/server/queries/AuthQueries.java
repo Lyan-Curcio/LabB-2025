@@ -67,17 +67,22 @@ public class AuthQueries {
         // Controllo password
         @Language("PostgreSQL")
         String query = """
-            SELECT COALESCE(
-                (
-                    SELECT CASE
-                        WHEN password_hash = crypt(?, password_hash) THEN 2
-                        ELSE 1
-                    END
-                    FROM "UtentiRegistrati"
+            SELECT CASE
+                -- 0: L'utente non esiste
+                WHEN NOT EXISTS(
+                    SELECT 1 FROM "UtentiRegistrati"
                     WHERE userid = ?
-                ),
-                0
-            ) AS n
+                ) THEN 0
+        
+                -- 1: Se la password non è corretta
+                WHEN NOT EXISTS(
+                    SELECT 1 FROM "UtentiRegistrati"
+                    WHERE userid = ? AND password_hash = crypt(?, password_hash)
+                ) THEN 1
+        
+                -- 2: Se l'utente esiste e la password è corretta
+                ELSE 2
+            END AS r
         """;
 
         LinkedList<Integer> result = DatabaseManager.getInstance().executeQuery(
@@ -89,11 +94,11 @@ public class AuthQueries {
                 }
                 catch (SQLException e)
                 {
-                    System.err.println("Impossibile recuperare la colonna 'n' dalla query di 'login()'!");
+                    System.err.println("Impossibile recuperare la colonna 'r' dalla query di 'login()'!");
                     return null;
                 }
             },
-            new Object[] {userid, password}
+            new Object[] {userid, userid, password}
         );
 
         if (result.size() != 1 || result.getFirst() == null) return LoginResult.UNEXPECTED_ERROR;
