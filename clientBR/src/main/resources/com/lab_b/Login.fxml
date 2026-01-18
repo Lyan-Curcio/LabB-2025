@@ -4,48 +4,53 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: #451B15; -fx-border-color: #7D3814; -fx-border-width: 3;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.bookrecommender.client.controller.LoginController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" style="-fx-border-color: #7D3814; -fx-border-width: 3;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.bookrecommender.client.controller.LoginController">
    <children>
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="301.0" layoutY="21.0" prefHeight="73.0" prefWidth="571.0" text="Login" textFill="YELLOW">
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="301.0" layoutY="21.0" prefHeight="73.0" prefWidth="571.0" text="Login">
          <font>
             <Font size="34.0" />
          </font>
       </Label>
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="386.0" layoutY="171.0" prefHeight="21.0" prefWidth="402.0" text="UserID" textFill="YELLOW" underline="true">
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="386.0" layoutY="171.0" prefHeight="21.0" prefWidth="402.0" text="UserID" underline="true">
          <font>
             <Font size="21.0" />
          </font>
       </Label>
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="405.0" layoutY="256.0" prefHeight="21.0" prefWidth="365.0" text="Password" textFill="YELLOW" underline="true">
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="405.0" layoutY="256.0" prefHeight="21.0" prefWidth="365.0" text="Password" underline="true">
          <font>
             <Font size="21.0" />
          </font>
       </Label>
-      <Button fx:id="BLogin" layoutX="504.0" layoutY="381.0" mnemonicParsing="false" onAction="#BtnClickLog" prefHeight="67.0" prefWidth="168.0" style="-fx-background-color: yellow; -fx-background-insets: 0; -fx-effect: dropshadow(gaussian, rgba(0,0,3,2.4), 6, 0.3, 3, 2);" text="Accedi">
+      <Button fx:id="BLogin" layoutX="504.0" layoutY="381.0" mnemonicParsing="false" onAction="#BtnClickLog" prefHeight="67.0" prefWidth="168.0" style="-fx-background-insets: 0; -fx-effect: dropshadow(gaussian, rgba(0,0,3,2.4), 6, 0.3, 3, 2);" text="Accedi">
          <font>
             <Font size="26.0" />
          </font></Button>
-      <TextField fx:id="UserID" layoutX="440.0" layoutY="211.0" prefHeight="31.0" prefWidth="296.0" style="-fx-background-color: yellow; -fx-border-color: black; -fx-border-width: 4; -fx-background-radius: 7; -fx-border-radius: 4; -fx-font-size: 14;" />
-      <PasswordField fx:id="Password" layoutX="439.0" layoutY="295.0" prefHeight="31.0" prefWidth="296.0" style="-fx-background-color: yellow; -fx-border-color: black; -fx-border-width: 4; -fx-background-radius: 7; -fx-border-radius: 4; -fx-font-size: 14;" />
-      <Pane prefHeight="600.0" prefWidth="296.0" style="-fx-background-color: #451B15; -fx-border-color: #7D3814; -fx-border-width: 3;">
-         <children>
-            <ImageView fitHeight="292.0" fitWidth="286.0" layoutX="5.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../../data/imgs/flat-design-library-logo-design_23-2149324478.jpg" />
-               </image>
-            </ImageView>
-         </children>
-      </Pane>
-      <Button fx:id="ButtonReturn" layoutX="296.0" mnemonicParsing="false" onAction="#BtnReturn" prefHeight="54.0" prefWidth="87.0" style="-fx-background-color: yellow; -fx-background-insets: 0; -fx-border-color: black; -fx-border-width: 2; -fx-effect: dropshadow(gaussian, rgba(0,0,0,4.4), 6, 0.3, 1, 2);" text="&lt;--">
+      <TextField fx:id="UserID" layoutX="440.0" layoutY="211.0" prefHeight="31.0" prefWidth="296.0" style="-fx-border-color: black; -fx-border-width: 4; -fx-background-radius: 7; -fx-border-radius: 4; -fx-font-size: 14;" />
+      <PasswordField fx:id="Password" layoutX="439.0" layoutY="295.0" prefHeight="31.0" prefWidth="296.0" style="-fx-border-color: black; -fx-border-width: 4; -fx-background-radius: 7; -fx-border-radius: 4; -fx-font-size: 14;" />
+      <Pane prefHeight="600.0" prefWidth="296.0" style="-fx-background-color: grey; -fx-border-color: black; -fx-border-width: 3;" />
+      <Button fx:id="ButtonReturn" layoutX="296.0" mnemonicParsing="false" onAction="#BtnReturn" prefHeight="54.0" prefWidth="87.0" style="-fx-background-insets: 0; -fx-border-color: black; -fx-border-width: 2; -fx-effect: dropshadow(gaussian, rgba(0,0,0,4.4), 6, 0.3, 1, 2);" text="&lt;--">
          <font>
             <Font size="21.0" />
          </font>
       </Button>
+      <Label fx:id="errorUserid" layoutX="301.0" layoutY="148.0" prefHeight="22.0" prefWidth="358.0" textFill="RED">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <Label fx:id="errorPassword" layoutX="296.0" layoutY="341.0" prefHeight="22.0" prefWidth="296.0" textFill="RED">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <Label fx:id="errorUnexpected" alignment="CENTER" layoutX="443.0" layoutY="489.0" prefHeight="22.0" prefWidth="289.0" textFill="RED">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

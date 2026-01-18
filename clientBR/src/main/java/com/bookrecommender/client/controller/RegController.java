@@ -8,34 +8,38 @@ import com.bookrecommender.common.dto.UtentiRegistrati;
 import com.bookrecommender.common.enums.auth.RegisterResult;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 public class RegController {
 
-    @FXML private TextField Tfnome;
-    @FXML private TextField Tfcognome;
-    @FXML private TextField TfUserid;
-    @FXML private TextField TfCodiceFiscale;
-    @FXML private TextField TfEmail;
-    @FXML private TextField TfCreaPassword;
-    @FXML private TextField TfConfermaPassword;
+    @FXML private TextField tfnome;
+    @FXML private TextField tfcognome;
+    @FXML private TextField tfUserid;
+    @FXML private TextField tfCodiceFiscale;
+    @FXML private TextField tfEmail;
+    @FXML private TextField tfCreaPassword;
+    @FXML private TextField tfConfermaPassword;
+    @FXML private Label errorCF, errorEmail, errorPassword, errorUserId, errorUnexpected;
 
     @FXML
-    void BtnClick(ActionEvent event) throws RemoteException {
-        String password = TfCreaPassword.getText();
-        String cPassword = TfConfermaPassword.getText();
+    void btnClick(ActionEvent event) throws RemoteException {
+        String password = tfCreaPassword.getText();
+        String cPassword = tfConfermaPassword.getText();
 
-        if(!password.equals(cPassword)) {
-            System.out.println("Le password non coincidono");
-            return;
+        resetErrorLabels();
+
+        if(!password.equals(cPassword))
+        {
+            errorPassword.setText("le password non coincidono");
         }
 
         UtentiRegistrati newUser = new UtentiRegistrati(
-            TfUserid.getText(),
-            Tfnome.getText(),
-            Tfcognome.getText(),
-            TfCodiceFiscale.getText(),
-            TfEmail.getText()
+            tfUserid.getText(),
+            tfnome.getText(),
+            tfcognome.getText(),
+            tfCodiceFiscale.getText(),
+            tfEmail.getText()
         );
 
         // Qui andrà il codice per salvare nel DB PostgreSQL
@@ -50,17 +54,40 @@ public class RegController {
         if (result.first() == RegisterResult.OK)
         {
             App.getInstance().authedBookRepository = result.second();
-            // TODO pulisci errore e porta a schermata nuova
+            LoginController.user = Utente.REGISTRATO;
+            App.getInstance().changeScene("Benvenuto.fxml");
         }
-        else
+        else if(result.first() == RegisterResult.DUPLICATE_EMAIL)
         {
-            // TODO Segnala errore
+            this.errorEmail.setText(result.first().getMessage());
+        }
+        else if (result.first() == RegisterResult.DUPLICATE_CF)
+        {
+            this.errorCF.setText(result.first().getMessage());
+        }
+        else if (result.first() == RegisterResult.DUPLICATE_USERID)
+        {
+            this.errorUserId.setText(result.first().getMessage());
+        } else
+        {
+            this.errorUnexpected.setText(result.first().getMessage());
         }
     }
 
     @FXML
-    void BtnReturn(ActionEvent event) {
+    void btnReturn(ActionEvent event)
+    {
         App m = App.getInstance();
         m.changeScene("Benvenuto.fxml");
+    }
+
+    //
+    private void resetErrorLabels()
+    {
+        this.errorCF.setText("");
+        this.errorEmail.setText("");
+        this.errorPassword.setText("");
+        this.errorUserId.setText("");
+        this.errorUnexpected.setText("");
     }
 }

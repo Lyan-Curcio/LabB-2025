@@ -13,12 +13,24 @@
    <children>
       <Pane prefHeight="600.0" prefWidth="200.0" style="-fx-background-color: grey;">
          <children>
-            <VBox prefHeight="161.0" prefWidth="200.0" style="-fx-border-color: black; -fx-border-width: 4;">
+            <VBox prefHeight="207.0" prefWidth="200.0" style="-fx-border-color: black; -fx-border-width: 4;">
                <children>
-                  <Button fx:id="btnLeTueLib" mnemonicParsing="false" onAction="#btnClickTueLib" prefHeight="40.0" prefWidth="208.0" text="Le tue librerie" />
-                  <Button fx:id="btnRicercaLibreria" mnemonicParsing="false" onAction="#btnClickRicercaLibreria" prefHeight="40.0" prefWidth="208.0" text="Ricerca libreria" />
-                  <Button fx:id="btnRicercaLib" mnemonicParsing="false" onAction="#btnClickRicercaLib" prefHeight="40.0" prefWidth="208.0" text="Ricerca libri" />
-                  <Button fx:id="btnLogout" mnemonicParsing="false" onAction="#btnClickLogout" prefHeight="40.0" prefWidth="208.0" text="Logout" />
+                  <Button fx:id="btnLeTueLib" mnemonicParsing="false" onAction="#btnClickTueLib" prefHeight="49.0" prefWidth="200.0" text="Le tue librerie">
+                     <font>
+                        <Font size="15.0" />
+                     </font></Button>
+                  <Button fx:id="btnRicercaLibreria" mnemonicParsing="false" onAction="#btnClickRicercaLibreria" prefHeight="49.0" prefWidth="200.0" text="Ricerca libreria">
+                     <font>
+                        <Font size="15.0" />
+                     </font></Button>
+                  <Button fx:id="btnRicercaLib" mnemonicParsing="false" onAction="#btnClickRicercaLib" prefHeight="49.0" prefWidth="208.0" text="Ricerca libri">
+                     <font>
+                        <Font size="15.0" />
+                     </font></Button>
+                  <Button fx:id="btnLogout" mnemonicParsing="false" onAction="#btnClickLogout" prefHeight="49.0" prefWidth="200.0" text="Logout">
+                     <font>
+                        <Font size="15.0" />
+                     </font></Button>
                </children>
             </VBox>
          </children>

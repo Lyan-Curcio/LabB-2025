@@ -1,43 +1,72 @@
 package com.bookrecommender.client.controller;
 
+import com.bookrecommender.common.AuthedBookRepositoryService;
+import com.bookrecommender.common.Pair;
+import com.bookrecommender.common.enums.auth.LoginResult;
+import com.bookrecommender.common.enums.auth.RegisterResult;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+
+import java.rmi.RemoteException;
 
 public class LoginController {
 
     @FXML private TextField UserID;
     @FXML private PasswordField Password;
-    @FXML private Button BLogin;
-    @FXML private Button ButtonReturn;
+    @FXML private Label errorUserid, errorPassword, errorUnexpected;
+
     public static Utente user = Utente.OSPITE;
     @FXML
-    private void BtnClickLog(ActionEvent event) {
+    private void BtnClickLog(ActionEvent event) throws RemoteException
+    {
         CheckLogin();   
     }
 
     @FXML
-    private void BtnReturn(ActionEvent event) {
+    private void BtnReturn(ActionEvent event)
+    {
         App m = App.getInstance();
         m.changeScene("Benvenuto.fxml");
     }
     
-    private void CheckLogin() {
+    private void CheckLogin() throws RemoteException
+    {
         String uid = UserID.getText();
         String pwd = Password.getText();
-        App m = App.getInstance();
 
+        resetErrorLabels();
+
+        Pair <LoginResult, AuthedBookRepositoryService> result = App.getInstance().bookRepository.login(uid, pwd);
+
+        System.out.println(result);
         // Simulazione login (da sostituire con DB in futuro)
-        if("Sergio".equals(uid) && "123".equals(pwd)) {
-            System.out.println("Successo");
+        if(result.first() == LoginResult.OK)
+        {
+            App.getInstance().authedBookRepository = result.second();
             user = Utente.REGISTRATO;
-            m.changeScene("Benvenuto.fxml");
-        } else if (uid.isEmpty() || pwd.isEmpty()) {
-            System.out.println("Per favore inserire i dati");
-        } else {
-            System.out.println("Nome utente o password errati");
+            App.getInstance().changeScene("Benvenuto.fxml");
         }
+        else if(result.first() == LoginResult.USER_ID_NOT_FOUND)
+        {
+            errorUserid.setText(result.first().getMessage());
+        }
+        else if(result.first() == LoginResult.INCORRECT_PASSWORD)
+        {
+            errorPassword.setText(result.first().getMessage());
+        }
+        else
+        {
+            errorUnexpected.setText(result.first().getMessage());
+        }
+    }
+    private void resetErrorLabels()
+    {
+        this.errorUserid.setText("");
+        this.errorPassword.setText("");
+        this.errorUnexpected.setText("");
     }
 }

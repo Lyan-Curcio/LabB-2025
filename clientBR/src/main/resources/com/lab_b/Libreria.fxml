@@ -13,26 +13,26 @@
    <children>
       <Pane prefHeight="600.0" prefWidth="200.0" style="-fx-background-color: grey;">
          <children>
-            <VBox prefHeight="247.0" prefWidth="200.0" style="-fx-border-color: black; -fx-border-width: 4;">
+            <VBox prefHeight="258.0" prefWidth="200.0" style="-fx-border-color: black; -fx-border-width: 4;">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="47.0" prefWidth="213.0" text="Crea una libreria">
+                  <Button mnemonicParsing="false" prefHeight="49.0" prefWidth="200.0" text="Crea una libreria">
                      <font>
                         <Font size="15.0" />
                      </font></Button>
-                  <Button mnemonicParsing="false" prefHeight="47.0" prefWidth="213.0" text="Le tue librerie">
+                  <Button mnemonicParsing="false" prefHeight="49.0" prefWidth="200.0" text="Le tue librerie">
                      <font>
                         <Font size="15.0" />
                      </font></Button>
-                  <Button mnemonicParsing="false" prefHeight="47.0" prefWidth="213.0" text="Ricerca librerie">
+                  <Button mnemonicParsing="false" prefHeight="49.0" prefWidth="200.0" text="Ricerca librerie">
                      <font>
                         <Font size="15.0" />
                      </font></Button>
-                  <Button mnemonicParsing="false" prefHeight="47.0" prefWidth="213.0" text="Ricerca libri">
+                  <Button mnemonicParsing="false" prefHeight="49.0" prefWidth="200.0" text="Ricerca libri">
                      <font>
                         <Font size="15.0" />
                      </font>
                   </Button>
-                  <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="192.0" text="Logout">
+                  <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" text="Logout">
                      <font>
                         <Font size="15.0" />
                      </font>
@@ -52,11 +52,21 @@
             <Font size="18.0" />
          </font>
       </Label>
-      <Label alignment="CENTER" layoutX="241.0" layoutY="22.0" prefHeight="60.0" prefWidth="605.0" text="Label">
+      <Label alignment="CENTER" layoutX="241.0" layoutY="22.0" prefHeight="60.0" prefWidth="605.0" text="Libreria Selezionata">
          <font>
             <Font size="29.0" />
          </font>
       </Label>
+      <Button layoutX="241.0" layoutY="439.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="98.0" text="consiglia">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Button>
+      <Button layoutX="422.0" layoutY="439.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="98.0" text="valuta">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Button>
    </children>
    <cursor>
       <Cursor fx:constant="SE_RESIZE" />

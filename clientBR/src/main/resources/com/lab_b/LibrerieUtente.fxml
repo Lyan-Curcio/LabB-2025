@@ -46,5 +46,10 @@
             <Font size="41.0" />
          </font>
       </Label>
+      <Label alignment="CENTER" layoutX="327.0" layoutY="190.0" prefHeight="302.0" prefWidth="423.0" text="non hai librerie">
+         <font>
+            <Font size="27.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

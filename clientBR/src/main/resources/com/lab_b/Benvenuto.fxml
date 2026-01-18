@@ -16,7 +16,7 @@
    <children>
       <Pane prefHeight="600.0" prefWidth="200.0" style="-fx-background-color: grey;">
          <children>
-            <VBox fx:id="buttonList" prefHeight="389.0" prefWidth="200.0" style="-fx-background-color: grey;">
+            <VBox fx:id="buttonList" prefHeight="302.0" prefWidth="200.0" style="-fx-border-color: black; -fx-border-width: 4;">
                <children>
                   <Button fx:id="btnReg" mnemonicParsing="false" onAction="#registrati" prefHeight="49.0" prefWidth="200.0" text="Registrati">
                      <font>
