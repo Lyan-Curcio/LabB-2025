@@ -90,7 +90,7 @@ public class AuthQueries {
             rs -> {
                 try
                 {
-                    return rs.getInt("n");
+                    return rs.getInt("r");
                 }
                 catch (SQLException e)
                 {
