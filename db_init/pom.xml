@@ -56,7 +56,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>com.bookrecommender.server.ServerMain</mainClass>
+                            <mainClass>com.bookrecommender.db_init.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
