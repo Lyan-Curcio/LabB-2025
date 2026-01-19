@@ -5,35 +5,99 @@ import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Classe DTO (Data Transfer Object) che rappresenta una valutazione rilasciata da un utente per un libro.
+ * <p>
+ * Contiene sia i punteggi numerici (da 1 a 5) per diverse categorie (stile, contenuto, ecc.),
+ * sia le note testuali opzionali associate.
+ * La classe è immutabile e implementa <code>Serializable</code> per il trasferimento dati via rete.
+ * </p>
+ *
+ * @author Lorenzo Monachino 757393 VA
+ * @author Lyan Curcio 757579 VA
+ * @author Sergio Saldarriaga 757394 VA
+ * @author Nash Guizzardi 756941 VA
+ */
 public class Valutazione implements Serializable {
+
+    /** Versione della classe per la serializzazione. */
     @Serial
     private static final long serialVersionUID = 1L;
 
+    /** Identificativo univoco della valutazione nel database. */
     public final int id;
+
+    /** Identificativo del libro a cui si riferisce la valutazione. */
     public final int libroId;
+
+    /** Identificativo dell'utente che ha rilasciato la valutazione. */
     public final String userId;
 
     // Punteggi 1-5
+
+    /** Punteggio assegnato allo stile di scrittura (range 1-5). */
     public final int stile;
+
+    /** Punteggio assegnato al contenuto del libro (range 1-5). */
     public final int contenuto;
+
+    /** Punteggio assegnato alla gradevolezza generale (range 1-5). */
     public final int gradevolezza;
+
+    /** Punteggio assegnato all'originalità dell'opera (range 1-5). */
     public final int originalita;
+
+    /** Punteggio assegnato alla qualità dell'edizione (range 1-5). */
     public final int edizione;
-    public final int finale; // (calcolato con la media)
-    
+
+    /** Punteggio finale calcolato come media arrotondata dei 5 criteri precedenti. */
+    public final int finale;
+
     // Note testuali (max 256 char)
+
+    /** Nota testuale relativa allo stile (max 256 caratteri). */
     public final String noteStile;
+
+    /** Nota testuale relativa al contenuto (max 256 caratteri). */
     public final String noteContenuto;
+
+    /** Nota testuale relativa alla gradevolezza (max 256 caratteri). */
     public final String noteGradevolezza;
+
+    /** Nota testuale relativa all'originalità (max 256 caratteri). */
     public final String noteOriginalita;
+
+    /** Nota testuale relativa all'edizione (max 256 caratteri). */
     public final String noteEdizione;
+
+    /** Nota testuale o commento finale complessivo (max 256 caratteri). */
     public final String noteFinale;
 
-    // Costruttori, Getters e Setters
+    /**
+     * Costruisce una nuova <code>Valutazione</code> con i punteggi e le note specificati.
+     * <p>
+     * Il punteggio <code>finale</code> viene calcolato automaticamente come media arrotondata
+     * dei 5 parametri numerici passati.
+     * </p>
+     *
+     * @param libroId          l'ID del libro valutato
+     * @param userId           l'ID dell'utente valutatore
+     * @param stile            punteggio stile (1-5)
+     * @param contenuto        punteggio contenuto (1-5)
+     * @param gradevolezza     punteggio gradevolezza (1-5)
+     * @param originalita      punteggio originalità (1-5)
+     * @param edizione         punteggio edizione (1-5)
+     * @param noteStile        commento sullo stile
+     * @param noteContenuto    commento sul contenuto
+     * @param noteGradevolezza commento sulla gradevolezza
+     * @param noteOriginalita  commento sull'originalità
+     * @param noteEdizione     commento sull'edizione
+     * @param noteFinale       commento finale
+     */
     public Valutazione(
-        int libroId, String userId,
-        int stile, int contenuto, int gradevolezza, int originalita, int edizione,
-        String noteStile, String noteContenuto, String noteGradevolezza, String noteOriginalita, String noteEdizione, String noteFinale
+            int libroId, String userId,
+            int stile, int contenuto, int gradevolezza, int originalita, int edizione,
+            String noteStile, String noteContenuto, String noteGradevolezza, String noteOriginalita, String noteEdizione, String noteFinale
     )
     {
         this.id = -1;
@@ -55,12 +119,21 @@ public class Valutazione implements Serializable {
         this.noteFinale = noteFinale;
     }
 
+    /**
+     * Costruisce un oggetto <code>Valutazione</code> estraendo i dati da un <code>ResultSet</code> SQL.
+     * <p>
+     * Questo costruttore recupera i punteggi e le note dalle colonne del database e ricalcola
+     * il voto finale basandosi sui dati estratti.
+     * In caso di <code>SQLException</code>, viene generato un oggetto vuoto/di default e l'errore stampato su System.err.
+     * </p>
+     *
+     * @param rs il <code>ResultSet</code> posizionato sulla riga della valutazione da leggere
+     */
     public Valutazione(ResultSet rs) {
         int _id, _libroId;
         String _userId;
         int _stile, _contenuto, _gradevolezza, _originalita, _edizione, _finale;
         String _noteStile, _noteContenuto, _noteGradevolezza, _noteOriginalita, _noteEdizione, _noteFinale;
-
         try {
             _id = rs.getInt("id");
             _libroId = rs.getInt("libro_id");
@@ -120,23 +193,36 @@ public class Valutazione implements Serializable {
         this.noteFinale = _noteFinale;
     }
 
+    /**
+     * Restituisce una rappresentazione dettagliata della valutazione per scopi di debug.
+     *
+     * @return una stringa multilinea contenente tutti i voti parziali e le relative note
+     */
     public String toStringDebug() {
         return id + ": Da '" + userId + "' per '" + libroId + "'" +
-            "\n\tStile " + stile + " " + noteStile +
-            "\n\tContenuto " + contenuto + " " + noteContenuto +
-            "\n\tGradevolezza " + gradevolezza + " " + noteGradevolezza +
-            "\n\tOriginalità " + originalita + " " + noteOriginalita +
-            "\n\tEdizione " + edizione + " " + noteEdizione +
-            "\n\tFinale " + finale + " " + noteFinale;
+                "\n\tStile " + stile + " " + noteStile +
+                "\n\tContenuto " + contenuto +
+                " " + noteContenuto +
+                "\n\tGradevolezza " + gradevolezza + " " + noteGradevolezza +
+                "\n\tOriginalità " + originalita + " " + noteOriginalita +
+                "\n\tEdizione " + edizione + " " + noteEdizione +
+                "\n\tFinale " + finale +
+                " " + noteFinale;
     }
 
+    /**
+     * Restituisce una stringa sintetica della valutazione per la visualizzazione all'utente.
+     *
+     * @return una stringa formattata con l'autore della recensione e i dettagli dei voti
+     */
     public String toStringInfo() {
         return "Da " + userId +
-            "\nStile " + stile + " " + noteStile +
-            "\nContenuto " + contenuto + " " + noteContenuto +
-            "\nGradevolezza " + gradevolezza + " " + noteGradevolezza +
-            "\nOriginalità " + originalita + " " + noteOriginalita +
-            "\nEdizione " + edizione + " " + noteEdizione +
-            "\nFinale " + finale + " " + noteFinale;
+                "\nStile " + stile + " " + noteStile +
+                "\nContenuto " + contenuto + " " + noteContenuto +
+
+                "\nGradevolezza " + gradevolezza + " " + noteGradevolezza +
+                "\nOriginalità " + originalita + " " + noteOriginalita +
+                "\nEdizione " + edizione + " " + noteEdizione +
+                "\nFinale " + finale + " " + noteFinale;
     }
 }

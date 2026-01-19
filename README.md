@@ -6,8 +6,8 @@
 5. migliorare interfaccia grafica e renderla unificata
 
 
-
-
+### Generazione javadoc
+Comando: `mvn clean install javadoc:aggregate`
 
 
 

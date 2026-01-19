@@ -17,10 +17,30 @@ import com.bookrecommender.server.queries.SuggestionQueries;
 import java.rmi.server.UnicastRemoteObject;
 import java.rmi.RemoteException;
 
+/**
+ * Implementazione del servizio RMI riservato agli utenti autenticati.
+ * <p>
+ * Implementa il pattern Session: viene creata una nuova istanza per ogni utente loggato,
+ * mantenendo lo stato della sessione (userId) per garantire che ogni operazione sia
+ * eseguita con i permessi corretti.
+ * </p>
+ *
+ * @author Lorenzo Monachino 757393 VA
+ * @author Lyan Curcio 757579 VA
+ * @author Sergio Saldarriaga 757394 VA
+ * @author Nash Guizzardi 756941 VA
+ */
 public class AuthedBookRepositoryImpl extends UnicastRemoteObject implements AuthedBookRepositoryService {
 
+    /** L'identificativo univoco dell'utente associato a questa sessione. */
     final String loggedUserId;
 
+    /**
+     * Costruisce una nuova sessione per l'utente specificato.
+     *
+     * @param loggedUserId l'ID dell'utente autenticato
+     * @throws RemoteException in caso di errore RMI
+     */
     public AuthedBookRepositoryImpl(String loggedUserId) throws RemoteException {
         super();
         this.loggedUserId = loggedUserId;
@@ -28,6 +48,9 @@ public class AuthedBookRepositoryImpl extends UnicastRemoteObject implements Aut
 
     //
     // Autenticazione
+    //
+
+    /** {@inheritDoc} */
     @Override
     public void logout() throws RemoteException {
         // Fa in modo che l'oggetto remoto non sia più usabile dal client
@@ -36,21 +59,27 @@ public class AuthedBookRepositoryImpl extends UnicastRemoteObject implements Aut
 
     //
     // Librerie
+    //
+
+    /** {@inheritDoc} */
     @Override
     public CreateLibResult creaLibreria(String nomeLibreria) throws RemoteException {
         return LibraryQueries.createLibrary(loggedUserId, nomeLibreria);
     }
 
+    /** {@inheritDoc} */
     @Override
     public DeleteLibResult eliminaLibreria(int libreriaId) throws RemoteException {
         return LibraryQueries.deleteLibrary(loggedUserId, libreriaId);
     }
 
+    /** {@inheritDoc} */
     @Override
     public AddBookToLibResult aggiungiLibroALibreria(int libreriaId, int libroId) throws RemoteException {
         return LibraryQueries.addBookToLibrary(loggedUserId, libreriaId, libroId);
     }
 
+    /** {@inheritDoc} */
     @Override
     public RemoveBookFromLibResult rimuoviLibroDaLibreria(int libreriaId, int libroId) throws RemoteException {
         return LibraryQueries.removeBookFromLibrary(loggedUserId, libreriaId, libroId);
@@ -58,11 +87,15 @@ public class AuthedBookRepositoryImpl extends UnicastRemoteObject implements Aut
 
     //
     // Valutazioni
+    //
+
+    /** {@inheritDoc} */
     @Override
     public CreateRatingResult inserisciValutazioneLibro(Valutazione v) throws RemoteException {
         return RatingQueries.createRating(loggedUserId, v);
     }
 
+    /** {@inheritDoc} */
     @Override
     public DeleteRatingResult rimuoviValutazioneLibro(int valutazioneId) throws RemoteException {
         return RatingQueries.deleteRating(loggedUserId, valutazioneId);
@@ -70,11 +103,15 @@ public class AuthedBookRepositoryImpl extends UnicastRemoteObject implements Aut
 
     //
     // Suggerimenti
+    //
+
+    /** {@inheritDoc} */
     @Override
     public AddSuggestionResult inserisciSuggerimentoLibro(int libroSorgenteId, int libroConsigliatoId) throws RemoteException {
         return SuggestionQueries.createRating(loggedUserId, libroSorgenteId, libroConsigliatoId);
     }
 
+    /** {@inheritDoc} */
     @Override
     public RemoveSuggestionResult rimuoviSuggerimentoLibro(int libroSorgenteId, int libroConsigliatoId) throws RemoteException {
         return SuggestionQueries.deleteRating(loggedUserId, libroSorgenteId, libroConsigliatoId);

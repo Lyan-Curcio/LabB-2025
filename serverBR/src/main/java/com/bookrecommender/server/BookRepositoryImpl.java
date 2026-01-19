@@ -14,24 +14,47 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
+/**
+ * Implementazione del servizio RMI principale per l'accesso non autenticato.
+ * <p>
+ * Questa classe estende <code>UnicastRemoteObject</code> per permettere l'invocazione remota.
+ * Funge da punto di ingresso, gestendo le ricerche di libri e le operazioni di autenticazione.
+ * In caso di login/registrazione con successo, agisce come Factory restituendo un riferimento
+ * a un oggetto <code>AuthedBookRepositoryImpl</code> specifico per la sessione.
+ * </p>
+ *
+ * @author Lorenzo Monachino 757393 VA
+ * @author Lyan Curcio 757579 VA
+ * @author Sergio Saldarriaga 757394 VA
+ * @author Nash Guizzardi 756941 VA
+ */
 public class BookRepositoryImpl extends UnicastRemoteObject implements BookRepositoryService {
 
+    /**
+     * Costruttore protetto che esporta l'oggetto per la ricezione di chiamate RMI.
+     * @throws RemoteException in caso di errore di esportazione
+     */
     protected BookRepositoryImpl() throws RemoteException {
         super();
     }
 
     //
     // Ricerca libri
+    //
+
+    /** {@inheritDoc} */
     @Override
     public List<Libri> cercaLibroPerTitolo(String titolo) throws RemoteException {
         return BookQueries.searchByTitle(titolo);
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<Libri> cercaLibroPerAutore(String autore) throws RemoteException {
         return BookQueries.searchByAuthor(autore);
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<Libri> cercaLibroPerAutoreEAnno(String autore, int anno) throws RemoteException {
         return BookQueries.searchByAuthorAndYear(autore, anno);
@@ -39,25 +62,29 @@ public class BookRepositoryImpl extends UnicastRemoteObject implements BookRepos
 
     //
     // Autenticazione
+    //
+
+    /** {@inheritDoc} */
     @Override
     public Pair<RegisterResult, AuthedBookRepositoryService> registrazione(UtentiRegistrati user, String password) throws RemoteException {
         RegisterResult result = AuthQueries.register(user, password);
         return new Pair<>(
-            result,
-            result == RegisterResult.OK
-                ? new AuthedBookRepositoryImpl(user.userId)
-                : null
+                result,
+                result == RegisterResult.OK
+                        ? new AuthedBookRepositoryImpl(user.userId)
+                        : null
         );
     }
 
+    /** {@inheritDoc} */
     @Override
     public Pair<LoginResult, AuthedBookRepositoryService> login(String userid, String pass) throws RemoteException {
         LoginResult result = AuthQueries.login(userid, pass);
         return new Pair<>(
-            result,
-            result == LoginResult.OK
-                ? new AuthedBookRepositoryImpl(userid)
-                : null
+                result,
+                result == LoginResult.OK
+                        ? new AuthedBookRepositoryImpl(userid)
+                        : null
         );
     }
 }
