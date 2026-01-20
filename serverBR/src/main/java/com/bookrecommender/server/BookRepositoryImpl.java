@@ -2,9 +2,9 @@ package com.bookrecommender.server;
 
 import com.bookrecommender.common.AuthedBookRepositoryService;
 import com.bookrecommender.common.BookRepositoryService;
-import com.bookrecommender.common.Pair;
-import com.bookrecommender.common.dto.Libri;
-import com.bookrecommender.common.dto.UtentiRegistrati;
+import com.bookrecommender.common.BRPair;
+import com.bookrecommender.common.dto.Book;
+import com.bookrecommender.common.dto.User;
 import com.bookrecommender.common.enums.auth.LoginResult;
 import com.bookrecommender.common.enums.auth.RegisterResult;
 import com.bookrecommender.server.queries.AuthQueries;
@@ -44,19 +44,19 @@ public class BookRepositoryImpl extends UnicastRemoteObject implements BookRepos
 
     /** {@inheritDoc} */
     @Override
-    public List<Libri> cercaLibroPerTitolo(String titolo) throws RemoteException {
+    public List<Book> cercaLibroPerTitolo(String titolo) throws RemoteException {
         return BookQueries.searchByTitle(titolo);
     }
 
     /** {@inheritDoc} */
     @Override
-    public List<Libri> cercaLibroPerAutore(String autore) throws RemoteException {
+    public List<Book> cercaLibroPerAutore(String autore) throws RemoteException {
         return BookQueries.searchByAuthor(autore);
     }
 
     /** {@inheritDoc} */
     @Override
-    public List<Libri> cercaLibroPerAutoreEAnno(String autore, int anno) throws RemoteException {
+    public List<Book> cercaLibroPerAutoreEAnno(String autore, int anno) throws RemoteException {
         return BookQueries.searchByAuthorAndYear(autore, anno);
     }
 
@@ -66,9 +66,9 @@ public class BookRepositoryImpl extends UnicastRemoteObject implements BookRepos
 
     /** {@inheritDoc} */
     @Override
-    public Pair<RegisterResult, AuthedBookRepositoryService> registrazione(UtentiRegistrati user, String password) throws RemoteException {
+    public BRPair<RegisterResult, AuthedBookRepositoryService> registrazione(User user, String password) throws RemoteException {
         RegisterResult result = AuthQueries.register(user, password);
-        return new Pair<>(
+        return new BRPair<>(
                 result,
                 result == RegisterResult.OK
                         ? new AuthedBookRepositoryImpl(user.userId)
@@ -78,9 +78,9 @@ public class BookRepositoryImpl extends UnicastRemoteObject implements BookRepos
 
     /** {@inheritDoc} */
     @Override
-    public Pair<LoginResult, AuthedBookRepositoryService> login(String userid, String pass) throws RemoteException {
+    public BRPair<LoginResult, AuthedBookRepositoryService> login(String userid, String pass) throws RemoteException {
         LoginResult result = AuthQueries.login(userid, pass);
-        return new Pair<>(
+        return new BRPair<>(
                 result,
                 result == LoginResult.OK
                         ? new AuthedBookRepositoryImpl(userid)

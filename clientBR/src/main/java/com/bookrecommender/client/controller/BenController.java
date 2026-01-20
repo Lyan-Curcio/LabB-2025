@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.bookrecommender.common.dto.Libri;
+import com.bookrecommender.common.dto.Book;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -72,7 +72,7 @@ public class BenController {
     @FXML
     void btnClickResearch(ActionEvent event)
     {
-        List<Libri> libri = null;
+        List<Book> libri = null;
 
         try
         {
@@ -128,7 +128,7 @@ public class BenController {
         listaLibri.setItems(
             FXCollections.observableArrayList(
                 libri.stream()
-                    .map(Libri::toStringInfo)
+                    .map(Book::toStringInfo)
                     .collect(Collectors.toList())
             )
         );

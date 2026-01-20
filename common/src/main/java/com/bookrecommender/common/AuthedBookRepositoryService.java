@@ -1,6 +1,6 @@
 package com.bookrecommender.common;
 
-import com.bookrecommender.common.dto.Valutazione;
+import com.bookrecommender.common.dto.Rating;
 import com.bookrecommender.common.enums.library.AddBookToLibResult;
 import com.bookrecommender.common.enums.library.CreateLibResult;
 import com.bookrecommender.common.enums.library.DeleteLibResult;
@@ -37,20 +37,19 @@ public interface AuthedBookRepositoryService extends Remote {
     // Gestione Librerie
 
     /**
-     * Crea una nuova libreria personale associata all'utente autenticato.
+     * Crea una nuova libreria associata all'utente.
      *
      * @param nomeLibreria il nome da assegnare alla nuova libreria
-     * @return un valore dell'enum <code>CreateLibResult</code> che indica l'esito dell'operazione
-     * (es. successo, nome duplicato, errore generico)
+     * @return un valore dell'enum {@link CreateLibResult} che indica l'esito dell'operazione
      * @throws RemoteException se si verifica un errore di comunicazione RMI
      */
     CreateLibResult creaLibreria(String nomeLibreria) throws RemoteException;
 
     /**
-     * Elimina definitivamente una libreria dell'utente.
+     * Elimina una libreria dell'utente.
      *
      * @param libreriaId l'identificativo univoco della libreria da eliminare
-     * @return un valore dell'enum <code>DeleteLibResult</code> che indica l'esito dell'operazione
+     * @return un valore dell'enum {@link DeleteLibResult} che indica l'esito dell'operazione
      * @throws RemoteException se si verifica un errore di comunicazione RMI
      */
     DeleteLibResult eliminaLibreria(int libreriaId) throws RemoteException;
@@ -60,7 +59,7 @@ public interface AuthedBookRepositoryService extends Remote {
      *
      * @param libreriaId l'identificativo della libreria di destinazione
      * @param libroId    l'identificativo del libro da aggiungere
-     * @return un valore dell'enum <code>AddBookToLibResult</code> che indica l'esito dell'operazione
+     * @return un valore dell'enum {@link AddBookToLibResult} che indica l'esito dell'operazione
      * @throws RemoteException se si verifica un errore di comunicazione RMI
      */
     AddBookToLibResult aggiungiLibroALibreria(int libreriaId, int libroId) throws RemoteException;
@@ -70,7 +69,7 @@ public interface AuthedBookRepositoryService extends Remote {
      *
      * @param libreriaId l'identificativo della libreria da cui rimuovere il libro
      * @param libroId    l'identificativo del libro da rimuovere
-     * @return un valore dell'enum <code>RemoveBookFromLibResult</code> che indica l'esito dell'operazione
+     * @return un valore dell'enum {@link RemoveBookFromLibResult} che indica l'esito dell'operazione
      * @throws RemoteException se si verifica un errore di comunicazione RMI
      */
     RemoveBookFromLibResult rimuoviLibroDaLibreria(int libreriaId, int libroId) throws RemoteException;
@@ -80,20 +79,20 @@ public interface AuthedBookRepositoryService extends Remote {
     /**
      * Inserisce una nuova valutazione (voto e/o commento) per un libro.
      * <p>
-     * Richiede un oggetto <code>Valutazione</code> compilato con i dati necessari (punteggio, commento, id libro).
+     * Richiede un oggetto {@link Rating} compilato con i dati necessari (punteggio, commento, id libro).
      * </p>
      *
      * @param valutazione l'oggetto DTO contenente i dettagli della valutazione
-     * @return un valore dell'enum <code>CreateRatingResult</code> che indica l'esito dell'inserimento
+     * @return un valore dell'enum {@link CreateRatingResult} che indica l'esito dell'operazione
      * @throws RemoteException se si verifica un errore di comunicazione RMI
      */
-    CreateRatingResult inserisciValutazioneLibro(Valutazione valutazione) throws RemoteException;
+    CreateRatingResult inserisciValutazioneLibro(Rating valutazione) throws RemoteException;
 
     /**
      * Rimuove una valutazione precedentemente inserita dall'utente.
      *
      * @param valutazioneId l'identificativo univoco della valutazione da rimuovere
-     * @return un valore dell'enum <code>DeleteRatingResult</code> che indica l'esito della rimozione
+     * @return un valore dell'enum <code>DeleteRatingResult</code> che indica l'esito dell'operazione
      * @throws RemoteException se si verifica un errore di comunicazione RMI
      */
     DeleteRatingResult rimuoviValutazioneLibro(int valutazioneId) throws RemoteException;
@@ -101,7 +100,7 @@ public interface AuthedBookRepositoryService extends Remote {
     // Suggerimenti
 
     /**
-     * Inserisce un suggerimento di correlazione tra due libri.
+     * Inserisce un suggerimento tra due libri.
      * <p>
      * Collega un "libro sorgente" a un "libro consigliato", indicando che chi legge il primo
      * potrebbe apprezzare il secondo.
@@ -109,17 +108,17 @@ public interface AuthedBookRepositoryService extends Remote {
      *
      * @param libroSorgenteId    l'identificativo del libro di partenza
      * @param libroConsigliatoId l'identificativo del libro suggerito
-     * @return un valore dell'enum <code>AddSuggestionResult</code> che indica l'esito dell'operazione
+     * @return un valore dell'enum {@link AddSuggestionResult} che indica l'esito dell'operazione
      * @throws RemoteException se si verifica un errore di comunicazione RMI
      */
     AddSuggestionResult inserisciSuggerimentoLibro(int libroSorgenteId, int libroConsigliatoId) throws RemoteException;
 
     /**
-     * Rimuove un suggerimento di correlazione tra due libri precedentemente inserito.
+     * Rimuove un suggerimento tra due libri.
      *
      * @param libroSorgenteId    l'identificativo del libro di partenza
      * @param libroConsigliatoId l'identificativo del libro suggerito da rimuovere
-     * @return un valore dell'enum <code>RemoveSuggestionResult</code> che indica l'esito dell'operazione
+     * @return un valore dell'enum {@link RemoveSuggestionResult} che indica l'esito dell'operazione
      * @throws RemoteException se si verifica un errore di comunicazione RMI
      */
     RemoveSuggestionResult rimuoviSuggerimentoLibro(int libroSorgenteId, int libroConsigliatoId) throws RemoteException;

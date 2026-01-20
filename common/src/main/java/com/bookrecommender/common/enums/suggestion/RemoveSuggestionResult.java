@@ -1,7 +1,7 @@
 package com.bookrecommender.common.enums.suggestion;
 
 /**
- * Enumerazione che definisce i possibili esiti dell'operazione di rimozione di un suggerimento.
+ * Enum che definisce i possibili esiti dell'operazione di rimozione di un suggerimento.
  *
  * @author Lorenzo Monachino 757393 VA
  * @author Lyan Curcio 757579 VA
@@ -23,7 +23,7 @@ public enum RemoveSuggestionResult {
     private final String msg;
 
     /**
-     * Costruttore privato dell'enumerazione.
+     * Costruttore privato dell'enum.
      *
      * @param msg il messaggio descrittivo da associare alla costante
      */

@@ -1,6 +1,6 @@
 package com.bookrecommender.server.queries;
 
-import com.bookrecommender.common.dto.Valutazione;
+import com.bookrecommender.common.dto.Rating;
 import com.bookrecommender.common.enums.rating.CreateRatingResult;
 import com.bookrecommender.common.enums.rating.DeleteRatingResult;
 import com.bookrecommender.server.DatabaseManager;
@@ -37,7 +37,7 @@ public class RatingQueries {
      * <code>CreateRatingResult.ALREADY_RATED</code> se esiste già una valutazione per quel libro,
      * <code>CreateRatingResult.UNEXPECTED_ERROR</code> in caso di errore SQL.
      */
-    public static CreateRatingResult createRating(String userId, Valutazione v) {
+    public static CreateRatingResult createRating(String userId, Rating v) {
         @Language("PostgreSQL")
         String query = """
             SELECT CASE WHEN EXISTS(

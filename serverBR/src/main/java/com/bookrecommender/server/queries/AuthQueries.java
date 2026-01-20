@@ -1,6 +1,6 @@
 package com.bookrecommender.server.queries;
 
-import com.bookrecommender.common.dto.UtentiRegistrati;
+import com.bookrecommender.common.dto.User;
 import com.bookrecommender.common.enums.auth.LoginResult;
 import com.bookrecommender.common.enums.auth.RegisterResult;
 import com.bookrecommender.server.DatabaseManager;
@@ -38,7 +38,7 @@ public class AuthQueries {
      * @param password la password in chiaro scelta dall'utente (verrà salvata solo hashata)
      * @return un valore dell'enum <code>RegisterResult</code> che indica il successo o il tipo di errore (es. duplicato)
      */
-    public static RegisterResult register(UtentiRegistrati user, String password) {
+    public static RegisterResult register(User user, String password) {
         //
         // Controllo vincoli
         @Language("PostgreSQL")

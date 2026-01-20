@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Classe DTO (Data Transfer Object) che rappresenta l'entità di un Utente Registrato.
+ * Classe DTO (Data Transfer Object) che rappresenta l'entità di un Utente.
  * <p>
  * Questa classe è immutabile e contiene le informazioni anagrafiche dell'utente.
  * Implementa <code>Serializable</code> per essere trasferita tra client e server durante le fasi di login e registrazione.
@@ -18,7 +18,7 @@ import java.sql.SQLException;
  * @author Sergio Saldarriaga 757394 VA
  * @author Nash Guizzardi 756941 VA
  */
-public class UtentiRegistrati implements Serializable {
+public class User implements Serializable {
 
     /** Versione della classe per la serializzazione. */
     @Serial
@@ -27,7 +27,7 @@ public class UtentiRegistrati implements Serializable {
     /** Identificativo univoco (username) scelto dall'utente. */
     public final String userId;
 
-    /** Nome di battesimo dell'utente. */
+    /** Nome dell'utente. */
     public final String nome;
 
     /** Cognome dell'utente. */
@@ -40,7 +40,7 @@ public class UtentiRegistrati implements Serializable {
     public final String email;
 
     /**
-     * Costruisce un nuovo oggetto <code>UtentiRegistrati</code> con i dati anagrafici specificati.
+     * Costruisce un nuovo oggetto {@link User} con i dati anagrafici specificati.
      * <p>
      * Questo costruttore viene usato tipicamente durante la fase di registrazione lato client,
      * prima dell'invio dei dati al server.
@@ -52,7 +52,7 @@ public class UtentiRegistrati implements Serializable {
      * @param codiceFiscale il codice fiscale
      * @param email         l'indirizzo di posta elettronica
      */
-    public UtentiRegistrati(String userId, String nome, String cognome, String codiceFiscale, String email) {
+    public User(String userId, String nome, String cognome, String codiceFiscale, String email) {
         this.userId = userId;
         this.nome = nome;
         this.cognome = cognome;
@@ -61,16 +61,16 @@ public class UtentiRegistrati implements Serializable {
     }
 
     /**
-     * Costruisce un oggetto <code>UtentiRegistrati</code> estraendo i dati da un <code>ResultSet</code> SQL.
+     * Costruisce un oggetto {@link User} estraendo i dati da un <code>ResultSet</code> SQL.
      * <p>
      * Questo costruttore mappa le colonne del database sui campi dell'oggetto.
-     * In caso di <code>SQLException</code> (es. colonna mancante), viene generato un oggetto
-     * con campi vuoti e l'errore viene stampato sullo standard error.
+     * In caso di <code>SQLException</code>, viene generato un oggetto
+     * con campi vuoti e l'errore viene stampato su <code>System.err</code>.
      * </p>
      *
      * @param rs il <code>ResultSet</code> posizionato sulla riga dell'utente da leggere
      */
-    public UtentiRegistrati(ResultSet rs) {
+    public User(ResultSet rs) {
         String _userId;
         String _nome;
         String _cognome;
@@ -102,11 +102,8 @@ public class UtentiRegistrati implements Serializable {
 
     /**
      * Restituisce una rappresentazione testuale completa dell'utente per scopi di debug.
-     * <p>
-     * Include username, nome completo, codice fiscale ed email formattati su più righe.
-     * </p>
      *
-     * @return una stringa multilinea con tutti i dettagli dell'utente
+     * @return una stringa con tutti i dettagli dell'utente
      */
     public String toStringDebug() {
         return userId + ": " + nome + " " + cognome +

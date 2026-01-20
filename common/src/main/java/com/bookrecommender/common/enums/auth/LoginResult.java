@@ -1,11 +1,7 @@
 package com.bookrecommender.common.enums.auth;
 
 /**
- * Enumerazione che definisce i possibili esiti di un tentativo di login da parte di un utente.
- * <p>
- * Ogni costante è associata a un messaggio descrittivo in lingua italiana,
- * utile per essere mostrato direttamente nell'interfaccia utente (GUI) del client.
- * </p>
+ * Enum che definisce i possibili esiti di un tentativo di login da parte di un utente.
  *
  * @author Lorenzo Monachino 757393 VA
  * @author Lyan Curcio 757579 VA
@@ -23,7 +19,7 @@ public enum LoginResult {
     /** Indica che non è stato trovato alcun utente registrato con l'ID fornito. */
     USER_ID_NOT_FOUND("Non esiste un utente con l'user id inserito"),
 
-    /** Indica un errore di sistema imprevisto (es. problemi di connessione al database). */
+    /** Si è verificato un errore imprevisto. */
     UNEXPECTED_ERROR("Errore non previsto!");
 
     /**
@@ -32,7 +28,7 @@ public enum LoginResult {
     private final String msg;
 
     /**
-     * Costruttore privato dell'enumerazione.
+     * Costruttore privato dell'enum.
      *
      * @param msg il messaggio descrittivo da associare alla costante
      */

@@ -1,7 +1,7 @@
 package com.bookrecommender.common.enums.rating;
 
 /**
- * Enumerazione che definisce i possibili esiti del tentativo di rimuovere una valutazione.
+ * Enum che definisce i possibili esiti del tentativo di rimuovere una valutazione.
  *
  * @author Lorenzo Monachino 757393 VA
  * @author Lyan Curcio 757579 VA
@@ -10,20 +10,20 @@ package com.bookrecommender.common.enums.rating;
  */
 public enum DeleteRatingResult {
 
-    /** La valutazione è stata rimossa correttamente dal sistema. */
+    /** La valutazione è stata eliminata correttamente. */
     OK("Valutazione eliminata"),
 
     /** L'operazione è fallita perché non esiste alcuna valutazione associata all'utente per questo libro. */
     NOT_RATED("Questo libro non è stato ancora valutato"),
 
-    /** Si è verificato un errore imprevisto (es. eccezione SQL o errore di sistema). */
+    /** Si è verificato un errore imprevisto. */
     UNEXPECTED_ERROR("Errore non previsto!");
 
     /** Messaggio descrittivo associato all'esito. */
     private final String msg;
 
     /**
-     * Costruttore privato dell'enumerazione.
+     * Costruttore privato dell'enum.
      *
      * @param msg il messaggio descrittivo da associare alla costante
      */

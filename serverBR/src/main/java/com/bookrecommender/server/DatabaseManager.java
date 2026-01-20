@@ -73,7 +73,7 @@ public class DatabaseManager {
 
     /**
      * Restituisce la connessione JDBC attiva.
-     * @return oggetto Connection
+     * @return oggetto <code>Connection</code>
      */
     public Connection getPgsqlConn() {
         return pgsqlConn;
@@ -84,8 +84,8 @@ public class DatabaseManager {
      *
      * @param <T>               tipo del risultato mappato
      * @param query             query SQL
-     * @param resultConstructor funzione per convertire il ResultSet nell'oggetto T
-     * @param args              argomenti per il PreparedStatement
+     * @param resultConstructor funzione per convertire il <code>ResultSet</code> nell'oggetto <code>T</code>
+     * @param args              argomenti per il <code>PreparedStatement</code>
      * @return lista dei risultati o null in caso di errore
      */
     public <T> LinkedList<T> executeQuery(
@@ -122,8 +122,8 @@ public class DatabaseManager {
      * Esegue un comando di aggiornamento (INSERT, UPDATE, DELETE).
      *
      * @param query query SQL
-     * @param args  argomenti per il PreparedStatement
-     * @return true se successo, false altrimenti
+     * @param args  argomenti per il <code>PreparedStatement</code>
+     * @return true se ha successo, false altrimenti
      */
     public boolean execute(
             @Untainted @Language("PostgreSQL")

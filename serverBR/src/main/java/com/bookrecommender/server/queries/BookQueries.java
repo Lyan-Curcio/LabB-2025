@@ -1,6 +1,6 @@
 package com.bookrecommender.server.queries;
 
-import com.bookrecommender.common.dto.Libri;
+import com.bookrecommender.common.dto.Book;
 import com.bookrecommender.server.DatabaseManager;
 import org.intellij.lang.annotations.Language;
 
@@ -21,12 +21,12 @@ public class BookQueries {
      * Recupera tutti i libri presenti nel database.
      * @return lista completa dei libri
      */
-    public static LinkedList<Libri> selectAll() {
+    public static LinkedList<Book> selectAll() {
         @Language("PostgreSQL")
         String query = "SELECT * FROM \"Libri\"";
         return DatabaseManager.getInstance().executeQuery(
                 query,
-                Libri::new,
+                Book::new,
                 null
         );
     }
@@ -36,12 +36,12 @@ public class BookQueries {
      * @param title titolo o parte di esso
      * @return lista dei libri trovati
      */
-    public static LinkedList<Libri> searchByTitle(String title) {
+    public static LinkedList<Book> searchByTitle(String title) {
         @Language("PostgreSQL")
         String query = "SELECT * FROM \"Libri\" WHERE titolo ILIKE '%'||?||'%'";
         return DatabaseManager.getInstance().executeQuery(
                 query,
-                Libri::new,
+                Book::new,
                 new Object[] {title}
         );
     }
@@ -51,12 +51,12 @@ public class BookQueries {
      * @param author autore o parte del nome
      * @return lista dei libri trovati
      */
-    public static LinkedList<Libri> searchByAuthor(String author) {
+    public static LinkedList<Book> searchByAuthor(String author) {
         @Language("PostgreSQL")
         String query = "SELECT * FROM \"Libri\" WHERE autori ILIKE '%'||?||'%'";
         return DatabaseManager.getInstance().executeQuery(
                 query,
-                Libri::new,
+                Book::new,
                 new Object[] {author}
         );
     }
@@ -67,12 +67,12 @@ public class BookQueries {
      * @param year anno esatto
      * @return lista dei libri trovati
      */
-    public static LinkedList<Libri> searchByAuthorAndYear(String author, int year) {
+    public static LinkedList<Book> searchByAuthorAndYear(String author, int year) {
         @Language("PostgreSQL")
         String query = "SELECT * FROM \"Libri\" WHERE autori ILIKE '%'||?||'%' AND anno_pubblicazione = ?";
         return DatabaseManager.getInstance().executeQuery(
                 query,
-                Libri::new,
+                Book::new,
                 new Object[] {author, year}
         );
     }

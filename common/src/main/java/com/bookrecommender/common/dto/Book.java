@@ -18,7 +18,7 @@ import java.sql.SQLException;
  * @author Sergio Saldarriaga 757394 VA
  * @author Nash Guizzardi 756941 VA
  */
-public class Libri implements Serializable {
+public class Book implements Serializable {
 
     /** Versione della classe per la serializzazione. */
     @Serial
@@ -43,7 +43,7 @@ public class Libri implements Serializable {
     public final String[] categorie;
 
     /**
-     * Costruisce un nuovo oggetto <code>Libri</code> con i dati specificati.
+     * Costruisce un nuovo oggetto {@link Book} con i dati specificati.
      * <p>
      * Questo costruttore viene utilizzato quando i dati sono già stati elaborati
      * e non provengono direttamente da una query SQL grezza.
@@ -55,7 +55,7 @@ public class Libri implements Serializable {
      * @param editore    il nome dell'editore
      * @param categorie  un array di stringhe contenente le categorie
      */
-    public Libri(String titolo, String[] autori, int anno, String editore, String[] categorie) {
+    public Book(String titolo, String[] autori, int anno, String editore, String[] categorie) {
         this.id = -1;
         this.titolo = titolo;
         this.autori = autori;
@@ -65,16 +65,16 @@ public class Libri implements Serializable {
     }
 
     /**
-     * Costruisce un oggetto <code>Libri</code> estraendo i dati da un <code>ResultSet</code> SQL.
+     * Costruisce un oggetto {@link Book} estraendo i dati da un <code>ResultSet</code> SQL.
      * <p>
      * Questo costruttore effettua il parsing automatico delle colonne database e converte
      * le stringhe separate da virgola (per autori e categorie) in array.
-     * In caso di <code>SQLException</code>, viene generato un oggetto vuoto/di default e l'errore viene stampato su System.err.
+     * In caso di <code>SQLException</code>, viene generato un oggetto vuoto/di default e l'errore viene stampato su <code>System.err</code>.
      * </p>
      *
      * @param rs il <code>ResultSet</code> posizionato sulla riga da convertire
      */
-    public Libri(ResultSet rs) {
+    public Book(ResultSet rs) {
         int _id;
         String _titolo;
         String[] _autori;
@@ -110,11 +110,8 @@ public class Libri implements Serializable {
 
     /**
      * Restituisce una rappresentazione dettagliata dell'oggetto utile per il debugging.
-     * <p>
-     * Il formato include l'ID e tutti i campi su righe separate e indentate.
-     * </p>
      *
-     * @return una stringa multilinea contenente tutti i dati del libro
+     * @return una stringa contenente tutti i dati del libro
      */
     public String toStringDebug() {
         return id + ": " + titolo +

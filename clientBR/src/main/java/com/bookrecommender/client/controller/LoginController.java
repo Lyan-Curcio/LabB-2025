@@ -1,12 +1,10 @@
 package com.bookrecommender.client.controller;
 
 import com.bookrecommender.common.AuthedBookRepositoryService;
-import com.bookrecommender.common.Pair;
+import com.bookrecommender.common.BRPair;
 import com.bookrecommender.common.enums.auth.LoginResult;
-import com.bookrecommender.common.enums.auth.RegisterResult;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -40,7 +38,7 @@ public class LoginController {
 
         resetErrorLabels();
 
-        Pair <LoginResult, AuthedBookRepositoryService> result = App.getInstance().bookRepository.login(uid, pwd);
+        BRPair<LoginResult, AuthedBookRepositoryService> result = App.getInstance().bookRepository.login(uid, pwd);
 
         System.out.println(result);
         // Simulazione login (da sostituire con DB in futuro)

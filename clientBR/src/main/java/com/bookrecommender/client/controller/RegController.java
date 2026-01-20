@@ -3,8 +3,8 @@ package com.bookrecommender.client.controller;
 import java.rmi.RemoteException;
 
 import com.bookrecommender.common.AuthedBookRepositoryService;
-import com.bookrecommender.common.Pair;
-import com.bookrecommender.common.dto.UtentiRegistrati;
+import com.bookrecommender.common.BRPair;
+import com.bookrecommender.common.dto.User;
 import com.bookrecommender.common.enums.auth.RegisterResult;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -34,7 +34,7 @@ public class RegController {
             errorPassword.setText("le password non coincidono");
         }
 
-        UtentiRegistrati newUser = new UtentiRegistrati(
+        User newUser = new User(
             tfUserid.getText(),
             tfnome.getText(),
             tfcognome.getText(),
@@ -46,7 +46,7 @@ public class RegController {
         // Per ora stampiamo solo a video
         System.out.println("Tentativo registrazione:\n" + newUser.toStringDebug());
 
-        Pair<RegisterResult, AuthedBookRepositoryService> result = App.getInstance().bookRepository.registrazione(newUser, password);
+        BRPair<RegisterResult, AuthedBookRepositoryService> result = App.getInstance().bookRepository.registrazione(newUser, password);
 
         // TODO rimuovere log
         System.out.println(result);
@@ -54,7 +54,7 @@ public class RegController {
         if (result.first() == RegisterResult.OK)
         {
             App.getInstance().authedBookRepository = result.second();
-            LoginController.user = Utente.REGISTRATO;
+            LoginController.user = com.bookrecommender.client.controller.Utente.REGISTRATO;
             App.getInstance().changeScene("Benvenuto.fxml");
         }
         else if(result.first() == RegisterResult.DUPLICATE_EMAIL)

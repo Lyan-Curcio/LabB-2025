@@ -1,8 +1,6 @@
 package com.bookrecommender.client.controller; // ERRORE: c'era "main.java."
 
 import com.bookrecommender.common.AuthedBookRepositoryService; // ERRORE: c'era "main.java."
-import com.bookrecommender.common.Pair;
-import com.bookrecommender.common.enums.auth.LoginResult;
 
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;

@@ -1,7 +1,7 @@
 package com.bookrecommender.server;
 
 import com.bookrecommender.common.AuthedBookRepositoryService;
-import com.bookrecommender.common.dto.Valutazione;
+import com.bookrecommender.common.dto.Rating;
 import com.bookrecommender.common.enums.library.AddBookToLibResult;
 import com.bookrecommender.common.enums.library.CreateLibResult;
 import com.bookrecommender.common.enums.library.DeleteLibResult;
@@ -91,7 +91,7 @@ public class AuthedBookRepositoryImpl extends UnicastRemoteObject implements Aut
 
     /** {@inheritDoc} */
     @Override
-    public CreateRatingResult inserisciValutazioneLibro(Valutazione v) throws RemoteException {
+    public CreateRatingResult inserisciValutazioneLibro(Rating v) throws RemoteException {
         return RatingQueries.createRating(loggedUserId, v);
     }
 

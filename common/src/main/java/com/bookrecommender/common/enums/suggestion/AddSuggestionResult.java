@@ -1,7 +1,7 @@
 package com.bookrecommender.common.enums.suggestion;
 
 /**
- * Enumerazione che definisce i possibili esiti dell'operazione di aggiunta di un suggerimento.
+ * Enum che definisce i possibili esiti dell'operazione di aggiunta di un suggerimento.
  *
  * @author Lorenzo Monachino 757393 VA
  * @author Lyan Curcio 757579 VA
@@ -10,13 +10,17 @@ package com.bookrecommender.common.enums.suggestion;
  */
 public enum AddSuggestionResult {
 
-    /** Il suggerimento è stato registrato con successo nel sistema. */
+    /** Il suggerimento è stato registrato con successo. */
     OK("Consiglio aggiunto"),
 
-    /** Il libro "sorgente" non è presente in nessuna delle librerie dell'utente. */
+    /** Il libro "sorgente" non è presente in nessuna delle librerie dell'utente.
+     * Un utente può aggiungere consigliati solo ai libri che ha aggiunto ad almeno a una delle proprie librerie.
+     */
     MAIN_BOOK_NOT_IN_LIBRARY("Il libro a cui si sta aggiungendo un consigliato non è in nessuna delle tue librerie"),
 
-    /** Il libro che si intende consigliare non è presente in nessuna delle librerie dell'utente. */
+    /** Il libro che si intende consigliare non è presente in nessuna delle librerie dell'utente.
+     * Un utente può consigliare solo libri che ha aggiunto ad almeno a una delle proprie librerie.
+     */
     SUGGESTED_BOOK_NOT_IN_LIBRARY("Il libro consigliato non è in nessuna delle tue librerie"),
 
     /** Esiste già un suggerimento identico inserito dall'utente. */
@@ -29,7 +33,7 @@ public enum AddSuggestionResult {
     private final String msg;
 
     /**
-     * Costruttore privato dell'enumerazione.
+     * Costruttore privato dell'enum.
      *
      * @param msg il messaggio descrittivo da associare alla costante
      */

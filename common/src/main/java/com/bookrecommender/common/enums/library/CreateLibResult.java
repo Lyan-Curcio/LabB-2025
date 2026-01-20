@@ -1,11 +1,7 @@
 package com.bookrecommender.common.enums.library;
 
 /**
- * Enumerazione che definisce i possibili esiti della creazione di una nuova libreria personale.
- * <p>
- * Viene utilizzata come valore di ritorno dal metodo <code>creaLibreria</code> dell'interfaccia autenticata.
- * Permette di distinguere il caso di successo dai casi di errore, come il tentativo di usare un nome già esistente.
- * </p>
+ * Enum che definisce i possibili esiti della creazione di una nuova libreria personale.
  *
  * @author Lorenzo Monachino 757393 VA
  * @author Lyan Curcio 757579 VA
@@ -14,7 +10,7 @@ package com.bookrecommender.common.enums.library;
  */
 public enum CreateLibResult {
 
-    /** La nuova libreria è stata creata e salvata correttamente nel database. */
+    /** La nuova libreria è stata creata correttamente. */
     OK("Libreria creata"),
 
     /**
@@ -23,7 +19,7 @@ public enum CreateLibResult {
      */
     DUPLICATE_NAME("Esiste già una libreria con questo nome"),
 
-    /** Si è verificato un errore imprevisto (es. eccezione SQL o errore di sistema). */
+    /** Si è verificato un errore imprevisto. */
     UNEXPECTED_ERROR("Errore non previsto!");
 
     /**
@@ -32,7 +28,7 @@ public enum CreateLibResult {
     private final String msg;
 
     /**
-     * Costruttore privato dell'enumerazione.
+     * Costruttore privato dell'enum.
      *
      * @param msg il messaggio descrittivo da associare alla costante
      */

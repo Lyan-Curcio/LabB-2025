@@ -1,12 +1,7 @@
 package com.bookrecommender.common.enums.auth;
 
 /**
- * Enumerazione che definisce i possibili esiti di una richiesta di registrazione di un nuovo utente.
- * <p>
- * Questa enum viene utilizzata per comunicare al client se l'operazione ha avuto successo
- * o se i dati inseriti violano i vincoli di unicità del database (User ID, Codice Fiscale o Email).
- * Ogni costante contiene un messaggio descrittivo pronto per essere mostrato nell'interfaccia utente.
- * </p>
+ * Enum che definisce i possibili esiti di una richiesta di registrazione di un nuovo utente.
  *
  * @author Lorenzo Monachino 757393 VA
  * @author Lyan Curcio 757579 VA
@@ -27,7 +22,7 @@ public enum RegisterResult {
     /** Indica un errore dovuto al fatto che l'indirizzo email inserito è già associato a un altro account. */
     DUPLICATE_EMAIL("Esiste già un utente con la stessa email"),
 
-    /** Indica un errore di sistema imprevisto (es. fallimento della query SQL o errore di connessione). */
+    /** Si è verificato un errore imprevisto. */
     UNEXPECTED_ERROR("Errore non previsto!");
 
     /**
@@ -36,7 +31,7 @@ public enum RegisterResult {
     private final String msg;
 
     /**
-     * Costruttore privato dell'enumerazione.
+     * Costruttore privato dell'enum.
      *
      * @param msg il messaggio descrittivo da associare alla costante
      */

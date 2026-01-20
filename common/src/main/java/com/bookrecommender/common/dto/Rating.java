@@ -18,7 +18,7 @@ import java.sql.SQLException;
  * @author Sergio Saldarriaga 757394 VA
  * @author Nash Guizzardi 756941 VA
  */
-public class Valutazione implements Serializable {
+public class Rating implements Serializable {
 
     /** Versione della classe per la serializzazione. */
     @Serial
@@ -70,11 +70,11 @@ public class Valutazione implements Serializable {
     /** Nota testuale relativa all'edizione (max 256 caratteri). */
     public final String noteEdizione;
 
-    /** Nota testuale o commento finale complessivo (max 256 caratteri). */
+    /** Nota testuale finale complessiva (max 256 caratteri). */
     public final String noteFinale;
 
     /**
-     * Costruisce una nuova <code>Valutazione</code> con i punteggi e le note specificati.
+     * Costruisce una nuova {@link Rating} con i punteggi e le note specificati.
      * <p>
      * Il punteggio <code>finale</code> viene calcolato automaticamente come media arrotondata
      * dei 5 parametri numerici passati.
@@ -94,7 +94,7 @@ public class Valutazione implements Serializable {
      * @param noteEdizione     commento sull'edizione
      * @param noteFinale       commento finale
      */
-    public Valutazione(
+    public Rating(
             int libroId, String userId,
             int stile, int contenuto, int gradevolezza, int originalita, int edizione,
             String noteStile, String noteContenuto, String noteGradevolezza, String noteOriginalita, String noteEdizione, String noteFinale
@@ -120,16 +120,16 @@ public class Valutazione implements Serializable {
     }
 
     /**
-     * Costruisce un oggetto <code>Valutazione</code> estraendo i dati da un <code>ResultSet</code> SQL.
+     * Costruisce un oggetto {@link Rating} estraendo i dati da un <code>ResultSet</code> SQL.
      * <p>
      * Questo costruttore recupera i punteggi e le note dalle colonne del database e ricalcola
      * il voto finale basandosi sui dati estratti.
-     * In caso di <code>SQLException</code>, viene generato un oggetto vuoto/di default e l'errore stampato su System.err.
+     * In caso di <code>SQLException</code>, viene generato un oggetto vuoto/di default e l'errore stampato su <code>System.err</code>.
      * </p>
      *
      * @param rs il <code>ResultSet</code> posizionato sulla riga della valutazione da leggere
      */
-    public Valutazione(ResultSet rs) {
+    public Rating(ResultSet rs) {
         int _id, _libroId;
         String _userId;
         int _stile, _contenuto, _gradevolezza, _originalita, _edizione, _finale;
@@ -196,7 +196,7 @@ public class Valutazione implements Serializable {
     /**
      * Restituisce una rappresentazione dettagliata della valutazione per scopi di debug.
      *
-     * @return una stringa multilinea contenente tutti i voti parziali e le relative note
+     * @return una stringa contenente tutti i voti parziali e le relative note
      */
     public String toStringDebug() {
         return id + ": Da '" + userId + "' per '" + libroId + "'" +

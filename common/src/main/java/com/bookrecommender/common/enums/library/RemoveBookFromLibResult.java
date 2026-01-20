@@ -1,11 +1,7 @@
 package com.bookrecommender.common.enums.library;
 
 /**
- * Enumerazione che definisce i possibili esiti dell'operazione di rimozione di un libro da una libreria personale.
- * <p>
- * Viene utilizzata per confermare l'avvenuta rimozione o segnalare errori specifici,
- * come il tentativo di rimuovere un libro che non è effettivamente presente nella libreria indicata.
- * </p>
+ * Enum che definisce i possibili esiti dell'operazione di rimozione di un libro da una libreria personale.
  *
  * @author Lorenzo Monachino 757393 VA
  * @author Lyan Curcio 757579 VA
@@ -17,16 +13,15 @@ public enum RemoveBookFromLibResult {
     /** Il libro è stato rimosso correttamente dalla libreria specificata. */
     OK("Libro rimosso dalla libreria"),
 
-    /** L'operazione è fallita perché la libreria specificata (tramite ID) non esiste. */
+    /** L'operazione è fallita perché la libreria specificata (tramite ID) non è associata all'utente o non esiste. */
     LIBRARY_NOT_FOUND("La libreria specificata non esiste"),
 
     /**
      * L'operazione è fallita perché il libro indicato non è presente nella libreria.
-     * Non è possibile rimuovere un libro che non è stato precedentemente aggiunto.
      */
     BOOK_NOT_IN_LIBRARY("Il libro non è presente nella libreria"),
 
-    /** Si è verificato un errore imprevisto (es. eccezione SQL o errore di sistema). */
+    /** Si è verificato un errore imprevisto. */
     UNEXPECTED_ERROR("Errore non previsto!");
 
     /**
@@ -35,7 +30,7 @@ public enum RemoveBookFromLibResult {
     private final String msg;
 
     /**
-     * Costruttore privato dell'enumerazione.
+     * Costruttore privato dell'enum.
      *
      * @param msg il messaggio descrittivo da associare alla costante
      */
