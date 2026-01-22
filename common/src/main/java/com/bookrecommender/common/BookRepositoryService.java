@@ -1,6 +1,7 @@
 package com.bookrecommender.common;
 
 import com.bookrecommender.common.dto.Book;
+import com.bookrecommender.common.dto.BookInfo;
 import com.bookrecommender.common.dto.User;
 import com.bookrecommender.common.enums.auth.LoginResult;
 import com.bookrecommender.common.enums.auth.RegisterResult;
@@ -22,6 +23,24 @@ import java.util.List;
  * @author Nash Guizzardi 756941 VA
  */
 public interface BookRepositoryService extends Remote {
+
+    /**
+     * Recupera le informazioni di un utente
+     *
+     * @param userId l'id dell'utente
+     * @return un oggetto {@link User} contenente le informazioni dell'utente cercato
+     * @throws RemoteException se si verifica un errore di comunicazione RMI
+     */
+    User getUserInfo(String userId) throws RemoteException;
+
+    /**
+     * Recupera le informazioni inerenti a un libro (libro, valutazioni e suggerimenti)
+     *
+     * @param libroId l'id del libro
+     * @return un oggetto {@link BookInfo} contenente le informazioni del libro richiesto
+     * @throws RemoteException se si verifica un errore di comunicazione RMI
+     */
+    BookInfo getBookInfo(int libroId) throws RemoteException;
 
     /**
      * Cerca i libri nel database che contengono la stringa specificata nel titolo.

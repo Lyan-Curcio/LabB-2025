@@ -1,5 +1,7 @@
 package com.bookrecommender.server.queries;
 
+import com.bookrecommender.common.dto.Rating;
+import com.bookrecommender.common.dto.Suggestion;
 import com.bookrecommender.common.enums.suggestion.AddSuggestionResult;
 import com.bookrecommender.common.enums.suggestion.RemoveSuggestionResult;
 import com.bookrecommender.server.DatabaseManager;
@@ -22,6 +24,19 @@ import java.util.LinkedList;
  * @author Nash Guizzardi 756941 VA
  */
 public class SuggestionQueries {
+
+    public synchronized static LinkedList<Suggestion> getSuggestionsFrom(String userId, int bookId) {
+        @Language("PostgreSQL")
+        String query =  """
+            SELECT * FROM "ConsigliLibri"
+            WHERE userid = ? AND libro_sorgente_id = ?
+        """;
+        return DatabaseManager.getInstance().executeQuery(
+            query,
+            Suggestion::new,
+            new Object[] {userId, bookId}
+        );
+    }
 
     /**
      * Inserisce un nuovo suggerimento di correlazione tra due libri.

@@ -1,6 +1,9 @@
 package com.bookrecommender.server.queries;
 
 import com.bookrecommender.common.dto.Book;
+import com.bookrecommender.common.dto.BookInfo;
+import com.bookrecommender.common.dto.Rating;
+import com.bookrecommender.common.dto.Suggestion;
 import com.bookrecommender.server.DatabaseManager;
 import org.intellij.lang.annotations.Language;
 
@@ -16,6 +19,41 @@ import java.util.LinkedList;
  * @author Nash Guizzardi 756941 VA
  */
 public class BookQueries {
+
+    public synchronized static BookInfo getBookInfo(int bookId) {
+        @Language("PostgreSQL")
+        String query = """
+            SELECT * FROM "Libri"
+            WHERE id = ?
+        """;
+        Book book = DatabaseManager.getInstance().executeQuery(
+            query,
+            Book::new,
+            new Object[] {bookId}
+        ).getFirst();
+
+        query = """
+            SELECT * FROM "ValutazioniLibri"
+            WHERE libro_id = ?
+        """;
+        LinkedList<Rating> ratings = DatabaseManager.getInstance().executeQuery(
+            query,
+            Rating::new,
+            new Object[] {bookId}
+        );
+
+        query = """
+            SELECT * FROM "ConsigliLibri"
+            WHERE libro_sorgente_id = ?
+        """;
+        LinkedList<Suggestion> suggestions = DatabaseManager.getInstance().executeQuery(
+            query,
+            Suggestion::new,
+            new Object[] {bookId}
+        );
+
+        return new BookInfo(book, ratings, suggestions);
+    }
 
     /**
      * Recupera tutti i libri presenti nel database.

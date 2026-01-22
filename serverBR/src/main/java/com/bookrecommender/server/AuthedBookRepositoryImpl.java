@@ -2,6 +2,7 @@ package com.bookrecommender.server;
 
 import com.bookrecommender.common.AuthedBookRepositoryService;
 import com.bookrecommender.common.dto.Rating;
+import com.bookrecommender.common.dto.Suggestion;
 import com.bookrecommender.common.enums.library.AddBookToLibResult;
 import com.bookrecommender.common.enums.library.CreateLibResult;
 import com.bookrecommender.common.enums.library.DeleteLibResult;
@@ -14,8 +15,10 @@ import com.bookrecommender.server.queries.LibraryQueries;
 import com.bookrecommender.server.queries.RatingQueries;
 import com.bookrecommender.server.queries.SuggestionQueries;
 
+import java.rmi.Remote;
 import java.rmi.server.UnicastRemoteObject;
 import java.rmi.RemoteException;
+import java.util.LinkedList;
 
 /**
  * Implementazione del servizio RMI riservato agli utenti autenticati.
@@ -91,6 +94,12 @@ public class AuthedBookRepositoryImpl extends UnicastRemoteObject implements Aut
 
     /** {@inheritDoc} */
     @Override
+    public Rating getMyValutazione(int bookId) throws RemoteException {
+        return RatingQueries.getRatingFrom(loggedUserId, bookId);
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public CreateRatingResult inserisciValutazioneLibro(Rating v) throws RemoteException {
         return RatingQueries.createRating(loggedUserId, v);
     }
@@ -104,6 +113,12 @@ public class AuthedBookRepositoryImpl extends UnicastRemoteObject implements Aut
     //
     // Suggerimenti
     //
+
+    /** {@inheritDoc} */
+    @Override
+    public LinkedList<Suggestion> getMySuggerimenti(int bookId) throws RemoteException {
+        return SuggestionQueries.getSuggestionsFrom(loggedUserId, bookId);
+    }
 
     /** {@inheritDoc} */
     @Override

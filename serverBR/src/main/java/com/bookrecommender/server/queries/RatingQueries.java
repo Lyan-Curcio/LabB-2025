@@ -23,6 +23,19 @@ import java.util.LinkedList;
  */
 public class RatingQueries {
 
+    public synchronized static Rating getRatingFrom(String userId, int bookId) {
+        @Language("PostgreSQL")
+        String query =  """
+            SELECT * FROM "ValutazioniLibri"
+            WHERE userid = ? AND libro_id = ?
+        """;
+        return DatabaseManager.getInstance().executeQuery(
+            query,
+            Rating::new,
+            new Object[] {userId, bookId}
+        ).getFirst();
+    }
+
     /**
      * Inserisce una nuova valutazione per un libro nel database.
      * <p>

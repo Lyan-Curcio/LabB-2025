@@ -1,6 +1,7 @@
 package com.bookrecommender.common;
 
 import com.bookrecommender.common.dto.Rating;
+import com.bookrecommender.common.dto.Suggestion;
 import com.bookrecommender.common.enums.library.AddBookToLibResult;
 import com.bookrecommender.common.enums.library.CreateLibResult;
 import com.bookrecommender.common.enums.library.DeleteLibResult;
@@ -12,6 +13,7 @@ import com.bookrecommender.common.enums.suggestion.RemoveSuggestionResult;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.LinkedList;
 
 /**
  * Interfaccia remota che espone le funzionalità riservate agli utenti registrati e autenticati.
@@ -76,6 +78,8 @@ public interface AuthedBookRepositoryService extends Remote {
 
     // Valutazioni
 
+    Rating getMyValutazione(int bookId) throws RemoteException;
+
     /**
      * Inserisce una nuova valutazione (voto e/o commento) per un libro.
      * <p>
@@ -98,6 +102,8 @@ public interface AuthedBookRepositoryService extends Remote {
     DeleteRatingResult rimuoviValutazioneLibro(int valutazioneId) throws RemoteException;
 
     // Suggerimenti
+
+    LinkedList<Suggestion> getMySuggerimenti(int bookId) throws RemoteException;
 
     /**
      * Inserisce un suggerimento tra due libri.

@@ -4,11 +4,13 @@ import com.bookrecommender.common.AuthedBookRepositoryService;
 import com.bookrecommender.common.BookRepositoryService;
 import com.bookrecommender.common.BRPair;
 import com.bookrecommender.common.dto.Book;
+import com.bookrecommender.common.dto.BookInfo;
 import com.bookrecommender.common.dto.User;
 import com.bookrecommender.common.enums.auth.LoginResult;
 import com.bookrecommender.common.enums.auth.RegisterResult;
 import com.bookrecommender.server.queries.AuthQueries;
 import com.bookrecommender.server.queries.BookQueries;
+import com.bookrecommender.server.queries.UserQueries;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -36,6 +38,22 @@ public class BookRepositoryImpl extends UnicastRemoteObject implements BookRepos
      */
     protected BookRepositoryImpl() throws RemoteException {
         super();
+    }
+
+    //
+    // Recupero informazioni
+    //
+
+    /** {@inheritDoc} */
+    @Override
+    public User getUserInfo(String userId) throws RemoteException {
+        return UserQueries.getUserInfo(userId);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public BookInfo getBookInfo(int bookId) throws RemoteException {
+        return BookQueries.getBookInfo(bookId);
     }
 
     //
