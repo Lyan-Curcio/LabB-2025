@@ -1,8 +1,12 @@
 package com.bookrecommender.server;
 
+import io.github.cdimascio.dotenv.Dotenv;
+import io.github.cdimascio.dotenv.DotenvException;
 import org.checkerframework.checker.tainting.qual.Untainted;
 import org.intellij.lang.annotations.Language;
 
+import java.io.File;
+import java.net.URISyntaxException;
 import java.sql.*;
 import java.util.LinkedList;
 import java.util.function.Function;
@@ -28,26 +32,68 @@ public class DatabaseManager {
     /** Oggetto di connessione JDBC attivo verso PostgreSQL. */
     private Connection pgsqlConn;
 
-    // Credenziali DB (da caricare preferibilmente da file config o args)
-
-    /** URL di connessione al database (include host e nome DB). */
-    private final String url = "jdbc:postgresql://localhost:5432/bookrecommender";
-
-    /** Username per l'accesso al database. */
-    private final String user = "postgres";
-
-    /** Password per l'accesso al database. */
-    private final String password = "password";
-
     /**
      * Costruttore privato che inizializza la connessione al DB.
      * Termina l'applicazione in caso di errore critico.
      */
     private DatabaseManager() {
+        String dbUrl = "";
+        String dbUser = "";
+        String dbPassword = "";
+
+        // Prova a caricare le credenziali DB da file ".env"
+        //
+        // Il path del file ".env" dipende da come si sta eseguendo il programma:
+        // - Se si sta sviluppando verranno eseguiti i file ".class"
+        //    e il file ".env" sarà cercato nella root del progetto.
+        // - Se si sta utilizzando il programma verrà eseguito un file ".jar"
+        //    e il file ".env" sarà cercato nella stessa cartella del file ".jar".
+        try {
+            Dotenv dotenv;
+
+            String jarPath = getJarPath();
+            if (jarPath != null)
+            {
+                dotenv = Dotenv
+                    .configure()
+                    .directory(new File(jarPath).getParent())
+                    .load();
+            }
+            else
+            {
+                dotenv = Dotenv.load();
+            }
+
+            String dbHost = dotenv.get("DB_HOST");
+            String dbPort = dotenv.get("DB_PORT");
+            String dbName = dotenv.get("DB_NAME");
+            dbUrl = "jdbc:postgresql://" + dbHost + ":" + dbPort + "/" + dbName;
+
+            dbUser = dotenv.get("DB_USER");
+            dbPassword = dotenv.get("DB_PASSWORD");
+        }
+        catch (DotenvException e) {
+            // Altrimenti richiedi le credenziali da stdin
+            System.out.println("Non è stato possibile caricare le credenziali del DB dal file '.env'");
+
+            String dbHost = System.console().readLine("Inserire l'host del DB [localhost]: ");
+            if (dbHost.isBlank()) dbHost = "localhost";
+            String dbPort = System.console().readLine("Inserire la porta del DB [5432]: ");
+            if (dbPort.isBlank()) dbPort = "5432";
+            String dbName = System.console().readLine("Inserire il nome del DB [bookrecommender]: ");
+            if (dbName.isBlank()) dbName = "bookrecommender";
+            dbUrl = "jdbc:postgresql://" + dbHost + ":" + dbPort + "/" + dbName;
+
+            dbUser = System.console().readLine("Inserire l'utente del DB [postgres]: ");
+            if (dbUser.isBlank()) dbUser = "postgres";
+            dbPassword = System.console().readLine("Inserire la password del DB [password]: ");
+            if (dbPassword.isBlank()) dbPassword = "password";
+        }
+
         // Caricamento driver JDBC
         try {
             Class.forName("org.postgresql.Driver");
-            this.pgsqlConn = DriverManager.getConnection(url, user, password);
+            this.pgsqlConn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
         }
         catch (ClassNotFoundException e) {
             System.err.println("Errore con il caricamento del driver di postgres!");
@@ -146,5 +192,46 @@ public class DatabaseManager {
         }
 
         return true;
+    }
+
+
+    /**
+     * Recupera il path del file ".jar" che sta eseguendo il programma
+     *
+     * @return il path se si sta eseguendo un file .jar, <code>null</code> altrimenti
+     */
+    private String getJarPath() {
+        // Recupera il nome della risorsa e controlla se inizia con "jar:"
+        boolean runFromJar = DatabaseManager
+            .class
+            .getResource(
+                DatabaseManager
+                    .class
+                    .getSimpleName() + ".class"
+            )
+            .toString()
+            .startsWith("jar:");
+
+        if (!runFromJar) {
+            return null;
+        }
+
+        try {
+            return new File(
+                DatabaseManager
+                    .class
+                    .getProtectionDomain()
+                    .getCodeSource()
+                    .getLocation()
+                    .toURI()
+            ).getPath();
+        } catch (URISyntaxException e) {
+            // Non dovrebbe mai arrivare qui
+            e.printStackTrace();
+            System.exit(1);
+
+            // Per far contento java
+            return null;
+        }
     }
 }
