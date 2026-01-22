@@ -127,7 +127,6 @@ public class Main
                 }
             }
 
-            // Separa gli statement
             return sql.toString();
         }
         catch (Exception e)
