@@ -38,7 +38,7 @@ public class LibraryQueries {
      * <code>CreateLibResult.DUPLICATE_NAME</code> se il nome è già in uso,
      * <code>CreateLibResult.UNEXPECTED_ERROR</code> in caso di errore SQL.
      */
-    public static CreateLibResult createLibrary(String userId, String nomeLibreria) {
+    public synchronized static CreateLibResult createLibrary(String userId, String nomeLibreria) {
         @Language("PostgreSQL")
         String query = """
             SELECT CASE WHEN EXISTS(
@@ -89,7 +89,7 @@ public class LibraryQueries {
      * <code>DeleteLibResult.LIBRARY_NOT_FOUND</code> se la libreria non esiste o non appartiene all'utente,
      * <code>DeleteLibResult.UNEXPECTED_ERROR</code> in caso di errore SQL.
      */
-    public static DeleteLibResult deleteLibrary(String userId, int libreriaId) {
+    public synchronized static DeleteLibResult deleteLibrary(String userId, int libreriaId) {
         @Language("PostgreSQL")
         String query = """
             SELECT CASE WHEN EXISTS(
@@ -144,7 +144,7 @@ public class LibraryQueries {
      * @param libroId    l'identificativo del libro da aggiungere
      * @return un valore di <code>AddBookToLibResult</code> che descrive l'esito specifico (Successo, Libreria non trovata, Libro già presente).
      */
-    public static AddBookToLibResult addBookToLibrary(String userId, int libreriaId, int libroId) {
+    public synchronized static AddBookToLibResult addBookToLibrary(String userId, int libreriaId, int libroId) {
         @Language("PostgreSQL")
         String query = """
             SELECT CASE
@@ -212,7 +212,7 @@ public class LibraryQueries {
      * <code>RemoveBookFromLibResult.LIBRARY_NOT_FOUND</code> se la libreria non esiste,
      * <code>RemoveBookFromLibResult.BOOK_NOT_IN_LIBRARY</code> se il libro non era presente.
      */
-    public static RemoveBookFromLibResult removeBookFromLibrary(String userId, int libreriaId, int libroId) {
+    public synchronized static RemoveBookFromLibResult removeBookFromLibrary(String userId, int libreriaId, int libroId) {
         @Language("PostgreSQL")
         String query = """
             SELECT CASE

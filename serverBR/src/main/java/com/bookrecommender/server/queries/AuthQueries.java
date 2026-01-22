@@ -38,7 +38,7 @@ public class AuthQueries {
      * @param password la password in chiaro scelta dall'utente (verrà salvata solo hashata)
      * @return un valore dell'enum <code>RegisterResult</code> che indica il successo o il tipo di errore (es. duplicato)
      */
-    public static RegisterResult register(User user, String password) {
+    public synchronized static RegisterResult register(User user, String password) {
         //
         // Controllo vincoli
         @Language("PostgreSQL")
@@ -108,7 +108,7 @@ public class AuthQueries {
      * @param password la password in chiaro da verificare contro l'hash nel DB
      * @return un valore dell'enum <code>LoginResult</code> che indica l'esito dell'autenticazione
      */
-    public static LoginResult login(String userid, String password) {
+    public synchronized static LoginResult login(String userid, String password) {
         //
         // Controllo password
         @Language("PostgreSQL")

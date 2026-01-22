@@ -41,7 +41,7 @@ public class SuggestionQueries {
      * @param libroConsigliatoId l'ID del libro suggerito
      * @return un valore dell'enum <code>AddSuggestionResult</code> che rispecchia l'esito dei controlli o il successo dell'operazione.
      */
-    public static AddSuggestionResult createRating(String userId, int libroSorgenteId, int libroConsigliatoId) {
+    public synchronized static AddSuggestionResult createRating(String userId, int libroSorgenteId, int libroConsigliatoId) {
         @Language("PostgreSQL")
         String query = """
             SELECT CASE
@@ -107,7 +107,7 @@ public class SuggestionQueries {
      * <code>RemoveSuggestionResult.NOT_SUGGESTED</code> se il suggerimento non esiste,
      * <code>RemoveSuggestionResult.UNEXPECTED_ERROR</code> in caso di errore.
      */
-    public static RemoveSuggestionResult deleteRating(String userId, int libroSorgenteId, int libroConsigliatoId) {
+    public synchronized static RemoveSuggestionResult deleteRating(String userId, int libroSorgenteId, int libroConsigliatoId) {
         @Language("PostgreSQL")
         String query = """
             SELECT CASE WHEN EXISTS(

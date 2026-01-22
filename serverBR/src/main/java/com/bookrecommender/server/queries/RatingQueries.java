@@ -37,7 +37,7 @@ public class RatingQueries {
      * <code>CreateRatingResult.ALREADY_RATED</code> se esiste già una valutazione per quel libro,
      * <code>CreateRatingResult.UNEXPECTED_ERROR</code> in caso di errore SQL.
      */
-    public static CreateRatingResult createRating(String userId, Rating v) {
+    public synchronized static CreateRatingResult createRating(String userId, Rating v) {
         @Language("PostgreSQL")
         String query = """
             SELECT CASE WHEN EXISTS(
@@ -99,7 +99,7 @@ public class RatingQueries {
      * <code>DeleteRatingResult.NOT_RATED</code> se la valutazione non esiste o non appartiene all'utente,
      * <code>DeleteRatingResult.UNEXPECTED_ERROR</code> in caso di errore SQL.
      */
-    public static DeleteRatingResult deleteRating(String userId, int valutazioneId) {
+    public synchronized static DeleteRatingResult deleteRating(String userId, int valutazioneId) {
         @Language("PostgreSQL")
         String query = """
             SELECT CASE WHEN EXISTS(

@@ -21,7 +21,7 @@ public class BookQueries {
      * Recupera tutti i libri presenti nel database.
      * @return lista completa dei libri
      */
-    public static LinkedList<Book> selectAll() {
+    public synchronized static LinkedList<Book> selectAll() {
         @Language("PostgreSQL")
         String query = "SELECT * FROM \"Libri\"";
         return DatabaseManager.getInstance().executeQuery(
@@ -36,7 +36,7 @@ public class BookQueries {
      * @param title titolo o parte di esso
      * @return lista dei libri trovati
      */
-    public static LinkedList<Book> searchByTitle(String title) {
+    public synchronized static LinkedList<Book> searchByTitle(String title) {
         @Language("PostgreSQL")
         String query = "SELECT * FROM \"Libri\" WHERE titolo ILIKE '%'||?||'%'";
         return DatabaseManager.getInstance().executeQuery(
@@ -51,7 +51,7 @@ public class BookQueries {
      * @param author autore o parte del nome
      * @return lista dei libri trovati
      */
-    public static LinkedList<Book> searchByAuthor(String author) {
+    public synchronized static LinkedList<Book> searchByAuthor(String author) {
         @Language("PostgreSQL")
         String query = "SELECT * FROM \"Libri\" WHERE autori ILIKE '%'||?||'%'";
         return DatabaseManager.getInstance().executeQuery(
@@ -67,7 +67,7 @@ public class BookQueries {
      * @param year anno esatto
      * @return lista dei libri trovati
      */
-    public static LinkedList<Book> searchByAuthorAndYear(String author, int year) {
+    public synchronized static LinkedList<Book> searchByAuthorAndYear(String author, int year) {
         @Language("PostgreSQL")
         String query = "SELECT * FROM \"Libri\" WHERE autori ILIKE '%'||?||'%' AND anno_pubblicazione = ?";
         return DatabaseManager.getInstance().executeQuery(
