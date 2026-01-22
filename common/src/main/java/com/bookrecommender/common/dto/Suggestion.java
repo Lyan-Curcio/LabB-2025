@@ -36,7 +36,7 @@ public class Suggestion implements Serializable {
         }
         catch (SQLException e) {
             System.err.println("Impossibile costruire una 'Suggestion' con il 'ResultSet': " + rs);
-            _id = -1;
+            _id = 0;
             _userId = "";
             _mainBookId = 0;
             _suggestedBookId = 0;
@@ -46,5 +46,10 @@ public class Suggestion implements Serializable {
         this.userId = _userId;
         this.mainBookId = _mainBookId;
         this.suggestedBookId = _suggestedBookId;
+    }
+
+    public String toStringDebug() {
+        return id + ": da " + userId +
+            "\n\t" + mainBookId + " -> " + suggestedBookId;
     }
 }

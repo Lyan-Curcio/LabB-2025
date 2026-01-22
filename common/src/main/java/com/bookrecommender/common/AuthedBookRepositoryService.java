@@ -1,5 +1,6 @@
 package com.bookrecommender.common;
 
+import com.bookrecommender.common.dto.Library;
 import com.bookrecommender.common.dto.Rating;
 import com.bookrecommender.common.dto.Suggestion;
 import com.bookrecommender.common.enums.library.AddBookToLibResult;
@@ -37,6 +38,9 @@ public interface AuthedBookRepositoryService extends Remote {
     void logout() throws RemoteException;
 
     // Gestione Librerie
+
+    LinkedList<Library> cercaLibreriePerNome(String nomeLibreria) throws RemoteException;
+    LinkedList<Library> cercaLibreriePerUtente(String userId) throws RemoteException;
 
     /**
      * Crea una nuova libreria associata all'utente.

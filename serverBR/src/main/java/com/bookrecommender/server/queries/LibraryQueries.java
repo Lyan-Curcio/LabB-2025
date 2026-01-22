@@ -1,5 +1,6 @@
 package com.bookrecommender.server.queries;
 
+import com.bookrecommender.common.dto.Library;
 import com.bookrecommender.common.enums.library.AddBookToLibResult;
 import com.bookrecommender.common.enums.library.CreateLibResult;
 import com.bookrecommender.common.enums.library.DeleteLibResult;
@@ -25,6 +26,26 @@ import java.util.LinkedList;
  * @author Nash Guizzardi 756941 VA
  */
 public class LibraryQueries {
+
+    public synchronized static LinkedList<Library> searchLibraryByName(String libraryName) {
+        @Language("PostgreSQL")
+        String query = "SELECT * FROM \"Librerie\" WHERE nome ILIKE '%'||?||'%'";
+        return DatabaseManager.getInstance().executeQuery(
+            query,
+            Library::new,
+            new Object[] {libraryName}
+        );
+    }
+
+    public synchronized static LinkedList<Library> searchLibraryByUser(String userId) {
+        @Language("PostgreSQL")
+        String query = "SELECT * FROM \"Librerie\" WHERE userid ILIKE '%'||?||'%'";
+        return DatabaseManager.getInstance().executeQuery(
+            query,
+            Library::new,
+            new Object[] {userId}
+        );
+    }
 
     /**
      * Crea una nuova libreria per un utente specifico.
