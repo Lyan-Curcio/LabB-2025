@@ -39,7 +39,22 @@ public interface AuthedBookRepositoryService extends Remote {
 
     // Gestione Librerie
 
+    /**
+     * Cerca le librerie nel sistema che contengono la stringa specificata nel nome.
+     *
+     * @param nomeLibreria la stringa (o parte di essa) da cercare nel nome della libreria
+     * @return una lista di oggetti {@link Library} che soddisfano i criteri di ricerca
+     * @throws RemoteException se si verifica un errore di comunicazione RMI
+     */
     LinkedList<Library> cercaLibreriePerNome(String nomeLibreria) throws RemoteException;
+
+    /**
+     * Cerca tutte le librerie appartenenti a uno specifico utente.
+     *
+     * @param userId l'identificativo dell'utente proprietario delle librerie
+     * @return una lista di oggetti {@link Library} appartenenti all'utente specificato
+     * @throws RemoteException se si verifica un errore di comunicazione RMI
+     */
     LinkedList<Library> cercaLibreriePerUtente(String userId) throws RemoteException;
 
     /**
@@ -82,6 +97,13 @@ public interface AuthedBookRepositoryService extends Remote {
 
     // Valutazioni
 
+    /**
+     * Recupera la valutazione che l'utente loggato ha rilasciato per un determinato libro.
+     *
+     * @param bookId l'identificativo del libro
+     * @return l'oggetto {@link Rating} se esiste, altrimenti null o un oggetto vuoto a seconda dell'implementazione
+     * @throws RemoteException se si verifica un errore di comunicazione RMI
+     */
     Rating getMyValutazione(int bookId) throws RemoteException;
 
     /**
@@ -107,6 +129,13 @@ public interface AuthedBookRepositoryService extends Remote {
 
     // Suggerimenti
 
+    /**
+     * Recupera i suggerimenti che l'utente loggato ha creato per un determinato libro sorgente.
+     *
+     * @param bookId l'identificativo del libro sorgente
+     * @return una lista di {@link Suggestion} creati dall'utente per quel libro
+     * @throws RemoteException se si verifica un errore di comunicazione RMI
+     */
     LinkedList<Suggestion> getMySuggerimenti(int bookId) throws RemoteException;
 
     /**

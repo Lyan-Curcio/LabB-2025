@@ -20,6 +20,19 @@ import java.util.LinkedList;
  */
 public class BookQueries {
 
+    /**
+     * Recupera tutte le informazioni aggregate relative a un libro (Dettagli, Valutazioni, Suggerimenti).
+     * <p>
+     * Questo metodo esegue tre query distinte in sequenza:
+     * 1. Recupera i dati del libro dalla tabella "Libri".
+     * 2. Recupera tutte le recensioni dalla tabella "ValutazioniLibri".
+     * 3. Recupera tutti i consigli dalla tabella "ConsigliLibri".
+     * </p>
+     *
+     * @param bookId l'identificativo univoco del libro
+     * @return un oggetto {@link BookInfo} contenente tutti i dati aggregati
+     * @throws java.util.NoSuchElementException se il libro con l'ID specificato non esiste
+     */
     public synchronized static BookInfo getBookInfo(int bookId) {
         @Language("PostgreSQL")
         String query = """
@@ -27,9 +40,9 @@ public class BookQueries {
             WHERE id = ?
         """;
         Book book = DatabaseManager.getInstance().executeQuery(
-            query,
-            Book::new,
-            new Object[] {bookId}
+                query,
+                Book::new,
+                new Object[] {bookId}
         ).getFirst();
 
         query = """
@@ -37,9 +50,9 @@ public class BookQueries {
             WHERE libro_id = ?
         """;
         LinkedList<Rating> ratings = DatabaseManager.getInstance().executeQuery(
-            query,
-            Rating::new,
-            new Object[] {bookId}
+                query,
+                Rating::new,
+                new Object[] {bookId}
         );
 
         query = """
@@ -47,9 +60,9 @@ public class BookQueries {
             WHERE libro_sorgente_id = ?
         """;
         LinkedList<Suggestion> suggestions = DatabaseManager.getInstance().executeQuery(
-            query,
-            Suggestion::new,
-            new Object[] {bookId}
+                query,
+                Suggestion::new,
+                new Object[] {bookId}
         );
 
         return new BookInfo(book, ratings, suggestions);

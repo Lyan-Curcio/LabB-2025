@@ -23,6 +23,14 @@ import java.util.LinkedList;
  */
 public class RatingQueries {
 
+    /**
+     * Recupera una specifica valutazione dal database data la coppia Utente-Libro.
+     *
+     * @param userId l'identificativo dell'utente
+     * @param bookId l'identificativo del libro
+     * @return l'oggetto {@link Rating} corrispondente
+     * @throws java.util.NoSuchElementException se la valutazione non viene trovata (poiché .getFirst() fallisce su lista vuota)
+     */
     public synchronized static Rating getRatingFrom(String userId, int bookId) {
         @Language("PostgreSQL")
         String query =  """
@@ -30,9 +38,9 @@ public class RatingQueries {
             WHERE userid = ? AND libro_id = ?
         """;
         return DatabaseManager.getInstance().executeQuery(
-            query,
-            Rating::new,
-            new Object[] {userId, bookId}
+                query,
+                Rating::new,
+                new Object[] {userId, bookId}
         ).getFirst();
     }
 

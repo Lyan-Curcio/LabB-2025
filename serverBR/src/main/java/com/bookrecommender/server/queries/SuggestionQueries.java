@@ -25,16 +25,23 @@ import java.util.LinkedList;
  */
 public class SuggestionQueries {
 
+    /**
+     * Recupera tutti i suggerimenti creati da un utente specifico partendo da un dato libro sorgente.
+     *
+     * @param userId l'identificativo dell'utente
+     * @param bookId l'identificativo del libro sorgente
+     * @return una lista di oggetti {@link Suggestion} trovati
+     */
     public synchronized static LinkedList<Suggestion> getSuggestionsFrom(String userId, int bookId) {
         @Language("PostgreSQL")
-        String query =  """
-            SELECT * FROM "ConsigliLibri"
-            WHERE userid = ? AND libro_sorgente_id = ?
-        """;
+        String query = """
+                    SELECT * FROM "ConsigliLibri"
+                    WHERE userid = ? AND libro_sorgente_id = ?
+                """;
         return DatabaseManager.getInstance().executeQuery(
-            query,
-            Suggestion::new,
-            new Object[] {userId, bookId}
+                query,
+                Suggestion::new,
+                new Object[]{userId, bookId}
         );
     }
 

@@ -1,0 +1,3931 @@
+\n--- START FILE: ./common/src/main/java/com/bookrecommender/common/BookRepositoryService.java ---
+package com.bookrecommender.common;
+
+import com.bookrecommender.common.dto.Book;
+import com.bookrecommender.common.dto.BookInfo;
+import com.bookrecommender.common.dto.User;
+import com.bookrecommender.common.enums.auth.LoginResult;
+import com.bookrecommender.common.enums.auth.RegisterResult;
+
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+import java.util.List;
+
+/**
+ * Interfaccia remota che definisce le funzionalità ad accesso libero del sistema (senza login).
+ * <p>
+ * Questa interfaccia estende <code>Remote</code> e permette ai client di ricercare libri
+ * e di effettuare le operazioni di autenticazione (login e registrazione).
+ * </p>
+ *
+ * @author Lorenzo Monachino 757393 VA
+ * @author Lyan Curcio 757579 VA
+ * @author Sergio Saldarriaga 757394 VA
+ * @author Nash Guizzardi 756941 VA
+ */
+public interface BookRepositoryService extends Remote {
+
+    /**
+     * Recupera le informazioni di un utente
+     *
+     * @param userId l'id dell'utente
+     * @return un oggetto {@link User} contenente le informazioni dell'utente cercato
+     * @throws RemoteException se si verifica un errore di comunicazione RMI
+     */
+    User getUserInfo(String userId) throws RemoteException;
+
+    /**
+     * Recupera le informazioni inerenti a un libro (libro, valutazioni e suggerimenti)
+     *
+     * @param libroId l'id del libro
+     * @return un oggetto {@link BookInfo} contenente le informazioni del libro richiesto
+     * @throws RemoteException se si verifica un errore di comunicazione RMI
+     */
+    BookInfo getBookInfo(int libroId) throws RemoteException;
+
+    /**
+     * Cerca i libri nel database che contengono la stringa specificata nel titolo.
+     * <p>La ricerca è <em>case-insensitive</em> e considera le sottostringhe.</p>
+     *
+     * @param titolo la stringa da cercare nel titolo dei libri
+     * @return una lista di oggetti {@link Book} che soddisfano i criteri di ricerca
+     * @throws RemoteException se si verifica un errore di comunicazione RMI
+     */
+    List<Book> cercaLibroPerTitolo(String titolo) throws RemoteException;
+
+    /**
+     * Cerca i libri scritti dall'autore specificato.
+     *
+     * @param autore il nome (o parte del nome) dell'autore da cercare
+     * @return una lista di oggetti {@link Book} scritti dall'autore richiesto
+     * @throws RemoteException se si verifica un errore di comunicazione RMI
+     */
+    List<Book> cercaLibroPerAutore(String autore) throws RemoteException;
+
+    /**
+     * Cerca i libri scritti da un autore specifico pubblicati in un determinato anno.
+     *
+     * @param autore il nome (o parte del nome) dell'autore
+     * @param anno   l'anno di pubblicazione del libro
+     * @return una lista di oggetti {@link Book} corrispondenti ai criteri di ricerca
+     * @throws RemoteException se si verifica un errore di comunicazione RMI
+     */
+    List<Book> cercaLibroPerAutoreEAnno(String autore, int anno) throws RemoteException;
+
+    /**
+     * Registra un nuovo utente nel sistema.
+     * <p>
+     * Se la registrazione ha successo, viene restituito anche il servizio per le operazioni autenticate.
+     * </p>
+     *
+     * @param utente   l'oggetto {@link User} contenente i dati anagrafici del nuovo utente
+     * @param password la password scelta dall'utente per l'accesso
+     * @return un oggetto {@link BRPair} contenente l'esito della registrazione ({@link RegisterResult})
+     * e, in caso di successo, il riferimento al servizio autenticato ({@link AuthedBookRepositoryService})
+     * @throws RemoteException se si verifica un errore di comunicazione RMI
+     */
+    BRPair<RegisterResult, AuthedBookRepositoryService> registrazione(User utente, String password) throws RemoteException;
+
+    /**
+     * Effettua il login di un utente già registrato.
+     *
+     * @param userId   l'identificativo dell'utente
+     * @param password la password di accesso
+     * @return un oggetto {@link BRPair} contenente l'esito del login ({@link LoginResult})
+     * e, se le credenziali sono valide, il riferimento al servizio autenticato ({@link AuthedBookRepositoryService})
+     * @throws RemoteException se si verifica un errore di comunicazione RMI
+     */
+    BRPair<LoginResult, AuthedBookRepositoryService> login(String userId, String password) throws RemoteException;
+}\n--- END FILE: ./common/src/main/java/com/bookrecommender/common/BookRepositoryService.java ---
+\n--- START FILE: ./common/src/main/java/com/bookrecommender/common/dto/Rating.java ---
+package com.bookrecommender.common.dto;
+
+import java.io.Serial;
+import java.io.Serializable;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+/**
+ * Classe DTO (Data Transfer Object) che rappresenta una valutazione rilasciata da un utente per un libro.
+ * <p>
+ * Contiene sia i punteggi numerici (da 1 a 5) per diverse categorie (stile, contenuto, ecc.),
+ * sia le note testuali opzionali associate.
+ * La classe è immutabile e implementa <code>Serializable</code> per il trasferimento dati via rete.
+ * </p>
+ *
+ * @author Lorenzo Monachino 757393 VA
+ * @author Lyan Curcio 757579 VA
+ * @author Sergio Saldarriaga 757394 VA
+ * @author Nash Guizzardi 756941 VA
+ */
+public class Rating implements Serializable {
+
+    /** Versione della classe per la serializzazione. */
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    /** Identificativo univoco della valutazione nel database. */
+    public final int id;
+
+    /** Identificativo del libro a cui si riferisce la valutazione. */
+    public final int libroId;
+
+    /** Identificativo dell'utente che ha rilasciato la valutazione. */
+    public final String userId;
+
+    // Punteggi 1-5
+
+    /** Punteggio assegnato allo stile di scrittura (range 1-5). */
+    public final int stile;
+
+    /** Punteggio assegnato al contenuto del libro (range 1-5). */
+    public final int contenuto;
+
+    /** Punteggio assegnato alla gradevolezza generale (range 1-5). */
+    public final int gradevolezza;
+
+    /** Punteggio assegnato all'originalità dell'opera (range 1-5). */
+    public final int originalita;
+
+    /** Punteggio assegnato alla qualità dell'edizione (range 1-5). */
+    public final int edizione;
+
+    /** Punteggio finale calcolato come media arrotondata dei 5 criteri precedenti. */
+    public final int finale;
+
+    // Note testuali (max 256 char)
+
+    /** Nota testuale relativa allo stile (max 256 caratteri). */
+    public final String noteStile;
+
+    /** Nota testuale relativa al contenuto (max 256 caratteri). */
+    public final String noteContenuto;
+
+    /** Nota testuale relativa alla gradevolezza (max 256 caratteri). */
+    public final String noteGradevolezza;
+
+    /** Nota testuale relativa all'originalità (max 256 caratteri). */
+    public final String noteOriginalita;
+
+    /** Nota testuale relativa all'edizione (max 256 caratteri). */
+    public final String noteEdizione;
+
+    /** Nota testuale finale complessiva (max 256 caratteri). */
+    public final String noteFinale;
+
+    /**
+     * Costruisce una nuova {@link Rating} con i punteggi e le note specificati.
+     * <p>
+     * Il punteggio <code>finale</code> viene calcolato automaticamente come media arrotondata
+     * dei 5 parametri numerici passati.
+     * </p>
+     *
+     * @param libroId          l'ID del libro valutato
+     * @param userId           l'ID dell'utente valutatore
+     * @param stile            punteggio stile (1-5)
+     * @param contenuto        punteggio contenuto (1-5)
+     * @param gradevolezza     punteggio gradevolezza (1-5)
+     * @param originalita      punteggio originalità (1-5)
+     * @param edizione         punteggio edizione (1-5)
+     * @param noteStile        commento sullo stile
+     * @param noteContenuto    commento sul contenuto
+     * @param noteGradevolezza commento sulla gradevolezza
+     * @param noteOriginalita  commento sull'originalità
+     * @param noteEdizione     commento sull'edizione
+     * @param noteFinale       commento finale
+     */
+    public Rating(
+            int libroId, String userId,
+            int stile, int contenuto, int gradevolezza, int originalita, int edizione,
+            String noteStile, String noteContenuto, String noteGradevolezza, String noteOriginalita, String noteEdizione, String noteFinale
+    )
+    {
+        this.id = -1;
+        this.libroId = libroId;
+        this.userId = userId;
+
+        this.stile = stile;
+        this.contenuto = contenuto;
+        this.gradevolezza = gradevolezza;
+        this.originalita = originalita;
+        this.edizione = edizione;
+        this.finale = Math.round((stile + contenuto + gradevolezza + originalita + edizione) / 5.0f);
+
+        this.noteStile = noteStile;
+        this.noteContenuto = noteContenuto;
+        this.noteGradevolezza = noteGradevolezza;
+        this.noteOriginalita = noteOriginalita;
+        this.noteEdizione = noteEdizione;
+        this.noteFinale = noteFinale;
+    }
+
+    /**
+     * Costruisce un oggetto {@link Rating} estraendo i dati da un <code>ResultSet</code> SQL.
+     * <p>
+     * Questo costruttore recupera i punteggi e le note dalle colonne del database e ricalcola
+     * il voto finale basandosi sui dati estratti.
+     * In caso di <code>SQLException</code>, viene generato un oggetto vuoto/di default e l'errore stampato su <code>System.err</code>.
+     * </p>
+     *
+     * @param rs il <code>ResultSet</code> posizionato sulla riga della valutazione da leggere
+     */
+    public Rating(ResultSet rs) {
+        int _id, _libroId;
+        String _userId;
+        int _stile, _contenuto, _gradevolezza, _originalita, _edizione, _finale;
+        String _noteStile, _noteContenuto, _noteGradevolezza, _noteOriginalita, _noteEdizione, _noteFinale;
+        try {
+            _id = rs.getInt("id");
+            _libroId = rs.getInt("libro_id");
+            _userId = rs.getString("user_id");
+
+            _stile = rs.getInt("stile");
+            _contenuto = rs.getInt("contenuto");
+            _gradevolezza = rs.getInt("gradevolezza");
+            _originalita = rs.getInt("originalita");
+            _edizione = rs.getInt("edizione");
+            _finale = Math.round((_stile + _contenuto + _gradevolezza + _originalita + _edizione) / 5.0f);
+
+            _noteStile = rs.getString("note_stile");
+            _noteContenuto = rs.getString("note_contenuto");
+            _noteGradevolezza = rs.getString("note_gradevolezza");
+            _noteOriginalita = rs.getString("note_originalita");
+            _noteEdizione = rs.getString("note_edizione");
+            _noteFinale = rs.getString("note_finale");
+        }
+        catch (SQLException e) {
+            System.err.println("Impossibile costruire una 'Valutazione' con il 'ResultSet': " + rs);
+            _id = 0;
+            _libroId = 0;
+            _userId = "";
+
+            _stile = 0;
+            _contenuto = 0;
+            _gradevolezza = 0;
+            _originalita = 0;
+            _edizione = 0;
+            _finale = 0;
+
+            _noteStile = "";
+            _noteContenuto = "";
+            _noteGradevolezza = "";
+            _noteOriginalita = "";
+            _noteEdizione = "";
+            _noteFinale = "";
+        }
+
+        this.id = _id;
+        this.libroId = _libroId;
+        this.userId = _userId;
+
+        this.stile = _stile;
+        this.contenuto = _contenuto;
+        this.gradevolezza = _gradevolezza;
+        this.originalita = _originalita;
+        this.edizione = _edizione;
+        this.finale = _finale;
+
+        this.noteStile = _noteStile;
+        this.noteContenuto = _noteContenuto;
+        this.noteGradevolezza = _noteGradevolezza;
+        this.noteOriginalita = _noteOriginalita;
+        this.noteEdizione = _noteEdizione;
+        this.noteFinale = _noteFinale;
+    }
+
+    /**
+     * Restituisce una rappresentazione dettagliata della valutazione per scopi di debug.
+     *
+     * @return una stringa contenente tutti i voti parziali e le relative note
+     */
+    public String toStringDebug() {
+        return id + ": Da '" + userId + "' per '" + libroId + "'" +
+                "\n\tStile " + stile + " " + noteStile +
+                "\n\tContenuto " + contenuto +
+                " " + noteContenuto +
+                "\n\tGradevolezza " + gradevolezza + " " + noteGradevolezza +
+                "\n\tOriginalità " + originalita + " " + noteOriginalita +
+                "\n\tEdizione " + edizione + " " + noteEdizione +
+                "\n\tFinale " + finale +
+                " " + noteFinale;
+    }
+
+    /**
+     * Restituisce una stringa sintetica della valutazione per la visualizzazione all'utente.
+     *
+     * @return una stringa formattata con l'autore della recensione e i dettagli dei voti
+     */
+    public String toStringInfo() {
+        return "Da " + userId +
+                "\nStile " + stile + " " + noteStile +
+                "\nContenuto " + contenuto + " " + noteContenuto +
+
+                "\nGradevolezza " + gradevolezza + " " + noteGradevolezza +
+                "\nOriginalità " + originalita + " " + noteOriginalita +
+                "\nEdizione " + edizione + " " + noteEdizione +
+                "\nFinale " + finale + " " + noteFinale;
+    }
+}\n--- END FILE: ./common/src/main/java/com/bookrecommender/common/dto/Rating.java ---
+\n--- START FILE: ./common/src/main/java/com/bookrecommender/common/dto/BookInfo.java ---
+package com.bookrecommender.common.dto;
+
+import java.io.Serial;
+import java.io.Serializable;
+import java.util.LinkedList;
+
+public class BookInfo implements Serializable {
+    /** Versione della classe per la serializzazione. */
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    public final Book book;
+    public final LinkedList<Rating> ratings;
+    public final LinkedList<Suggestion> suggestions;
+
+    public BookInfo(Book book, LinkedList<Rating> rating, LinkedList<Suggestion> suggestions) {
+        this.book = book;
+        this.ratings = rating;
+        this.suggestions = suggestions;
+    }
+}
+\n--- END FILE: ./common/src/main/java/com/bookrecommender/common/dto/BookInfo.java ---
+\n--- START FILE: ./common/src/main/java/com/bookrecommender/common/dto/Library.java ---
+package com.bookrecommender.common.dto;
+
+import java.io.Serial;
+import java.io.Serializable;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class Library implements Serializable {
+
+    /** Versione della classe per la serializzazione. */
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    public final int id;
+    public final String name;
+    public final String userId;
+
+    public Library(String name, String userId) {
+        id = -1;
+        this.name = name;
+        this.userId = userId;
+    }
+
+    public Library(ResultSet rs) {
+        int _id;
+        String _name;
+        String _userId;
+
+        try {
+            _id = rs.getInt("id");
+            _name = rs.getString("nome");
+            _userId = rs.getString("userid");
+        }
+        catch (SQLException e) {
+            System.err.println("Impossibile costruire una 'Library' con il 'ResultSet': " + rs);
+            _id = 0;
+            _name = "";
+            _userId = "";
+        }
+
+        this.id = _id;
+        this.name = _name;
+        this.userId = _userId;
+    }
+
+    public String toStringDebug() {
+        return id + ": " + name + " di " + userId;
+    }
+}
+\n--- END FILE: ./common/src/main/java/com/bookrecommender/common/dto/Library.java ---
+\n--- START FILE: ./common/src/main/java/com/bookrecommender/common/dto/User.java ---
+package com.bookrecommender.common.dto;
+
+import java.io.Serial;
+import java.io.Serializable;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+/**
+ * Classe DTO (Data Transfer Object) che rappresenta l'entità di un Utente.
+ * <p>
+ * Questa classe è immutabile e contiene le informazioni anagrafiche dell'utente.
+ * Implementa <code>Serializable</code> per essere trasferita tra client e server durante le fasi di login e registrazione.
+ * Non contiene la password, che viene gestita separatamente per motivi di sicurezza.
+ * </p>
+ *
+ * @author Lorenzo Monachino 757393 VA
+ * @author Lyan Curcio 757579 VA
+ * @author Sergio Saldarriaga 757394 VA
+ * @author Nash Guizzardi 756941 VA
+ */
+public class User implements Serializable {
+
+    /** Versione della classe per la serializzazione. */
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    /** Identificativo univoco (username) scelto dall'utente. */
+    public final String userId;
+
+    /** Nome dell'utente. */
+    public final String nome;
+
+    /** Cognome dell'utente. */
+    public final String cognome;
+
+    /** Codice Fiscale dell'utente. */
+    public final String codiceFiscale;
+
+    /** Indirizzo email dell'utente. */
+    public final String email;
+
+    /**
+     * Costruisce un nuovo oggetto {@link User} con i dati anagrafici specificati.
+     * <p>
+     * Questo costruttore viene usato tipicamente durante la fase di registrazione lato client,
+     * prima dell'invio dei dati al server.
+     * </p>
+     *
+     * @param userId        l'username o ID univoco
+     * @param nome          il nome proprio
+     * @param cognome       il cognome
+     * @param codiceFiscale il codice fiscale
+     * @param email         l'indirizzo di posta elettronica
+     */
+    public User(String userId, String nome, String cognome, String codiceFiscale, String email) {
+        this.userId = userId;
+        this.nome = nome;
+        this.cognome = cognome;
+        this.codiceFiscale = codiceFiscale;
+        this.email = email;
+    }
+
+    /**
+     * Costruisce un oggetto {@link User} estraendo i dati da un <code>ResultSet</code> SQL.
+     * <p>
+     * Questo costruttore mappa le colonne del database sui campi dell'oggetto.
+     * In caso di <code>SQLException</code>, viene generato un oggetto
+     * con campi vuoti e l'errore viene stampato su <code>System.err</code>.
+     * </p>
+     *
+     * @param rs il <code>ResultSet</code> posizionato sulla riga dell'utente da leggere
+     */
+    public User(ResultSet rs) {
+        String _userId;
+        String _nome;
+        String _cognome;
+        String _codiceFiscale;
+        String _email;
+
+        try {
+            _userId = rs.getString("userid");
+            _nome = rs.getString("nome");
+            _cognome = rs.getString("cognome");
+            _codiceFiscale = rs.getString("codice_fiscale");
+            _email = rs.getString("email");
+        }
+        catch (SQLException e) {
+            System.err.println("Impossibile costruire un 'User' con il 'ResultSet': " + rs);
+            _userId = "";
+            _nome = "";
+            _cognome = "";
+            _codiceFiscale = "";
+            _email = "";
+        }
+
+        this.userId = _userId;
+        this.nome = _nome;
+        this.cognome = _cognome;
+        this.codiceFiscale = _codiceFiscale;
+        this.email = _email;
+    }
+
+    /**
+     * Restituisce una rappresentazione testuale completa dell'utente per scopi di debug.
+     *
+     * @return una stringa con tutti i dettagli dell'utente
+     */
+    public String toStringDebug() {
+        return userId + ": " + nome + " " + cognome +
+                "\n\t" + codiceFiscale +
+                "\n\t" + email;
+    }
+
+    /**
+     * Restituisce una stringa sintetica per la visualizzazione all'utente.
+     * <p>
+     * Formato: "Nome Cognome (CodiceFiscale)"
+     * </p>
+     *
+     * @return una stringa formattata con le informazioni principali
+     */
+    public String toStringInfo() {
+        return nome + " " + cognome + " (" + codiceFiscale + ")";
+    }
+}\n--- END FILE: ./common/src/main/java/com/bookrecommender/common/dto/User.java ---
+\n--- START FILE: ./common/src/main/java/com/bookrecommender/common/dto/Suggestion.java ---
+package com.bookrecommender.common.dto;
+
+import java.io.Serial;
+import java.io.Serializable;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class Suggestion implements Serializable {
+    /** Versione della classe per la serializzazione. */
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    public final int id;
+    public final String userId;
+    public final int mainBookId;
+    public final int suggestedBookId;
+
+    public Suggestion(String userId, int mainBookId, int suggestedBookId) {
+        id = -1;
+        this.userId = userId;
+        this.mainBookId = mainBookId;
+        this.suggestedBookId = suggestedBookId;
+    }
+
+    public Suggestion(ResultSet rs) {
+        int _id;
+        String _userId;
+        int _mainBookId;
+        int _suggestedBookId;
+
+        try {
+            _id = rs.getInt("id");
+            _userId = rs.getString("userid");
+            _mainBookId = rs.getInt("libro_sorgente_id");
+            _suggestedBookId = rs.getInt("libro_consigliato_id");
+        }
+        catch (SQLException e) {
+            System.err.println("Impossibile costruire una 'Suggestion' con il 'ResultSet': " + rs);
+            _id = 0;
+            _userId = "";
+            _mainBookId = 0;
+            _suggestedBookId = 0;
+        }
+
+        this.id = _id;
+        this.userId = _userId;
+        this.mainBookId = _mainBookId;
+        this.suggestedBookId = _suggestedBookId;
+    }
+
+    public String toStringDebug() {
+        return id + ": da " + userId +
+            "\n\t" + mainBookId + " -> " + suggestedBookId;
+    }
+}
+\n--- END FILE: ./common/src/main/java/com/bookrecommender/common/dto/Suggestion.java ---
+\n--- START FILE: ./common/src/main/java/com/bookrecommender/common/dto/Book.java ---
+package com.bookrecommender.common.dto;
+
+import java.io.Serial;
+import java.io.Serializable;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+/**
+ * Classe DTO (Data Transfer Object) che rappresenta l'entità di un Libro.
+ * <p>
+ * Questa classe è immutabile (i campi sono <code>final</code>) e implementa <code>Serializable</code>
+ * per permettere il trasferimento dei dati tra il server e il client tramite RMI.
+ * Include logica di parsing per costruire l'oggetto direttamente da un <code>ResultSet</code> SQL.
+ * </p>
+ *
+ * @author Lorenzo Monachino 757393 VA
+ * @author Lyan Curcio 757579 VA
+ * @author Sergio Saldarriaga 757394 VA
+ * @author Nash Guizzardi 756941 VA
+ */
+public class Book implements Serializable {
+
+    /** Versione della classe per la serializzazione. */
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    /** Identificativo univoco del libro nel database. */
+    public final int id;
+
+    /** Titolo completo del libro. */
+    public final String titolo;
+
+    /** Array contenente i nomi degli autori del libro. */
+    public final String[] autori;
+
+    /** Anno di pubblicazione del libro. */
+    public final int annoPubblicazione;
+
+    /** Casa editrice che ha pubblicato il libro. */
+    public final String editore;
+
+    /** Array delle categorie o generi a cui appartiene il libro. */
+    public final String[] categorie;
+
+    /**
+     * Costruisce un nuovo oggetto {@link Book} con i dati specificati.
+     * <p>
+     * Questo costruttore viene utilizzato quando i dati sono già stati elaborati
+     * e non provengono direttamente da una query SQL grezza.
+     * </p>
+     *
+     * @param titolo     il titolo del libro
+     * @param autori     un array di stringhe contenente gli autori
+     * @param anno       l'anno di pubblicazione
+     * @param editore    il nome dell'editore
+     * @param categorie  un array di stringhe contenente le categorie
+     */
+    public Book(String titolo, String[] autori, int anno, String editore, String[] categorie) {
+        this.id = -1;
+        this.titolo = titolo;
+        this.autori = autori;
+        this.annoPubblicazione = anno;
+        this.editore = editore;
+        this.categorie = categorie;
+    }
+
+    /**
+     * Costruisce un oggetto {@link Book} estraendo i dati da un <code>ResultSet</code> SQL.
+     * <p>
+     * Questo costruttore effettua il parsing automatico delle colonne database e converte
+     * le stringhe separate da virgola (per autori e categorie) in array.
+     * In caso di <code>SQLException</code>, viene generato un oggetto vuoto/di default e l'errore viene stampato su <code>System.err</code>.
+     * </p>
+     *
+     * @param rs il <code>ResultSet</code> posizionato sulla riga da convertire
+     */
+    public Book(ResultSet rs) {
+        int _id;
+        String _titolo;
+        String[] _autori;
+        int _annoPubblicazione;
+        String _editore;
+        String[] _categorie;
+
+        try {
+            _id = rs.getInt("id");
+            _titolo = rs.getString("titolo");
+            _autori = autoriParser(rs.getString("autori"));
+            _annoPubblicazione = rs.getInt("anno_pubblicazione");
+            _editore = rs.getString("editore");
+            _categorie = categorieParser(rs.getString("categorie"));
+        }
+        catch (SQLException e) {
+            System.err.println("Impossibile costruire un 'Book' con il 'ResultSet': " + rs);
+            _id = 0;
+            _titolo = "";
+            _autori = new String[0];
+            _annoPubblicazione = 0;
+            _editore = "";
+            _categorie = new String[0];
+        }
+
+        this.id = _id;
+        this.titolo = _titolo;
+        this.autori = _autori;
+        this.annoPubblicazione = _annoPubblicazione;
+        this.editore = _editore;
+        this.categorie = _categorie;
+    }
+
+    /**
+     * Restituisce una rappresentazione dettagliata dell'oggetto utile per il debugging.
+     *
+     * @return una stringa contenente tutti i dati del libro
+     */
+    public String toStringDebug() {
+        return id + ": " + titolo +
+                "\n\t" + String.join(", ", autori) +
+                "\n\t" + annoPubblicazione +
+                "\n\t" + editore +
+                "\n\t" + String.join(", ", categorie);
+    }
+
+    /**
+     * Restituisce una stringa formattata sintetica per la visualizzazione all'utente.
+     * <p>
+     * Formato: "Titolo - Da: Autore1, Autore2 - (Anno)"
+     * </p>
+     *
+     * @return una stringa formattata con titolo, autori e anno
+     */
+    public String toStringInfo() {
+        return titolo + " - Da: " + String.join(", ", autori) + " - (" + annoPubblicazione + ")";
+    }
+
+    /**
+     * Metodo di utilità interno per convertire la stringa degli autori dal DB in un array.
+     *
+     * @param autoriStr la stringa proveniente dal DB (es. "Autore1,Autore2")
+     * @return un array di stringhe contenente i singoli autori
+     */
+    private String[] autoriParser(String autoriStr) {
+        if (autoriStr == null || autoriStr.isEmpty()) {
+            return new String[0];
+        }
+
+        return autoriStr.split(",");
+    }
+
+    /**
+     * Metodo di utilità interno per convertire la stringa delle categorie dal DB in un array.
+     *
+     * @param categorieStr la stringa proveniente dal DB (es. "Fantasy,Horror")
+     * @return un array di stringhe contenente le singole categorie
+     */
+    private String[] categorieParser(String categorieStr) {
+        if (categorieStr == null || categorieStr.isEmpty()) {
+            return new String[0];
+        }
+
+        return categorieStr.split(",");
+    }
+}\n--- END FILE: ./common/src/main/java/com/bookrecommender/common/dto/Book.java ---
+\n--- START FILE: ./common/src/main/java/com/bookrecommender/common/BRPair.java ---
+package com.bookrecommender.common;
+
+import java.io.Serializable;
+import java.rmi.Remote;
+
+/**
+ * Classe (record) di utility che rappresenta una coppia immutabile di oggetti tipizzati.
+ * <p>
+ * Questa implementazione è specifica per l'architettura RMI del progetto:
+ * </p>
+ * <ul>
+ * <li>Il tipo generico <code>A</code> deve essere <code>Serializable</code> (usato per enum).</li>
+ * <li>Il tipo generico <code>B</code> deve essere <code>Remote</code> (usato per restituire l'oggetto Remote del servizio autenticato {@link AuthedBookRepositoryService}).</li>
+ * </ul>
+ * <p>
+ * Viene utilizzato durante il login e la registrazione per restituire in un singolo oggetto
+ * sia l'esito dell'operazione che il riferimento al servizio remoto.
+ * </p>
+ *
+ * @param <A>    il tipo del primo elemento (vincolo: deve essere serializzabile)
+ * @param <B>    il tipo del secondo elemento (vincolo: deve essere un'interfaccia remota)
+ * @param first  il primo oggetto della coppia
+ * @param second il secondo oggetto della coppia
+ *
+ * @author Lorenzo Monachino 757393 VA
+ * @author Lyan Curcio 757579 VA
+ * @author Sergio Saldarriaga 757394 VA
+ * @author Nash Guizzardi 756941 VA
+ */
+public record BRPair<A extends Serializable, B extends Remote>(A first, B second) implements Serializable {}\n--- END FILE: ./common/src/main/java/com/bookrecommender/common/BRPair.java ---
+\n--- START FILE: ./common/src/main/java/com/bookrecommender/common/AuthedBookRepositoryService.java ---
+package com.bookrecommender.common;
+
+import com.bookrecommender.common.dto.Library;
+import com.bookrecommender.common.dto.Rating;
+import com.bookrecommender.common.dto.Suggestion;
+import com.bookrecommender.common.enums.library.AddBookToLibResult;
+import com.bookrecommender.common.enums.library.CreateLibResult;
+import com.bookrecommender.common.enums.library.DeleteLibResult;
+import com.bookrecommender.common.enums.library.RemoveBookFromLibResult;
+import com.bookrecommender.common.enums.rating.CreateRatingResult;
+import com.bookrecommender.common.enums.rating.DeleteRatingResult;
+import com.bookrecommender.common.enums.suggestion.AddSuggestionResult;
+import com.bookrecommender.common.enums.suggestion.RemoveSuggestionResult;
+
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+import java.util.LinkedList;
+
+/**
+ * Interfaccia remota che espone le funzionalità riservate agli utenti registrati e autenticati.
+ * <p>
+ * Questa interfaccia estende <code>Remote</code> e permette la gestione delle librerie personali,
+ * l'inserimento di valutazioni e la gestione dei suggerimenti tra libri.
+ * </p>
+ *
+ * @author Lorenzo Monachino 757393 VA
+ * @author Lyan Curcio 757579 VA
+ * @author Sergio Saldarriaga 757394 VA
+ * @author Nash Guizzardi 756941 VA
+ */
+public interface AuthedBookRepositoryService extends Remote {
+
+    /**
+     * Termina la sessione dell'utente corrente.
+     *
+     * @throws RemoteException se si verifica un errore di comunicazione RMI
+     */
+    void logout() throws RemoteException;
+
+    // Gestione Librerie
+
+    LinkedList<Library> cercaLibreriePerNome(String nomeLibreria) throws RemoteException;
+    LinkedList<Library> cercaLibreriePerUtente(String userId) throws RemoteException;
+
+    /**
+     * Crea una nuova libreria associata all'utente.
+     *
+     * @param nomeLibreria il nome da assegnare alla nuova libreria
+     * @return un valore dell'enum {@link CreateLibResult} che indica l'esito dell'operazione
+     * @throws RemoteException se si verifica un errore di comunicazione RMI
+     */
+    CreateLibResult creaLibreria(String nomeLibreria) throws RemoteException;
+
+    /**
+     * Elimina una libreria dell'utente.
+     *
+     * @param libreriaId l'identificativo univoco della libreria da eliminare
+     * @return un valore dell'enum {@link DeleteLibResult} che indica l'esito dell'operazione
+     * @throws RemoteException se si verifica un errore di comunicazione RMI
+     */
+    DeleteLibResult eliminaLibreria(int libreriaId) throws RemoteException;
+
+    /**
+     * Aggiunge un libro esistente a una specifica libreria dell'utente.
+     *
+     * @param libreriaId l'identificativo della libreria di destinazione
+     * @param libroId    l'identificativo del libro da aggiungere
+     * @return un valore dell'enum {@link AddBookToLibResult} che indica l'esito dell'operazione
+     * @throws RemoteException se si verifica un errore di comunicazione RMI
+     */
+    AddBookToLibResult aggiungiLibroALibreria(int libreriaId, int libroId) throws RemoteException;
+
+    /**
+     * Rimuove un libro da una specifica libreria dell'utente.
+     *
+     * @param libreriaId l'identificativo della libreria da cui rimuovere il libro
+     * @param libroId    l'identificativo del libro da rimuovere
+     * @return un valore dell'enum {@link RemoveBookFromLibResult} che indica l'esito dell'operazione
+     * @throws RemoteException se si verifica un errore di comunicazione RMI
+     */
+    RemoveBookFromLibResult rimuoviLibroDaLibreria(int libreriaId, int libroId) throws RemoteException;
+
+    // Valutazioni
+
+    Rating getMyValutazione(int bookId) throws RemoteException;
+
+    /**
+     * Inserisce una nuova valutazione (voto e/o commento) per un libro.
+     * <p>
+     * Richiede un oggetto {@link Rating} compilato con i dati necessari (punteggio, commento, id libro).
+     * </p>
+     *
+     * @param valutazione l'oggetto DTO contenente i dettagli della valutazione
+     * @return un valore dell'enum {@link CreateRatingResult} che indica l'esito dell'operazione
+     * @throws RemoteException se si verifica un errore di comunicazione RMI
+     */
+    CreateRatingResult inserisciValutazioneLibro(Rating valutazione) throws RemoteException;
+
+    /**
+     * Rimuove una valutazione precedentemente inserita dall'utente.
+     *
+     * @param valutazioneId l'identificativo univoco della valutazione da rimuovere
+     * @return un valore dell'enum <code>DeleteRatingResult</code> che indica l'esito dell'operazione
+     * @throws RemoteException se si verifica un errore di comunicazione RMI
+     */
+    DeleteRatingResult rimuoviValutazioneLibro(int valutazioneId) throws RemoteException;
+
+    // Suggerimenti
+
+    LinkedList<Suggestion> getMySuggerimenti(int bookId) throws RemoteException;
+
+    /**
+     * Inserisce un suggerimento tra due libri.
+     * <p>
+     * Collega un "libro sorgente" a un "libro consigliato", indicando che chi legge il primo
+     * potrebbe apprezzare il secondo.
+     * </p>
+     *
+     * @param libroSorgenteId    l'identificativo del libro di partenza
+     * @param libroConsigliatoId l'identificativo del libro suggerito
+     * @return un valore dell'enum {@link AddSuggestionResult} che indica l'esito dell'operazione
+     * @throws RemoteException se si verifica un errore di comunicazione RMI
+     */
+    AddSuggestionResult inserisciSuggerimentoLibro(int libroSorgenteId, int libroConsigliatoId) throws RemoteException;
+
+    /**
+     * Rimuove un suggerimento tra due libri.
+     *
+     * @param libroSorgenteId    l'identificativo del libro di partenza
+     * @param libroConsigliatoId l'identificativo del libro suggerito da rimuovere
+     * @return un valore dell'enum {@link RemoveSuggestionResult} che indica l'esito dell'operazione
+     * @throws RemoteException se si verifica un errore di comunicazione RMI
+     */
+    RemoveSuggestionResult rimuoviSuggerimentoLibro(int libroSorgenteId, int libroConsigliatoId) throws RemoteException;
+}\n--- END FILE: ./common/src/main/java/com/bookrecommender/common/AuthedBookRepositoryService.java ---
+\n--- START FILE: ./common/src/main/java/com/bookrecommender/common/enums/rating/DeleteRatingResult.java ---
+package com.bookrecommender.common.enums.rating;
+
+/**
+ * Enum che definisce i possibili esiti del tentativo di rimuovere una valutazione.
+ *
+ * @author Lorenzo Monachino 757393 VA
+ * @author Lyan Curcio 757579 VA
+ * @author Sergio Saldarriaga 757394 VA
+ * @author Nash Guizzardi 756941 VA
+ */
+public enum DeleteRatingResult {
+
+    /** La valutazione è stata eliminata correttamente. */
+    OK("Valutazione eliminata"),
+
+    /** L'operazione è fallita perché non esiste alcuna valutazione associata all'utente per questo libro. */
+    NOT_RATED("Questo libro non è stato ancora valutato"),
+
+    /** Si è verificato un errore imprevisto. */
+    UNEXPECTED_ERROR("Errore non previsto!");
+
+    /** Messaggio descrittivo associato all'esito. */
+    private final String msg;
+
+    /**
+     * Costruttore privato dell'enum.
+     *
+     * @param msg il messaggio descrittivo da associare alla costante
+     */
+    DeleteRatingResult(String msg) {
+        this.msg = msg;
+    }
+
+    /**
+     * Restituisce il messaggio descrittivo associato all'esito.
+     *
+     * @return una stringa contenente il messaggio da mostrare all'utente
+     */
+    public String getMessage() {
+        return msg;
+    }
+}\n--- END FILE: ./common/src/main/java/com/bookrecommender/common/enums/rating/DeleteRatingResult.java ---
+\n--- START FILE: ./common/src/main/java/com/bookrecommender/common/enums/rating/CreateRatingResult.java ---
+package com.bookrecommender.common.enums.rating;
+
+/**
+ * Enum che definisce i possibili esiti del tentativo di inserire una nuova valutazione per un libro.
+ *
+ * @author Lorenzo Monachino 757393 VA
+ * @author Lyan Curcio 757579 VA
+ * @author Sergio Saldarriaga 757394 VA
+ * @author Nash Guizzardi 756941 VA
+ */
+public enum CreateRatingResult {
+
+    /** La valutazione è stata creata con successo. */
+    OK("Valutazione creata"),
+
+    /**
+     * L'operazione è fallita perché il libro indicato non è presente in nessuna delle librerie dell'utente.
+     * Un utente può valutare solo i libri che ha aggiunto ad almeno a una delle proprie librerie.
+     */
+    BOOK_NOT_IN_LIBRARY("Questo libro non è in nessuna delle tue librerie"),
+
+    /**
+     * L'operazione è fallita perché esiste già una valutazione per questo libro da parte dell'utente.
+     */
+    ALREADY_RATED("Questo libro ha già una valutazione"),
+
+    /** Si è verificato un errore imprevisto. */
+    UNEXPECTED_ERROR("Errore non previsto!");
+
+    /**
+     * Messaggio descrittivo associato all'esito.
+     */
+    private final String msg;
+
+    /**
+     * Costruttore privato dell'enum.
+     *
+     * @param msg il messaggio descrittivo da associare alla costante
+     */
+    CreateRatingResult(String msg) {
+        this.msg = msg;
+    }
+
+    /**
+     * Restituisce il messaggio descrittivo associato all'esito.
+     *
+     * @return una stringa contenente il messaggio da mostrare all'utente
+     */
+    public String getMessage() {
+        return msg;
+    }
+}\n--- END FILE: ./common/src/main/java/com/bookrecommender/common/enums/rating/CreateRatingResult.java ---
+\n--- START FILE: ./common/src/main/java/com/bookrecommender/common/enums/library/AddBookToLibResult.java ---
+package com.bookrecommender.common.enums.library;
+
+/**
+ * Enum che definisce i possibili esiti dell'operazione di aggiunta di un libro a una libreria personale.
+ *
+ * @author Lorenzo Monachino 757393 VA
+ * @author Lyan Curcio 757579 VA
+ * @author Sergio Saldarriaga 757394 VA
+ * @author Nash Guizzardi 756941 VA
+ */
+public enum AddBookToLibResult {
+
+    /** Il libro è stato aggiunto correttamente alla libreria specificata. */
+    OK("Libro aggiunto alla libreria"),
+
+    /** La libreria indicata (tramite ID) non è associata all'utente indicato o non esiste nel database. */
+    LIBRARY_NOT_FOUND("La libreria specificata non esiste"),
+
+    /** Il libro selezionato è già presente all'interno della libreria di destinazione (evita duplicati). */
+    BOOK_ALREADY_IN_LIBRARY("Il libro è già presente nella libreria"),
+
+    /** Si è verificato un errore imprevisto. */
+    UNEXPECTED_ERROR("Errore non previsto!");
+
+    /**
+     * Messaggio descrittivo associato all'esito dell'operazione.
+     */
+    private final String msg;
+
+    /**
+     * Costruttore privato dell'enum.
+     *
+     * @param msg il messaggio descrittivo da associare alla costante
+     */
+    AddBookToLibResult(String msg) {
+        this.msg = msg;
+    }
+
+    /**
+     * Restituisce il messaggio descrittivo associato all'esito.
+     *
+     * @return una stringa contenente il messaggio da mostrare all'utente
+     */
+    public String getMessage() {
+        return msg;
+    }
+}\n--- END FILE: ./common/src/main/java/com/bookrecommender/common/enums/library/AddBookToLibResult.java ---
+\n--- START FILE: ./common/src/main/java/com/bookrecommender/common/enums/library/CreateLibResult.java ---
+package com.bookrecommender.common.enums.library;
+
+/**
+ * Enum che definisce i possibili esiti della creazione di una nuova libreria personale.
+ *
+ * @author Lorenzo Monachino 757393 VA
+ * @author Lyan Curcio 757579 VA
+ * @author Sergio Saldarriaga 757394 VA
+ * @author Nash Guizzardi 756941 VA
+ */
+public enum CreateLibResult {
+
+    /** La nuova libreria è stata creata correttamente. */
+    OK("Libreria creata"),
+
+    /**
+     * Impossibile creare la libreria perché l'utente possiede già una libreria con lo stesso nome.
+     * I nomi delle librerie devono essere univoci per ogni utente.
+     */
+    DUPLICATE_NAME("Esiste già una libreria con questo nome"),
+
+    /** Si è verificato un errore imprevisto. */
+    UNEXPECTED_ERROR("Errore non previsto!");
+
+    /**
+     * Messaggio descrittivo associato all'esito.
+     */
+    private final String msg;
+
+    /**
+     * Costruttore privato dell'enum.
+     *
+     * @param msg il messaggio descrittivo da associare alla costante
+     */
+    CreateLibResult(String msg) {
+        this.msg = msg;
+    }
+
+    /**
+     * Restituisce il messaggio descrittivo associato all'esito.
+     *
+     * @return una stringa contenente il messaggio da mostrare all'utente
+     */
+    public String getMessage() {
+        return msg;
+    }
+}\n--- END FILE: ./common/src/main/java/com/bookrecommender/common/enums/library/CreateLibResult.java ---
+\n--- START FILE: ./common/src/main/java/com/bookrecommender/common/enums/library/DeleteLibResult.java ---
+package com.bookrecommender.common.enums.library;
+
+/**
+ * Enum che definisce i possibili esiti dell'operazione di eliminazione di una libreria personale.
+ *
+ * @author Lorenzo Monachino 757393 VA
+ * @author Lyan Curcio 757579 VA
+ * @author Sergio Saldarriaga 757394 VA
+ * @author Nash Guizzardi 756941 VA
+ */
+public enum DeleteLibResult {
+
+    /** La libreria è stata eliminata correttamente. */
+    OK("Libreria eliminata"),
+
+    /**
+     * L'operazione è fallita perché la libreria specificata non è associata all'utente o non esiste.
+     */
+    LIBRARY_NOT_FOUND("La libreria che stai provando ad eliminare non esiste"),
+
+    /** Si è verificato un errore imprevisto. */
+    UNEXPECTED_ERROR("Errore non previsto!");
+
+    /**
+     * Messaggio descrittivo associato all'esito.
+     */
+    private final String msg;
+
+    /**
+     * Costruttore privato dell'enum.
+     *
+     * @param msg il messaggio descrittivo da associare alla costante
+     */
+    DeleteLibResult(String msg) {
+        this.msg = msg;
+    }
+
+    /**
+     * Restituisce il messaggio descrittivo associato all'esito.
+     *
+     * @return una stringa contenente il messaggio da mostrare all'utente
+     */
+    public String getMessage() {
+        return msg;
+    }
+}\n--- END FILE: ./common/src/main/java/com/bookrecommender/common/enums/library/DeleteLibResult.java ---
+\n--- START FILE: ./common/src/main/java/com/bookrecommender/common/enums/library/RemoveBookFromLibResult.java ---
+package com.bookrecommender.common.enums.library;
+
+/**
+ * Enum che definisce i possibili esiti dell'operazione di rimozione di un libro da una libreria personale.
+ *
+ * @author Lorenzo Monachino 757393 VA
+ * @author Lyan Curcio 757579 VA
+ * @author Sergio Saldarriaga 757394 VA
+ * @author Nash Guizzardi 756941 VA
+ */
+public enum RemoveBookFromLibResult {
+
+    /** Il libro è stato rimosso correttamente dalla libreria specificata. */
+    OK("Libro rimosso dalla libreria"),
+
+    /** L'operazione è fallita perché la libreria specificata (tramite ID) non è associata all'utente o non esiste. */
+    LIBRARY_NOT_FOUND("La libreria specificata non esiste"),
+
+    /**
+     * L'operazione è fallita perché il libro indicato non è presente nella libreria.
+     */
+    BOOK_NOT_IN_LIBRARY("Il libro non è presente nella libreria"),
+
+    /** Si è verificato un errore imprevisto. */
+    UNEXPECTED_ERROR("Errore non previsto!");
+
+    /**
+     * Messaggio descrittivo associato all'esito.
+     */
+    private final String msg;
+
+    /**
+     * Costruttore privato dell'enum.
+     *
+     * @param msg il messaggio descrittivo da associare alla costante
+     */
+    RemoveBookFromLibResult(String msg) {
+        this.msg = msg;
+    }
+
+    /**
+     * Restituisce il messaggio descrittivo associato all'esito.
+     *
+     * @return una stringa contenente il messaggio da mostrare all'utente
+     */
+    public String getMessage() {
+        return msg;
+    }
+}\n--- END FILE: ./common/src/main/java/com/bookrecommender/common/enums/library/RemoveBookFromLibResult.java ---
+\n--- START FILE: ./common/src/main/java/com/bookrecommender/common/enums/suggestion/AddSuggestionResult.java ---
+package com.bookrecommender.common.enums.suggestion;
+
+/**
+ * Enum che definisce i possibili esiti dell'operazione di aggiunta di un suggerimento.
+ *
+ * @author Lorenzo Monachino 757393 VA
+ * @author Lyan Curcio 757579 VA
+ * @author Sergio Saldarriaga 757394 VA
+ * @author Nash Guizzardi 756941 VA
+ */
+public enum AddSuggestionResult {
+
+    /** Il suggerimento è stato registrato con successo. */
+    OK("Consiglio aggiunto"),
+
+    /** Il libro "sorgente" non è presente in nessuna delle librerie dell'utente.
+     * Un utente può aggiungere consigliati solo ai libri che ha aggiunto ad almeno a una delle proprie librerie.
+     */
+    MAIN_BOOK_NOT_IN_LIBRARY("Il libro a cui si sta aggiungendo un consigliato non è in nessuna delle tue librerie"),
+
+    /** Il libro che si intende consigliare non è presente in nessuna delle librerie dell'utente.
+     * Un utente può consigliare solo libri che ha aggiunto ad almeno a una delle proprie librerie.
+     */
+    SUGGESTED_BOOK_NOT_IN_LIBRARY("Il libro consigliato non è in nessuna delle tue librerie"),
+
+    /** Esiste già un suggerimento identico inserito dall'utente. */
+    ALREADY_SUGGESTED("Questo libro è già stato consigliato"),
+
+    /** Si è verificato un errore imprevisto. */
+    UNEXPECTED_ERROR("Errore non previsto!");
+
+    /** Messaggio descrittivo associato all'esito. */
+    private final String msg;
+
+    /**
+     * Costruttore privato dell'enum.
+     *
+     * @param msg il messaggio descrittivo da associare alla costante
+     */
+    AddSuggestionResult(String msg) {
+        this.msg = msg;
+    }
+
+    /**
+     * Restituisce il messaggio descrittivo associato all'esito.
+     *
+     * @return una stringa contenente il messaggio da mostrare all'utente
+     */
+    public String getMessage() {
+        return msg;
+    }
+}\n--- END FILE: ./common/src/main/java/com/bookrecommender/common/enums/suggestion/AddSuggestionResult.java ---
+\n--- START FILE: ./common/src/main/java/com/bookrecommender/common/enums/suggestion/RemoveSuggestionResult.java ---
+package com.bookrecommender.common.enums.suggestion;
+
+/**
+ * Enum che definisce i possibili esiti dell'operazione di rimozione di un suggerimento.
+ *
+ * @author Lorenzo Monachino 757393 VA
+ * @author Lyan Curcio 757579 VA
+ * @author Sergio Saldarriaga 757394 VA
+ * @author Nash Guizzardi 756941 VA
+ */
+public enum RemoveSuggestionResult {
+
+    /** Il suggerimento è stato rimosso correttamente dal sistema. */
+    OK("Consiglio eliminato"),
+
+    /** Non esiste alcun suggerimento registrato tra i due libri specificati. */
+    NOT_SUGGESTED("Questo libro non è stato consigliato"),
+
+    /** Si è verificato un errore imprevisto. */
+    UNEXPECTED_ERROR("Errore non previsto!");
+
+    /** Messaggio descrittivo associato all'esito. */
+    private final String msg;
+
+    /**
+     * Costruttore privato dell'enum.
+     *
+     * @param msg il messaggio descrittivo da associare alla costante
+     */
+    RemoveSuggestionResult(String msg) {
+        this.msg = msg;
+    }
+
+    /**
+     * Restituisce il messaggio descrittivo associato all'esito.
+     *
+     * @return una stringa contenente il messaggio da mostrare all'utente
+     */
+    public String getMessage() {
+        return msg;
+    }
+}\n--- END FILE: ./common/src/main/java/com/bookrecommender/common/enums/suggestion/RemoveSuggestionResult.java ---
+\n--- START FILE: ./common/src/main/java/com/bookrecommender/common/enums/auth/RegisterResult.java ---
+package com.bookrecommender.common.enums.auth;
+
+/**
+ * Enum che definisce i possibili esiti di una richiesta di registrazione di un nuovo utente.
+ *
+ * @author Lorenzo Monachino 757393 VA
+ * @author Lyan Curcio 757579 VA
+ * @author Sergio Saldarriaga 757394 VA
+ * @author Nash Guizzardi 756941 VA
+ */
+public enum RegisterResult {
+
+    /** Indica che la registrazione è stata completata con successo e il nuovo utente è stato creato. */
+    OK("Registrazione effettuata con successo"),
+
+    /** Indica un errore dovuto al fatto che l'User ID scelto è già in uso da un altro utente. */
+    DUPLICATE_USERID("L'user id scelto non è disponibile"),
+
+    /** Indica un errore dovuto al fatto che il Codice Fiscale inserito è già presente nel sistema. */
+    DUPLICATE_CF("Esiste già un altro utente con lo stesso codice fiscale"),
+
+    /** Indica un errore dovuto al fatto che l'indirizzo email inserito è già associato a un altro account. */
+    DUPLICATE_EMAIL("Esiste già un utente con la stessa email"),
+
+    /** Si è verificato un errore imprevisto. */
+    UNEXPECTED_ERROR("Errore non previsto!");
+
+    /**
+     * Messaggio descrittivo associato all'esito della registrazione.
+     */
+    private final String msg;
+
+    /**
+     * Costruttore privato dell'enum.
+     *
+     * @param msg il messaggio descrittivo da associare alla costante
+     */
+    RegisterResult(String msg) {
+        this.msg = msg;
+    }
+
+    /**
+     * Restituisce il messaggio descrittivo associato all'esito.
+     *
+     * @return una stringa contenente il messaggio da mostrare all'utente
+     */
+    public String getMessage() {
+        return msg;
+    }
+}\n--- END FILE: ./common/src/main/java/com/bookrecommender/common/enums/auth/RegisterResult.java ---
+\n--- START FILE: ./common/src/main/java/com/bookrecommender/common/enums/auth/LoginResult.java ---
+package com.bookrecommender.common.enums.auth;
+
+/**
+ * Enum che definisce i possibili esiti di un tentativo di login da parte di un utente.
+ *
+ * @author Lorenzo Monachino 757393 VA
+ * @author Lyan Curcio 757579 VA
+ * @author Sergio Saldarriaga 757394 VA
+ * @author Nash Guizzardi 756941 VA
+ */
+public enum LoginResult {
+
+    /** Indica che le credenziali sono valide e l'accesso è stato autorizzato. */
+    OK("Accesso effettuato con successo"),
+
+    /** Indica che l'utente esiste, ma la password fornita non corrisponde. */
+    INCORRECT_PASSWORD("La password non è corretta"),
+
+    /** Indica che non è stato trovato alcun utente registrato con l'ID fornito. */
+    USER_ID_NOT_FOUND("Non esiste un utente con l'user id inserito"),
+
+    /** Si è verificato un errore imprevisto. */
+    UNEXPECTED_ERROR("Errore non previsto!");
+
+    /**
+     * Messaggio descrittivo associato al codice di errore o di successo.
+     */
+    private final String msg;
+
+    /**
+     * Costruttore privato dell'enum.
+     *
+     * @param msg il messaggio descrittivo da associare alla costante
+     */
+    LoginResult(String msg) {
+        this.msg = msg;
+    }
+
+    /**
+     * Restituisce il messaggio descrittivo associato all'esito del login.
+     *
+     * @return una stringa contenente il messaggio da mostrare all'utente
+     */
+    public String getMessage() {
+        return msg;
+    }
+}\n--- END FILE: ./common/src/main/java/com/bookrecommender/common/enums/auth/LoginResult.java ---
+\n--- START FILE: ./common/src/main/java/module-info.java ---
+module com.bookrecommender.common {
+    requires java.rmi;
+    requires java.sql;
+
+    exports com.bookrecommender.common.dto;
+    exports com.bookrecommender.common;
+    exports com.bookrecommender.common.enums.auth;
+    exports com.bookrecommender.common.enums.suggestion;
+    exports com.bookrecommender.common.enums.library;
+    exports com.bookrecommender.common.enums.rating;
+}\n--- END FILE: ./common/src/main/java/module-info.java ---
+\n--- START FILE: ./common/pom.xml ---
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.bookrecommender</groupId>
+        <artifactId>bookrecommender</artifactId>
+        <version>1.0</version>
+    </parent>
+
+    <artifactId>common</artifactId>
+
+    <properties>
+        <maven.compiler.source>25</maven.compiler.source>
+        <maven.compiler.target>25</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+</project>\n--- END FILE: ./common/pom.xml ---
+\n--- START FILE: ./clientBR/.mvn/wrapper/maven-wrapper.properties ---
+distributionUrl=https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/3.8.5/apache-maven-3.8.5-bin.zip
+wrapperUrl=https://repo.maven.apache.org/maven2/org/apache/maven/wrapper/maven-wrapper/3.3.2/maven-wrapper-3.3.2.jar\n--- END FILE: ./clientBR/.mvn/wrapper/maven-wrapper.properties ---
+\n--- START FILE: ./clientBR/src/main/java/com/bookrecommender/client/controller/LoginController.java ---
+package com.bookrecommender.client.controller;
+
+import com.bookrecommender.common.AuthedBookRepositoryService;
+import com.bookrecommender.common.BRPair;
+import com.bookrecommender.common.enums.auth.LoginResult;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+
+import java.rmi.RemoteException;
+
+public class LoginController {
+
+    @FXML private TextField UserID;
+    @FXML private PasswordField Password;
+    @FXML private Label errorUserid, errorPassword, errorUnexpected;
+
+    public static Utente user = Utente.OSPITE;
+    @FXML
+    private void BtnClickLog(ActionEvent event) throws RemoteException
+    {
+        CheckLogin();   
+    }
+
+    @FXML
+    private void BtnReturn(ActionEvent event)
+    {
+        App m = App.getInstance();
+        m.changeScene("Benvenuto.fxml");
+    }
+    
+    private void CheckLogin() throws RemoteException
+    {
+        String uid = UserID.getText();
+        String pwd = Password.getText();
+
+        resetErrorLabels();
+
+        BRPair<LoginResult, AuthedBookRepositoryService> result = App.getInstance().bookRepository.login(uid, pwd);
+
+        System.out.println(result);
+        // Simulazione login (da sostituire con DB in futuro)
+        if(result.first() == LoginResult.OK)
+        {
+            App.getInstance().authedBookRepository = result.second();
+            user = Utente.REGISTRATO;
+            App.getInstance().changeScene("Benvenuto.fxml");
+        }
+        else if(result.first() == LoginResult.USER_ID_NOT_FOUND)
+        {
+            errorUserid.setText(result.first().getMessage());
+        }
+        else if(result.first() == LoginResult.INCORRECT_PASSWORD)
+        {
+            errorPassword.setText(result.first().getMessage());
+        }
+        else
+        {
+            errorUnexpected.setText(result.first().getMessage());
+        }
+    }
+    private void resetErrorLabels()
+    {
+        this.errorUserid.setText("");
+        this.errorPassword.setText("");
+        this.errorUnexpected.setText("");
+    }
+}\n--- END FILE: ./clientBR/src/main/java/com/bookrecommender/client/controller/LoginController.java ---
+\n--- START FILE: ./clientBR/src/main/java/com/bookrecommender/client/controller/CreaLibreriaController.java ---
+package com.bookrecommender.client.controller;
+
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+
+import java.io.IOException;
+
+public class CreaLibreriaController {
+
+    @FXML
+    private Button btnLeTueLib;
+
+    @FXML
+    private Button btnRicercaLibreria;
+
+    @FXML
+    private Button btnRicercaLib;
+
+    @FXML
+    private Button btnLogout;
+
+    @FXML
+    void btnClickLogout(ActionEvent event) throws IOException
+    {
+        LoginController.user = Utente.OSPITE;
+        App.getInstance().changeScene("Benvenuto.fxml");
+    }
+
+    @FXML
+    void btnClickRicercaLib(ActionEvent event) throws IOException
+    {
+        App.getInstance().changeScene("Benvenuto.fxml");
+    }
+
+    @FXML
+    void btnClickRicercaLibreria(ActionEvent event) throws IOException
+    {
+        App.getInstance().changeScene("RicercheLibrerie.fxml");
+    }
+
+    @FXML
+    void btnClickTueLib(ActionEvent event) throws IOException
+    {
+        App.getInstance().changeScene("LibrerieUtente.fxml");
+    }
+
+}
+
+
+\n--- END FILE: ./clientBR/src/main/java/com/bookrecommender/client/controller/CreaLibreriaController.java ---
+\n--- START FILE: ./clientBR/src/main/java/com/bookrecommender/client/controller/BenController.java ---
+package com.bookrecommender.client.controller;
+
+import java.io.IOException;
+import java.rmi.RemoteException;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import com.bookrecommender.common.dto.Book;
+import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
+
+public class BenController {
+
+    @FXML private VBox buttonList;
+    @FXML private Button btnAcc, btnReg;    //bottoni che appaiono nella sezione ospite
+    @FXML private Button btnCreaLib, btnRicercaLib, btnLeTueLib,btnLogout; //bottoni che appaiono nella sezione registrato
+    @FXML private TextField tfRicerca;
+    @FXML private TextField tfRicercaAnno;
+    @FXML private SplitMenuButton tipiDiRicerca;
+    @FXML private Label listLabel;
+    @FXML private ListView<String> listaLibri;
+
+    @FXML
+    private void initialize()
+    {
+        if(LoginController.user == Utente.REGISTRATO)
+        {
+            listLabel.setText("registrato");
+            buttonList.getChildren().removeAll(btnAcc, btnReg);
+        }
+        else
+        {
+            listLabel.setText("ospite");
+            buttonList.getChildren().removeAll(btnCreaLib, btnRicercaLib, btnLeTueLib,btnLogout);
+        }
+    }
+
+    private enum TipoDiRicerca {
+        TITOLO,
+        AUTORE,
+        AUTORE_E_ANNO
+    }
+    private TipoDiRicerca tipoDiRicerca = TipoDiRicerca.TITOLO;
+
+    //sezione per la selezione del tipo di ricerca
+    @FXML
+    void ricercaAutore(ActionEvent event)
+    {
+        tipoDiRicerca = TipoDiRicerca.AUTORE;
+        tipiDiRicerca.setText("Autore");
+        tfRicercaAnno.setDisable(true);
+    }
+    @FXML
+    void ricercaTitolo(ActionEvent event)
+    {
+        tipoDiRicerca = TipoDiRicerca.TITOLO;
+        tipiDiRicerca.setText("Titolo");
+        tfRicercaAnno.setDisable(true);
+    }
+    @FXML
+    void ricercaAutoreEAnno(ActionEvent event)
+    {
+        tipoDiRicerca = TipoDiRicerca.AUTORE_E_ANNO;
+        tipiDiRicerca.setText("Autore e anno");
+        tfRicercaAnno.setDisable(false);
+    }
+    //ricerca del libro
+    @FXML
+    void btnClickResearch(ActionEvent event)
+    {
+        List<Book> libri = null;
+
+        try
+        {
+            if (tipoDiRicerca == TipoDiRicerca.TITOLO)
+            {
+                libri = App.getInstance().bookRepository.cercaLibroPerTitolo(tfRicerca.getText());
+            }
+            else if (tipoDiRicerca == TipoDiRicerca.AUTORE)
+            {
+                libri = App.getInstance().bookRepository.cercaLibroPerAutore(tfRicerca.getText());
+            }
+            else if (tipoDiRicerca == TipoDiRicerca.AUTORE_E_ANNO)
+            {
+                int anno = 0;
+                try
+                {
+                    anno = Integer.parseInt(tfRicercaAnno.getText());
+                }
+                catch (NumberFormatException e)
+                {
+                    listaLibri.getItems().clear();
+                    listLabel.setText("L'anno cercato non è valido!");
+                    return;
+                }
+                if (anno < 0 || anno > LocalDate.now().getYear())
+                {
+                    listaLibri.getItems().clear();
+                    listLabel.setText("L'anno cercato non è valido!");
+                    return;
+                }
+
+                libri = App.getInstance().bookRepository.cercaLibroPerAutoreEAnno(tfRicerca.getText(), anno);
+            }
+        }
+        catch (RemoteException e)
+        {
+            listaLibri.getItems().clear();
+            listLabel.setText("C'è stato un errore durante la ricerca!");
+            e.printStackTrace();
+            return;
+        }
+
+        if (libri == null || libri.isEmpty())
+        {
+            listaLibri.getItems().clear();
+            listLabel.setText("Nessun libro trovato");
+            return;
+        }
+
+        // Pulisci il messaggio nel caso fosse "sporco"
+        listLabel.setText("");
+
+        listaLibri.setItems(
+            FXCollections.observableArrayList(
+                libri.stream()
+                    .map(Book::toStringInfo)
+                    .collect(Collectors.toList())
+            )
+        );
+    }
+    //bottoni di navigazione se si è ospite
+    @FXML
+    void accedi(ActionEvent event) throws IOException
+    {
+        App m = App.getInstance();
+        m.changeScene("Login.fxml");
+    }
+
+    @FXML
+    void registrati(ActionEvent event) throws IOException
+    {
+        App m = App.getInstance();
+        m.changeScene("Registrazione.fxml");
+    }
+
+    //bottoni di navigazione se si è registrato
+    @FXML
+    void btnClickCreaLib(ActionEvent event) throws IOException
+    {
+        App.getInstance().changeScene("CreaLibreria.fxml");
+    }
+    @FXML
+    void btnClickRicercaLib(ActionEvent event) throws IOException
+    {
+        App.getInstance().changeScene("RicercheLibrerie.fxml");
+    }
+    @FXML
+    void btnClickLeTueLib(ActionEvent event) throws IOException
+    {
+        App.getInstance().changeScene("LibrerieUtente.fxml");
+    }
+    @FXML
+    void btnClickLogout(ActionEvent event) throws IOException
+    {
+        LoginController.user = Utente.OSPITE;
+        App.getInstance().changeScene("Benvenuto.fxml");
+    }
+}
+\n--- END FILE: ./clientBR/src/main/java/com/bookrecommender/client/controller/BenController.java ---
+\n--- START FILE: ./clientBR/src/main/java/com/bookrecommender/client/controller/LibrerieUtenteController.java ---
+package com.bookrecommender.client.controller;
+
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import java.io.IOException;
+import javafx.scene.control.ListView;
+
+public class LibrerieUtenteController {
+
+    @FXML private ListView<String> listaLibriUtente;
+
+    @FXML
+    void btnClickCerca(ActionEvent event)
+    {
+
+    }
+
+    @FXML
+    void btnClickCreaLib(ActionEvent event) throws IOException
+    {
+        App.getInstance().changeScene("CreaLibreria.fxml");
+    }
+
+
+    @FXML
+    void btnClickRicercaLibrerie(ActionEvent event) throws IOException
+    {
+        App.getInstance().changeScene("RicercheLibrerie.fxml");
+    }
+
+    @FXML
+    void btnClickRicercaLibri(ActionEvent event) throws IOException
+    {
+        App.getInstance().changeScene("Benvenuto.fxml");
+    }
+
+    @FXML
+    void btnClickLogout(ActionEvent event) throws IOException
+    {
+        LoginController.user = Utente.OSPITE;
+        App.getInstance().changeScene("Benvenuto.fxml");
+    }
+
+}
+\n--- END FILE: ./clientBR/src/main/java/com/bookrecommender/client/controller/LibrerieUtenteController.java ---
+\n--- START FILE: ./clientBR/src/main/java/com/bookrecommender/client/controller/App.java ---
+package com.bookrecommender.client.controller;
+
+import com.bookrecommender.common.AuthedBookRepositoryService;
+import com.bookrecommender.common.BookRepositoryService;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import java.io.IOException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+
+/**
+ * Classe di supporto per la navigazione tra le scene.
+ * I metodi return servono a tornare alle schermate precedenti.
+ */
+public class App {
+
+    private static App instance;
+    public final BookRepositoryService bookRepository;
+    public AuthedBookRepositoryService authedBookRepository;
+    private Stage stage;
+
+    private App() {
+        BookRepositoryService _bookRepository = null;
+        try {
+            Registry registry = LocateRegistry.getRegistry(1099);
+            _bookRepository = (BookRepositoryService) registry.lookup("BookRecommenderService"); // Per triggerare l'eccezione in assenza del servizio
+        }
+        catch (RemoteException e) {
+            System.err.println("RemoteException nel recupero del servizio `BookRecommender` nel registry!");
+            System.exit(1);
+        }
+        catch (NotBoundException e) {
+            System.err.println("Impossibile trovare il servizio `BookRecommenderService` nel registry!");
+            System.exit(1);
+        }
+
+        bookRepository = _bookRepository;
+    }
+
+    public void setStage(Stage s) {
+        stage = s;
+    }
+
+    public void changeScene(String fxml) {
+        // Carica il file FXML dalla cartella resources/com/lab_b/
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/lab_b/" + fxml));
+        Parent root;
+        try
+        {
+            root = loader.load();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+            return;
+        }
+
+        if (stage.getScene() == null) {
+            stage.setScene(new Scene(root, 900, 600)); // Dimensioni default
+        } else {
+            stage.getScene().setRoot(root);
+        }
+    }
+
+    public static synchronized App getInstance() {
+        if (instance == null) {
+            instance = new App();
+        }
+        return instance;
+    }
+}\n--- END FILE: ./clientBR/src/main/java/com/bookrecommender/client/controller/App.java ---
+\n--- START FILE: ./clientBR/src/main/java/com/bookrecommender/client/controller/Utente.java ---
+package com.bookrecommender.client.controller;
+
+public enum Utente
+{
+    OSPITE, REGISTRATO;
+}
+\n--- END FILE: ./clientBR/src/main/java/com/bookrecommender/client/controller/Utente.java ---
+\n--- START FILE: ./clientBR/src/main/java/com/bookrecommender/client/controller/RegController.java ---
+package com.bookrecommender.client.controller;
+
+import java.rmi.RemoteException;
+
+import com.bookrecommender.common.AuthedBookRepositoryService;
+import com.bookrecommender.common.BRPair;
+import com.bookrecommender.common.dto.User;
+import com.bookrecommender.common.enums.auth.RegisterResult;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+
+public class RegController {
+
+    @FXML private TextField tfnome;
+    @FXML private TextField tfcognome;
+    @FXML private TextField tfUserid;
+    @FXML private TextField tfCodiceFiscale;
+    @FXML private TextField tfEmail;
+    @FXML private TextField tfCreaPassword;
+    @FXML private TextField tfConfermaPassword;
+    @FXML private Label errorCF, errorEmail, errorPassword, errorUserId, errorUnexpected;
+
+    @FXML
+    void btnClick(ActionEvent event) throws RemoteException {
+        String password = tfCreaPassword.getText();
+        String cPassword = tfConfermaPassword.getText();
+
+        resetErrorLabels();
+
+        if(!password.equals(cPassword))
+        {
+            errorPassword.setText("le password non coincidono");
+        }
+
+        User newUser = new User(
+            tfUserid.getText(),
+            tfnome.getText(),
+            tfcognome.getText(),
+            tfCodiceFiscale.getText(),
+            tfEmail.getText()
+        );
+
+        // Qui andrà il codice per salvare nel DB PostgreSQL
+        // Per ora stampiamo solo a video
+        System.out.println("Tentativo registrazione:\n" + newUser.toStringDebug());
+
+        BRPair<RegisterResult, AuthedBookRepositoryService> result = App.getInstance().bookRepository.registrazione(newUser, password);
+
+        // TODO rimuovere log
+        System.out.println(result);
+
+        if (result.first() == RegisterResult.OK)
+        {
+            App.getInstance().authedBookRepository = result.second();
+            LoginController.user = com.bookrecommender.client.controller.Utente.REGISTRATO;
+            App.getInstance().changeScene("Benvenuto.fxml");
+        }
+        else if(result.first() == RegisterResult.DUPLICATE_EMAIL)
+        {
+            this.errorEmail.setText(result.first().getMessage());
+        }
+        else if (result.first() == RegisterResult.DUPLICATE_CF)
+        {
+            this.errorCF.setText(result.first().getMessage());
+        }
+        else if (result.first() == RegisterResult.DUPLICATE_USERID)
+        {
+            this.errorUserId.setText(result.first().getMessage());
+        } else
+        {
+            this.errorUnexpected.setText(result.first().getMessage());
+        }
+    }
+
+    @FXML
+    void btnReturn(ActionEvent event)
+    {
+        App m = App.getInstance();
+        m.changeScene("Benvenuto.fxml");
+    }
+
+    //
+    private void resetErrorLabels()
+    {
+        this.errorCF.setText("");
+        this.errorEmail.setText("");
+        this.errorPassword.setText("");
+        this.errorUserId.setText("");
+        this.errorUnexpected.setText("");
+    }
+}\n--- END FILE: ./clientBR/src/main/java/com/bookrecommender/client/controller/RegController.java ---
+\n--- START FILE: ./clientBR/src/main/java/com/bookrecommender/client/ClientMain.java ---
+package com.bookrecommender.client;
+
+public class ClientMain {
+    static void main(String[] args) {
+        // Avvia l'applicazione JavaFX tramite la classe ClientApplication
+        ClientApplication.main(args);
+    }
+}
+\n--- END FILE: ./clientBR/src/main/java/com/bookrecommender/client/ClientMain.java ---
+\n--- START FILE: ./clientBR/src/main/java/com/bookrecommender/client/ClientApplication.java ---
+package com.bookrecommender.client;
+
+import com.bookrecommender.client.controller.App; // QUESTO IMPORT MANCAVA
+import javafx.application.Application;
+import javafx.stage.Stage;
+import java.io.IOException;
+
+public class ClientApplication extends Application {
+
+    @Override
+    public void start(Stage stage) throws IOException {
+        // Inizializziamo la classe di utilità App con lo Stage principale
+        App app = App.getInstance();
+        app.setStage(stage);
+        
+        // Carichiamo la prima scena (Benvenuto)
+        // Assicurati che Benvenuto.fxml sia in src/main/resources/com/lab_b/
+        app.changeScene("Benvenuto.fxml");
+        
+        stage.setTitle("Book Recommender");
+        stage.show();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+}\n--- END FILE: ./clientBR/src/main/java/com/bookrecommender/client/ClientApplication.java ---
+\n--- START FILE: ./clientBR/src/main/java/module-info.java ---
+module com.bookrecommender.clientBR {
+    requires java.rmi;
+    requires javafx.base;
+    requires javafx.controls;
+    requires javafx.fxml;
+    requires javafx.graphics;
+
+    requires com.bookrecommender.common;
+
+    opens com.bookrecommender.client to javafx.fxml;
+    opens com.bookrecommender.client.controller to javafx.fxml;
+
+    exports com.bookrecommender.client;
+}\n--- END FILE: ./clientBR/src/main/java/module-info.java ---
+\n--- START FILE: ./clientBR/pom.xml ---
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.bookrecommender</groupId>
+    <artifactId>bookrecommender</artifactId>
+    <version>1.0</version>
+  </parent>
+
+  <artifactId>clientBR</artifactId>
+  <name>clientBR</name>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <junit.version>5.12.1</junit.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.bookrecommender</groupId>
+      <artifactId>common</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-controls</artifactId>
+      <version>25.0.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-fxml</artifactId>
+      <version>25.0.1</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.14.1</version>
+        <configuration>
+          <source>25</source>
+          <target>25</target>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-maven-plugin</artifactId>
+        <version>0.0.8</version>
+        <executions>
+          <execution>
+            <!-- Default configuration for running with: mvn clean javafx:run -->
+            <id>default-cli</id>
+            <configuration>
+              <mainClass>com.bookrecommender.client.ClientApplication</mainClass>
+              <launcher>app</launcher>
+              <jlinkZipName>app</jlinkZipName>
+              <jlinkImageName>app</jlinkImageName>
+              <noManPages>true</noManPages>
+              <stripDebug>true</stripDebug>
+              <noHeaderFiles>true</noHeaderFiles>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>3.8.0</version>
+        <configuration>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
+          <archive>
+            <manifest>
+              <mainClass>com.bookrecommender.client.ClientMain</mainClass>
+            </manifest>
+          </archive>
+        </configuration>
+        <executions>
+          <execution>
+            <id>make-assembly</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>\n--- END FILE: ./clientBR/pom.xml ---
+\n--- START FILE: ./db_init/src/main/java/com/bookrecommender/db_init/Main.java ---
+package com.bookrecommender.db_init;
+
+import com.bookrecommender.server.DatabaseManager;
+import org.intellij.lang.annotations.Language;
+import org.postgresql.PGConnection;
+import org.postgresql.copy.CopyManager;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+/**
+ * Classe principale (Entry Point) del modulo di inizializzazione del database.
+ * <p>
+ * Questa classe è responsabile del setup iniziale dell'ambiente di persistenza. Esegue in sequenza:
+ * </p>
+ * <ol>
+ * <li>Connessione al database tramite {@link DatabaseManager}.</li>
+ * <li>Abilitazione dell'estensione <code>pgcrypto</code> necessaria per l'hashing delle password.</li>
+ * <li>Creazione dello schema (tabelle) eseguendo lo script SQL <code>create-tables.sql</code>.</li>
+ * <li>Popolamento iniziale della tabella Libri importando i dati dal file CSV <code>BooksDatasetClean.csv</code>.</li>
+ * </ol>
+ *
+ * @author Lorenzo Monachino 757393 VA
+ * @author Lyan Curcio 757579 VA
+ * @author Sergio Saldarriaga 757394 VA
+ * @author Nash Guizzardi 756941 VA
+ */
+public class Main
+{
+    /**
+     * Costruttore privato implicito.
+     */
+    public Main() {}
+
+    /**
+     * Metodo principale che orchestra l'intera procedura di inizializzazione.
+     * <p>
+     * Stampa a video i log delle operazioni per monitorare l'avanzamento del processo.
+     * </p>
+     */
+    static void main()
+    {
+        System.out.println("Connessione al Database...");
+        DatabaseManager dbm = DatabaseManager.getInstance();
+
+        System.out.println("Abilitando l'estensione 'pgcrypto'...");
+        dbm.execute("CREATE EXTENSION IF NOT EXISTS pgcrypto", null);
+
+        System.out.println("Creazione delle tabelle...");
+        dbm.execute(readSqlFileFromRes("create-tables.sql"), null);
+
+        System.out.println("Caricamento dei dati...");
+        loadFromCsv("BooksDatasetClean.csv");
+
+        System.out.println("FATTO!");
+    }
+
+    /**
+     * Importa i dati dei libri da un file CSV utilizzando le API native di PostgreSQL per il caricamento massivo.
+     * <p>
+     * Al posto di eseguire singole query <code>INSERT</code>, questo metodo utilizza {@link CopyManager}
+     * e il comando SQL <code>COPY FROM STDIN</code>. Questo approccio garantisce performance elevate
+     * anche con dataset di grandi dimensioni.
+     * </p>
+     *
+     * @param path il percorso del file CSV all'interno delle risorse del progetto (classpath)
+     */
+    public static void loadFromCsv(String path) {
+        if (path == null) return;
+
+        try (InputStream is = Main.class
+                .getClassLoader()
+                .getResourceAsStream(path)
+        ) {
+            if (is == null) {
+                System.err.println("Impossibile trovare il file " + path + " nelle risorse!");
+                System.exit(1);
+            }
+
+            CopyManager copyManager = ((PGConnection) DatabaseManager.getInstance().getPgsqlConn()).getCopyAPI();
+
+            @Language("PostgreSQL")
+            String sql = "COPY \"Libri\" (titolo, autori, anno_pubblicazione, editore, categorie) FROM STDIN WITH (FORMAT csv, HEADER true)";
+
+            long rows = copyManager.copyIn(sql, is);
+            System.out.println("Importate " + rows + " righe");
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            System.exit(1);
+        }
+    }
+
+    /**
+     * Legge il contenuto di un file SQL dalle risorse e lo restituisce come stringa.
+     * <p>
+     * Il metodo filtra automaticamente le righe vuote e i commenti SQL (che iniziano con "--")
+     * per pulire lo script prima dell'esecuzione.
+     * </p>
+     *
+     * @param path il percorso del file SQL nelle risorse
+     * @return una stringa contenente i comandi SQL validi, oppure <code>null</code> in caso di errore
+     */
+    public static String readSqlFileFromRes(String path) {
+        if (path == null) return null;
+
+        try (InputStream is = Main.class
+                .getClassLoader()
+                .getResourceAsStream(path)
+        ) {
+            if (is == null) {
+                System.err.println("Impossibile trovare il file " + path + " nelle risorse!");
+                System.exit(1);
+            }
+
+            StringBuilder sql = new StringBuilder();
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    // Salta commenti o righe vuote
+                    if (line.trim().isEmpty() || line.trim().startsWith("--")) {
+                        continue;
+                    }
+                    sql.append(line).append("\n");
+                }
+            }
+
+            return sql.toString();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        return null;
+    }
+}\n--- END FILE: ./db_init/src/main/java/com/bookrecommender/db_init/Main.java ---
+\n--- START FILE: ./db_init/src/main/java/module-info.java ---
+module com.bookrecommender.db_init {
+    requires org.jetbrains.annotations;
+    requires org.postgresql.jdbc;
+
+    requires com.bookrecommender.serverBR;
+}\n--- END FILE: ./db_init/src/main/java/module-info.java ---
+\n--- START FILE: ./db_init/pom.xml ---
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.bookrecommender</groupId>
+        <artifactId>bookrecommender</artifactId>
+        <version>1.0</version>
+    </parent>
+
+    <artifactId>db_init</artifactId>
+    <packaging>jar</packaging>
+
+    <name>db_init</name>
+
+    <properties>
+        <maven.compiler.source>25</maven.compiler.source>
+        <maven.compiler.target>25</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.bookrecommender</groupId>
+            <artifactId>common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.bookrecommender</groupId>
+            <artifactId>serverBR</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.8</version>
+        </dependency>
+
+        <!-- For passing around safe SQL Strings -->
+        <!-- Used @Language("PostgreSQL") -->
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>26.0.2</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.8.0</version>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.bookrecommender.db_init.Main</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+\n--- END FILE: ./db_init/pom.xml ---
+\n--- START FILE: ./serverBR/src/main/java/com/bookrecommender/server/ServerMain.java ---
+package com.bookrecommender.server;
+
+import com.bookrecommender.common.BookRepositoryService;
+
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+
+/**
+ * Classe principale (Entry Point) dell'applicazione server BookRecommender.
+ * <p>
+ * Questa classe ha il compito di configurare e avviare l'infrastruttura lato server:
+ * </p>
+ * <ol>
+ * <li>Inizializza la connessione al database PostgreSQL tramite {@link DatabaseManager}.</li>
+ * <li>Crea l'istanza dell'implementazione del servizio RMI ({@link BookRepositoryImpl}).</li>
+ * <li>Avvia il registro RMI locale sulla porta predefinita (1099).</li>
+ * <li>Effettua il <em>rebind</em> del servizio con il nome "BookRecommenderService" per renderlo visibile ai client.</li>
+ * </ol>
+ *
+ * @author Lorenzo Monachino 757393 VA
+ * @author Lyan Curcio 757579 VA
+ * @author Sergio Saldarriaga 757394 VA
+ * @author Nash Guizzardi 756941 VA
+ */
+public class ServerMain {
+
+    /**
+     * Costruttore privato per nascondere quello implicito, trattandosi di una classe con soli metodi statici.
+     */
+    private ServerMain() {}
+
+    /**
+     * Metodo di avvio dell'applicazione server.
+     * <p>
+     * Gestisce le eccezioni critiche durante l'avvio (es. porta RMI occupata o problemi di rete).
+     * In caso di errore durante la pubblicazione del servizio, l'applicazione termina con codice di uscita 1.
+     * </p>
+     *
+     * @param args argomenti da riga di comando (attualmente non utilizzati)
+     */
+    public static void main(String[] args) {
+        // 1. Inizializza DB
+        System.out.println("Connessione al Database...");
+        DatabaseManager.getInstance();
+
+        try {
+            // 2. Crea istanza del servizio
+            BookRepositoryService service = new BookRepositoryImpl();
+
+            // 3. Pubblica il servizio su RMI Registry (default port 1099)
+            Registry registry = LocateRegistry.createRegistry(1099);
+            registry.rebind("BookRecommenderService", service);
+        } catch (Exception e) {
+            System.err.println("Errore durante il recupero dell'oggetto 'BookRecommenderService' dal registry!");
+            e.printStackTrace(); // Utile per il debug per vedere l'errore esatto
+            System.exit(1);
+        }
+
+        System.out.println("Server BookRecommender pronto e in attesa su porta 1099.");
+    }
+}\n--- END FILE: ./serverBR/src/main/java/com/bookrecommender/server/ServerMain.java ---
+\n--- START FILE: ./serverBR/src/main/java/com/bookrecommender/server/AuthedBookRepositoryImpl.java ---
+package com.bookrecommender.server;
+
+import com.bookrecommender.common.AuthedBookRepositoryService;
+import com.bookrecommender.common.dto.Library;
+import com.bookrecommender.common.dto.Rating;
+import com.bookrecommender.common.dto.Suggestion;
+import com.bookrecommender.common.enums.library.AddBookToLibResult;
+import com.bookrecommender.common.enums.library.CreateLibResult;
+import com.bookrecommender.common.enums.library.DeleteLibResult;
+import com.bookrecommender.common.enums.library.RemoveBookFromLibResult;
+import com.bookrecommender.common.enums.rating.CreateRatingResult;
+import com.bookrecommender.common.enums.rating.DeleteRatingResult;
+import com.bookrecommender.common.enums.suggestion.AddSuggestionResult;
+import com.bookrecommender.common.enums.suggestion.RemoveSuggestionResult;
+import com.bookrecommender.server.queries.LibraryQueries;
+import com.bookrecommender.server.queries.RatingQueries;
+import com.bookrecommender.server.queries.SuggestionQueries;
+
+import java.rmi.Remote;
+import java.rmi.server.UnicastRemoteObject;
+import java.rmi.RemoteException;
+import java.util.LinkedList;
+
+/**
+ * Implementazione del servizio RMI riservato agli utenti autenticati.
+ * <p>
+ * Implementa il pattern Session: viene creata una nuova istanza per ogni utente loggato,
+ * mantenendo lo stato della sessione (userId) per garantire che ogni operazione sia
+ * eseguita con i permessi corretti.
+ * </p>
+ *
+ * @author Lorenzo Monachino 757393 VA
+ * @author Lyan Curcio 757579 VA
+ * @author Sergio Saldarriaga 757394 VA
+ * @author Nash Guizzardi 756941 VA
+ */
+public class AuthedBookRepositoryImpl extends UnicastRemoteObject implements AuthedBookRepositoryService {
+
+    /** L'identificativo univoco dell'utente associato a questa sessione. */
+    final String loggedUserId;
+
+    /**
+     * Costruisce una nuova sessione per l'utente specificato.
+     *
+     * @param loggedUserId l'ID dell'utente autenticato
+     * @throws RemoteException in caso di errore RMI
+     */
+    public AuthedBookRepositoryImpl(String loggedUserId) throws RemoteException {
+        super();
+        this.loggedUserId = loggedUserId;
+    }
+
+    //
+    // Autenticazione
+    //
+
+    /** {@inheritDoc} */
+    @Override
+    public void logout() throws RemoteException {
+        // Fa in modo che l'oggetto remoto non sia più usabile dal client
+        UnicastRemoteObject.unexportObject(this, true);
+    }
+
+    //
+    // Librerie
+    //
+
+    /** {@inheritDoc} */
+    @Override
+    public LinkedList<Library> cercaLibreriePerNome(String nomeLibreria) throws RemoteException {
+        return LibraryQueries.searchLibraryByName(nomeLibreria);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public LinkedList<Library> cercaLibreriePerUtente(String userId) throws RemoteException {
+        return LibraryQueries.searchLibraryByUser(userId);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public CreateLibResult creaLibreria(String nomeLibreria) throws RemoteException {
+        return LibraryQueries.createLibrary(loggedUserId, nomeLibreria);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public DeleteLibResult eliminaLibreria(int libreriaId) throws RemoteException {
+        return LibraryQueries.deleteLibrary(loggedUserId, libreriaId);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public AddBookToLibResult aggiungiLibroALibreria(int libreriaId, int libroId) throws RemoteException {
+        return LibraryQueries.addBookToLibrary(loggedUserId, libreriaId, libroId);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public RemoveBookFromLibResult rimuoviLibroDaLibreria(int libreriaId, int libroId) throws RemoteException {
+        return LibraryQueries.removeBookFromLibrary(loggedUserId, libreriaId, libroId);
+    }
+
+    //
+    // Valutazioni
+    //
+
+    /** {@inheritDoc} */
+    @Override
+    public Rating getMyValutazione(int bookId) throws RemoteException {
+        return RatingQueries.getRatingFrom(loggedUserId, bookId);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public CreateRatingResult inserisciValutazioneLibro(Rating v) throws RemoteException {
+        return RatingQueries.createRating(loggedUserId, v);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public DeleteRatingResult rimuoviValutazioneLibro(int valutazioneId) throws RemoteException {
+        return RatingQueries.deleteRating(loggedUserId, valutazioneId);
+    }
+
+    //
+    // Suggerimenti
+    //
+
+    /** {@inheritDoc} */
+    @Override
+    public LinkedList<Suggestion> getMySuggerimenti(int bookId) throws RemoteException {
+        return SuggestionQueries.getSuggestionsFrom(loggedUserId, bookId);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public AddSuggestionResult inserisciSuggerimentoLibro(int libroSorgenteId, int libroConsigliatoId) throws RemoteException {
+        return SuggestionQueries.createRating(loggedUserId, libroSorgenteId, libroConsigliatoId);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public RemoveSuggestionResult rimuoviSuggerimentoLibro(int libroSorgenteId, int libroConsigliatoId) throws RemoteException {
+        return SuggestionQueries.deleteRating(loggedUserId, libroSorgenteId, libroConsigliatoId);
+    }
+}\n--- END FILE: ./serverBR/src/main/java/com/bookrecommender/server/AuthedBookRepositoryImpl.java ---
+\n--- START FILE: ./serverBR/src/main/java/com/bookrecommender/server/queries/LibraryQueries.java ---
+package com.bookrecommender.server.queries;
+
+import com.bookrecommender.common.dto.Library;
+import com.bookrecommender.common.enums.library.AddBookToLibResult;
+import com.bookrecommender.common.enums.library.CreateLibResult;
+import com.bookrecommender.common.enums.library.DeleteLibResult;
+import com.bookrecommender.common.enums.library.RemoveBookFromLibResult;
+import com.bookrecommender.server.DatabaseManager;
+import org.intellij.lang.annotations.Language;
+
+import java.sql.SQLException;
+import java.util.LinkedList;
+
+/**
+ * Classe di utility che contiene le query SQL per la gestione delle librerie personali degli utenti.
+ * <p>
+ * Fornisce metodi statici per creare ed eliminare librerie, nonché per aggiungere o rimuovere libri da esse.
+ * La logica di controllo (es. verifica esistenza libreria, duplicati, permessi utente) è implementata
+ * in modo efficiente direttamente nelle query SQL tramite costrutti <code>CASE WHEN</code>,
+ * riducendo il numero di round-trip verso il database.
+ * </p>
+ *
+ * @author Lorenzo Monachino 757393 VA
+ * @author Lyan Curcio 757579 VA
+ * @author Sergio Saldarriaga 757394 VA
+ * @author Nash Guizzardi 756941 VA
+ */
+public class LibraryQueries {
+
+    public synchronized static LinkedList<Library> searchLibraryByName(String libraryName) {
+        @Language("PostgreSQL")
+        String query = "SELECT * FROM \"Librerie\" WHERE nome ILIKE '%'||?||'%'";
+        return DatabaseManager.getInstance().executeQuery(
+            query,
+            Library::new,
+            new Object[] {libraryName}
+        );
+    }
+
+    public synchronized static LinkedList<Library> searchLibraryByUser(String userId) {
+        @Language("PostgreSQL")
+        String query = "SELECT * FROM \"Librerie\" WHERE userid ILIKE '%'||?||'%'";
+        return DatabaseManager.getInstance().executeQuery(
+            query,
+            Library::new,
+            new Object[] {userId}
+        );
+    }
+
+    /**
+     * Crea una nuova libreria per un utente specifico.
+     * <p>
+     * Verifica preventivamente se l'utente possiede già una libreria con lo stesso nome.
+     * </p>
+     *
+     * @param userId       l'identificativo dell'utente proprietario
+     * @param nomeLibreria il nome della nuova libreria
+     * @return <code>CreateLibResult.OK</code> se la creazione ha successo,
+     * <code>CreateLibResult.DUPLICATE_NAME</code> se il nome è già in uso,
+     * <code>CreateLibResult.UNEXPECTED_ERROR</code> in caso di errore SQL.
+     */
+    public synchronized static CreateLibResult createLibrary(String userId, String nomeLibreria) {
+        @Language("PostgreSQL")
+        String query = """
+            SELECT CASE WHEN EXISTS(
+                SELECT 1 FROM "Librerie"
+                WHERE userid = ? AND nome = ?
+            ) THEN 1 ELSE 0
+            END AS r
+        """;
+
+        LinkedList<Integer> result = DatabaseManager.getInstance().executeQuery(
+                query,
+                rs ->{
+                    try
+                    {
+                        return rs.getInt("r");
+                    }
+                    catch (SQLException e)
+                    {
+                        System.err.println("Impossibile recuperare la colonna 'r' dalla query di 'createLibrary()'!");
+                        return null;
+                    }
+                },
+                new Object[] {userId, nomeLibreria}
+        );
+
+        if (result.size() != 1 || result.getFirst() == null) return CreateLibResult.UNEXPECTED_ERROR;
+        else if (result.getFirst() == 1) return CreateLibResult.DUPLICATE_NAME;
+
+        query = "INSERT INTO \"Librerie\" (nome, userid) VALUES (?, ?)";
+
+        if (!DatabaseManager.getInstance().execute(
+                query,
+                new Object[] {nomeLibreria, userId}
+        )) return CreateLibResult.UNEXPECTED_ERROR;
+
+        return CreateLibResult.OK;
+    }
+
+    /**
+     * Elimina definitivamente una libreria utente.
+     * <p>
+     * Prima di procedere all'eliminazione, verifica che la libreria esista e appartenga effettivamente all'utente richiedente.
+     * </p>
+     *
+     * @param userId     l'identificativo dell'utente proprietario
+     * @param libreriaId l'identificativo univoco della libreria da eliminare
+     * @return <code>DeleteLibResult.OK</code> se l'eliminazione ha successo,
+     * <code>DeleteLibResult.LIBRARY_NOT_FOUND</code> se la libreria non esiste o non appartiene all'utente,
+     * <code>DeleteLibResult.UNEXPECTED_ERROR</code> in caso di errore SQL.
+     */
+    public synchronized static DeleteLibResult deleteLibrary(String userId, int libreriaId) {
+        @Language("PostgreSQL")
+        String query = """
+            SELECT CASE WHEN EXISTS(
+                SELECT 1 FROM "Librerie"
+                WHERE userid = ? AND id = ?
+            ) THEN 1 ELSE 0
+            END AS r
+        """;
+
+        LinkedList<Integer> result = DatabaseManager.getInstance().executeQuery(
+                query,
+                rs ->{
+                    try
+                    {
+                        return rs.getInt("r");
+                    }
+                    catch (SQLException e)
+                    {
+                        System.err.println("Impossibile recuperare la colonna 'r' dalla query di 'deleteLibrary()'!");
+                        return null;
+                    }
+                },
+                new Object[] {userId, libreriaId}
+        );
+
+        if (result.size() != 1 || result.getFirst() == null) return DeleteLibResult.UNEXPECTED_ERROR;
+        else if (result.getFirst() == 0) return DeleteLibResult.LIBRARY_NOT_FOUND;
+
+        query = "DELETE FROM \"Librerie\" WHERE id = ?";
+
+        if (!DatabaseManager.getInstance().execute(
+                query,
+                new Object[] {libreriaId}
+        )) return DeleteLibResult.UNEXPECTED_ERROR;
+
+        return DeleteLibResult.OK;
+    }
+
+    /**
+     * Aggiunge un libro a una libreria specifica.
+     * <p>
+     * Utilizza una query con logica <code>CASE WHEN</code> per distinguere tre scenari in un unico passaggio:
+     * </p>
+     * <ul>
+     * <li><strong>0</strong>: La libreria non esiste o non appartiene all'utente.</li>
+     * <li><strong>2</strong>: Il libro è già presente nella libreria (duplicato).</li>
+     * <li><strong>1</strong>: Condizioni valide per l'inserimento.</li>
+     * </ul>
+     *
+     * @param userId     l'identificativo dell'utente
+     * @param libreriaId l'identificativo della libreria di destinazione
+     * @param libroId    l'identificativo del libro da aggiungere
+     * @return un valore di <code>AddBookToLibResult</code> che descrive l'esito specifico (Successo, Libreria non trovata, Libro già presente).
+     */
+    public synchronized static AddBookToLibResult addBookToLibrary(String userId, int libreriaId, int libroId) {
+        @Language("PostgreSQL")
+        String query = """
+            SELECT CASE
+                -- 0: La libreria non esiste
+                WHEN NOT EXISTS (
+                    SELECT 1
+                    FROM "Librerie"
+                    WHERE id = ?
+                      AND userid = ?
+                ) THEN 0
+        
+                -- 2: La libreria esiste e contiene il libro
+                WHEN EXISTS (
+                    SELECT 1
+                    FROM "LibriXLibrerie"
+                    WHERE libreria_id = ?
+                      AND libro_id = ?
+                ) THEN 2
+        
+                -- 1: La libreria esiste ma non contiene il libro
+                ELSE 1
+            END AS r;
+        """;
+
+        LinkedList<Integer> result = DatabaseManager.getInstance().executeQuery(
+                query,
+                rs ->{
+                    try
+                    {
+                        return rs.getInt("r");
+                    }
+                    catch (SQLException e)
+                    {
+                        System.err.println("Impossibile recuperare la colonna 'r' dalla query di 'addBookToLibrary()'!");
+                        return null;
+                    }
+                },
+                new Object[] {libreriaId, userId, libroId}
+        );
+
+        if (result.size() != 1 || result.getFirst() == null) return AddBookToLibResult.UNEXPECTED_ERROR;
+        else if (result.getFirst() == 0) return AddBookToLibResult.LIBRARY_NOT_FOUND;
+        else if (result.getFirst() == 2) return AddBookToLibResult.BOOK_ALREADY_IN_LIBRARY;
+
+        query = "INSERT INTO \"LibriXLibrerie\" (libro_id, libreria_id) VALUES (?, ?)";
+
+        if (!DatabaseManager.getInstance().execute(
+                query,
+                new Object[] {libroId, libreriaId}
+        )) return AddBookToLibResult.UNEXPECTED_ERROR;
+
+        return AddBookToLibResult.OK;
+    }
+
+    /**
+     * Rimuove un libro da una libreria specifica.
+     * <p>
+     * Utilizza una logica simile all'aggiunta per verificare l'esistenza della libreria e la presenza effettiva del libro prima della rimozione.
+     * </p>
+     *
+     * @param userId     l'identificativo dell'utente
+     * @param libreriaId l'identificativo della libreria sorgente
+     * @param libroId    l'identificativo del libro da rimuovere
+     * @return <code>RemoveBookFromLibResult.OK</code> se rimosso con successo,
+     * <code>RemoveBookFromLibResult.LIBRARY_NOT_FOUND</code> se la libreria non esiste,
+     * <code>RemoveBookFromLibResult.BOOK_NOT_IN_LIBRARY</code> se il libro non era presente.
+     */
+    public synchronized static RemoveBookFromLibResult removeBookFromLibrary(String userId, int libreriaId, int libroId) {
+        @Language("PostgreSQL")
+        String query = """
+            SELECT CASE
+                -- 0: La libreria non esiste
+                WHEN NOT EXISTS (
+                    SELECT 1
+                    FROM "Librerie"
+                    WHERE id = ?
+                      AND userid = ?
+                ) THEN 0
+        
+                -- 2: La libreria esiste e contiene il libro
+                WHEN EXISTS (
+                    SELECT 1
+                    FROM "LibriXLibrerie"
+                    WHERE libreria_id = ?
+                      AND libro_id = ?
+                ) THEN 2
+        
+                -- 1: La libreria esiste ma non contiene il libro
+                ELSE 1
+            END AS r;
+        """;
+
+        LinkedList<Integer> result = DatabaseManager.getInstance().executeQuery(
+                query,
+                rs ->{
+                    try
+                    {
+                        return rs.getInt("r");
+                    }
+                    catch (SQLException e)
+                    {
+                        System.err.println("Impossibile recuperare la colonna 'r' dalla query di 'removeBookFromLibrary()'!");
+                        return null;
+                    }
+                },
+                new Object[] {libreriaId, userId, libroId}
+        );
+
+        if (result.size() != 1 || result.getFirst() == null) return RemoveBookFromLibResult.UNEXPECTED_ERROR;
+        else if (result.getFirst() == 0) return RemoveBookFromLibResult.LIBRARY_NOT_FOUND;
+        else if (result.getFirst() == 1) return RemoveBookFromLibResult.BOOK_NOT_IN_LIBRARY;
+
+        query = "DELETE FROM \"LibriXLibrerie\" WHERE libro_id = ? AND libreria_id = ?";
+
+        if (!DatabaseManager.getInstance().execute(
+                query,
+                new Object[] {libroId, libreriaId}
+        )) return RemoveBookFromLibResult.UNEXPECTED_ERROR;
+
+        return RemoveBookFromLibResult.OK;
+    }
+}\n--- END FILE: ./serverBR/src/main/java/com/bookrecommender/server/queries/LibraryQueries.java ---
+\n--- START FILE: ./serverBR/src/main/java/com/bookrecommender/server/queries/UserQueries.java ---
+package com.bookrecommender.server.queries;
+
+import com.bookrecommender.common.dto.User;
+import com.bookrecommender.server.DatabaseManager;
+import org.intellij.lang.annotations.Language;
+
+import java.util.LinkedList;
+
+public class UserQueries {
+    public synchronized static User getUserInfo(String userId) {
+        @Language("PostgreSQL")
+        String query = "SELECT * FROM \"UtentiRegistrati\" WHERE userid = ?";
+        return DatabaseManager.getInstance().executeQuery(
+            query,
+            User::new,
+            new Object[] {userId}
+        ).getFirst();
+    }
+}
+\n--- END FILE: ./serverBR/src/main/java/com/bookrecommender/server/queries/UserQueries.java ---
+\n--- START FILE: ./serverBR/src/main/java/com/bookrecommender/server/queries/AuthQueries.java ---
+package com.bookrecommender.server.queries;
+
+import com.bookrecommender.common.dto.User;
+import com.bookrecommender.common.enums.auth.LoginResult;
+import com.bookrecommender.common.enums.auth.RegisterResult;
+import com.bookrecommender.server.DatabaseManager;
+import org.intellij.lang.annotations.Language;
+
+import java.sql.SQLException;
+import java.util.LinkedList;
+
+/**
+ * Classe di utility contenente le query SQL per la gestione dell'autenticazione.
+ * <p>
+ * Questa classe offre metodi statici per la registrazione e il login degli utenti.
+ * La sicurezza delle password è garantita delegando l'hashing direttamente al DBMS PostgreSQL
+ * tramite l'estensione <code>pgcrypto</code> (funzioni <code>crypt</code> e <code>gen_salt</code> con algoritmo Blowfish).
+ * </p>
+ *
+ * @author Lorenzo Monachino 757393 VA
+ * @author Lyan Curcio 757579 VA
+ * @author Sergio Saldarriaga 757394 VA
+ * @author Nash Guizzardi 756941 VA
+ */
+public class AuthQueries {
+
+    /**
+     * Gestisce la registrazione di un nuovo utente nel database.
+     * <p>
+     * Il metodo esegue due operazioni distinte:
+     * </p>
+     * <ol>
+     * <li>Verifica preliminare dell'unicità di UserID, Codice Fiscale ed Email.</li>
+     * <li>Se i vincoli sono rispettati, procede all'inserimento (INSERT) calcolando l'hash della password.</li>
+     * </ol>
+     *
+     * @param user     l'oggetto DTO contenente i dati anagrafici dell'utente
+     * @param password la password in chiaro scelta dall'utente (verrà salvata solo hashata)
+     * @return un valore dell'enum <code>RegisterResult</code> che indica il successo o il tipo di errore (es. duplicato)
+     */
+    public synchronized static RegisterResult register(User user, String password) {
+        //
+        // Controllo vincoli
+        @Language("PostgreSQL")
+        String query = """
+            SELECT
+                EXISTS(SELECT 1 FROM "UtentiRegistrati" WHERE userid = ?) AS uid_ex,
+                EXISTS(SELECT 1 FROM "UtentiRegistrati" WHERE codice_fiscale = ?) AS cf_ex,
+                EXISTS(SELECT 1 FROM "UtentiRegistrati" WHERE email = ?) AS email_ex
+        """;
+
+        LinkedList<Boolean[]> result = DatabaseManager.getInstance().executeQuery(
+                query,
+                rs -> {
+                    try
+                    {
+                        return new Boolean[] {
+                                rs.getBoolean("uid_ex"),
+                                rs.getBoolean("cf_ex"),
+                                rs.getBoolean("email_ex")
+                        };
+                    }
+                    catch (SQLException e)
+                    {
+                        System.err.println("Impossibile recuperare le colonne 'uid_ex', 'cf_ex', 'email_ex' dalla query di 'register()'!");
+                        return null;
+                    }
+                },
+                new Object[] {user.userId, user.codiceFiscale, user.email}
+        );
+
+        if (result.size() != 1 || result.getFirst() == null) return RegisterResult.UNEXPECTED_ERROR;
+        else if (result.getFirst()[0]) return RegisterResult.DUPLICATE_USERID;
+        else if (result.getFirst()[1]) return RegisterResult.DUPLICATE_CF;
+        else if (result.getFirst()[2]) return RegisterResult.DUPLICATE_EMAIL;
+
+
+        //
+        // Inserimento
+        // Utilizza crypt() di PostgreSQL per l'hashing sicuro
+        query = """
+            INSERT INTO "UtentiRegistrati" (userid, nome, cognome, codice_fiscale, email, password_hash)
+                VALUES (?, ?, ?, ?, ?, crypt(?, gen_salt('bf')))
+        """;
+        if (!DatabaseManager.getInstance().execute(
+                query,
+                new Object[] {user.userId, user.nome, user.cognome, user.codiceFiscale, user.email, password}
+        )) return RegisterResult.UNEXPECTED_ERROR;
+
+        return RegisterResult.OK;
+    }
+
+    /**
+     * Verifica le credenziali di un utente per effettuare il login.
+     * <p>
+     * Utilizza una query SQL condizionale (CASE) per distinguere in un unico passaggio se:
+     * </p>
+     * <ul>
+     * <li>L'utente non esiste (Codice 0)</li>
+     * <li>L'utente esiste ma la password è errata (Codice 1)</li>
+     * <li>Le credenziali sono valide (Codice 2)</li>
+     * </ul>
+     * <p>
+     * Questo approccio migliora l'efficienza e permette di restituire messaggi di errore precisi al client.
+     * </p>
+     *
+     * @param userid   l'identificativo dell'utente
+     * @param password la password in chiaro da verificare contro l'hash nel DB
+     * @return un valore dell'enum <code>LoginResult</code> che indica l'esito dell'autenticazione
+     */
+    public synchronized static LoginResult login(String userid, String password) {
+        //
+        // Controllo password
+        @Language("PostgreSQL")
+        String query = """
+            SELECT CASE
+                -- 0: L'utente non esiste
+                WHEN NOT EXISTS(
+                    SELECT 1 FROM "UtentiRegistrati"
+                    WHERE userid = ?
+                ) THEN 0
+        
+                -- 1: Se la password non è corretta
+                WHEN NOT EXISTS(
+                    SELECT 1 FROM "UtentiRegistrati"
+                    WHERE userid = ? AND password_hash = crypt(?, password_hash)
+                ) THEN 1
+        
+                -- 2: Se l'utente esiste e la password è corretta
+                ELSE 2
+            END AS r
+        """;
+
+        LinkedList<Integer> result = DatabaseManager.getInstance().executeQuery(
+                query,
+                rs -> {
+                    try
+                    {
+                        return rs.getInt("r");
+                    }
+                    catch (SQLException e)
+                    {
+                        System.err.println("Impossibile recuperare la colonna 'r' dalla query di 'login()'!");
+                        return null;
+                    }
+                },
+                new Object[] {userid, userid, password}
+        );
+
+        if (result.size() != 1 || result.getFirst() == null) return LoginResult.UNEXPECTED_ERROR;
+        else if (result.getFirst() == 0) return LoginResult.USER_ID_NOT_FOUND;
+        else if (result.getFirst() == 1) return LoginResult.INCORRECT_PASSWORD;
+        else if (result.getFirst() == 2) return LoginResult.OK;
+
+        return LoginResult.UNEXPECTED_ERROR;
+    }
+}\n--- END FILE: ./serverBR/src/main/java/com/bookrecommender/server/queries/AuthQueries.java ---
+\n--- START FILE: ./serverBR/src/main/java/com/bookrecommender/server/queries/RatingQueries.java ---
+package com.bookrecommender.server.queries;
+
+import com.bookrecommender.common.dto.Rating;
+import com.bookrecommender.common.enums.rating.CreateRatingResult;
+import com.bookrecommender.common.enums.rating.DeleteRatingResult;
+import com.bookrecommender.server.DatabaseManager;
+import org.intellij.lang.annotations.Language;
+
+import java.sql.SQLException;
+import java.util.LinkedList;
+
+/**
+ * Classe di utility che contiene le query SQL per la gestione delle valutazioni (recensioni) dei libri.
+ * <p>
+ * Gestisce l'inserimento di nuovi voti e commenti e la loro rimozione, assicurando
+ * che ogni utente possa valutare un determinato libro una sola volta.
+ * </p>
+ *
+ * @author Lorenzo Monachino 757393 VA
+ * @author Lyan Curcio 757579 VA
+ * @author Sergio Saldarriaga 757394 VA
+ * @author Nash Guizzardi 756941 VA
+ */
+public class RatingQueries {
+
+    public synchronized static Rating getRatingFrom(String userId, int bookId) {
+        @Language("PostgreSQL")
+        String query =  """
+            SELECT * FROM "ValutazioniLibri"
+            WHERE userid = ? AND libro_id = ?
+        """;
+        return DatabaseManager.getInstance().executeQuery(
+            query,
+            Rating::new,
+            new Object[] {userId, bookId}
+        ).getFirst();
+    }
+
+    /**
+     * Inserisce una nuova valutazione per un libro nel database.
+     * <p>
+     * Esegue preventivamente un controllo per verificare se l'utente ha già valutato
+     * lo stesso libro. Se il controllo passa, vengono inseriti tutti i punteggi parziali
+     * (stile, contenuto, ecc.) e le relative note testuali.
+     * </p>
+     *
+     * @param userId l'identificativo dell'utente che sta rilasciando la valutazione
+     * @param v      l'oggetto DTO contenente i punteggi e i commenti
+     * @return <code>CreateRatingResult.OK</code> se l'inserimento ha successo,
+     * <code>CreateRatingResult.ALREADY_RATED</code> se esiste già una valutazione per quel libro,
+     * <code>CreateRatingResult.UNEXPECTED_ERROR</code> in caso di errore SQL.
+     */
+    public synchronized static CreateRatingResult createRating(String userId, Rating v) {
+        @Language("PostgreSQL")
+        String query = """
+            SELECT CASE WHEN EXISTS(
+                SELECT 1 FROM "ValutazioniLibri"
+                WHERE userid = ? AND libro_id = ?
+            ) THEN 1 ELSE 0
+            END AS r
+        """;
+
+        LinkedList<Integer> result = DatabaseManager.getInstance().executeQuery(
+                query,
+                rs ->{
+                    try
+                    {
+                        return rs.getInt("r");
+                    }
+                    catch (SQLException e)
+                    {
+                        System.err.println("Impossibile recuperare la colonna 'r' dalla query di 'createRating()'!");
+                        return null;
+                    }
+                },
+                new Object[] {userId, v.libroId}
+        );
+
+        if (result.size() != 1 || result.getFirst() == null) return CreateRatingResult.UNEXPECTED_ERROR;
+        else if (result.getFirst() == 1) return CreateRatingResult.ALREADY_RATED;
+
+        query = """
+            INSERT INTO "ValutazioniLibri" (
+                userid, libro_id,
+                stile, contenuto, gradevolezza, originalita, edizione,
+                note_stile, note_contenuto, note_gradevolezza, note_originalita, note_edizione, note_finale
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """;
+
+        if (!DatabaseManager.getInstance().execute(
+                query,
+                new Object[] {
+                        userId, v.libroId,
+                        v.stile, v.contenuto, v.gradevolezza, v.originalita, v.edizione,
+                        v.noteStile, v.noteContenuto, v.noteGradevolezza, v.noteOriginalita, v.noteEdizione, v.noteFinale
+                }
+        )) return CreateRatingResult.UNEXPECTED_ERROR;
+
+        return CreateRatingResult.OK;
+    }
+
+    /**
+     * Rimuove una valutazione esistente dal database.
+     * <p>
+     * Verifica l'esistenza della valutazione associata all'utente prima di procedere
+     * con l'eliminazione effettiva tramite ID.
+     * </p>
+     *
+     * @param userId        l'identificativo dell'utente proprietario della valutazione
+     * @param valutazioneId l'identificativo univoco della valutazione da eliminare
+     * @return <code>DeleteRatingResult.OK</code> se l'eliminazione ha successo,
+     * <code>DeleteRatingResult.NOT_RATED</code> se la valutazione non esiste o non appartiene all'utente,
+     * <code>DeleteRatingResult.UNEXPECTED_ERROR</code> in caso di errore SQL.
+     */
+    public synchronized static DeleteRatingResult deleteRating(String userId, int valutazioneId) {
+        @Language("PostgreSQL")
+        String query = """
+            SELECT CASE WHEN EXISTS(
+                SELECT 1 FROM "ValutazioniLibri"
+                WHERE userid = ? AND libro_id = ?
+            ) THEN 1 ELSE 0
+            END AS r
+        """;
+
+        LinkedList<Integer> result = DatabaseManager.getInstance().executeQuery(
+                query,
+                rs ->{
+                    try
+                    {
+                        return rs.getInt("r");
+                    }
+                    catch (SQLException e)
+                    {
+                        System.err.println("Impossibile recuperare la colonna 'r' dalla query di 'deleteRating()'!");
+                        return null;
+                    }
+                },
+                new Object[] {userId, valutazioneId}
+        );
+
+        if (result.size() != 1 || result.getFirst() == null) return DeleteRatingResult.UNEXPECTED_ERROR;
+        else if (result.getFirst() == 0) return DeleteRatingResult.NOT_RATED;
+
+        query = "DELETE FROM \"ValutazioniLibri\" WHERE id = ?";
+
+        if (!DatabaseManager.getInstance().execute(
+                query,
+                new Object[] {valutazioneId}
+        )) return DeleteRatingResult.UNEXPECTED_ERROR;
+
+        return DeleteRatingResult.OK;
+    }
+}\n--- END FILE: ./serverBR/src/main/java/com/bookrecommender/server/queries/RatingQueries.java ---
+\n--- START FILE: ./serverBR/src/main/java/com/bookrecommender/server/queries/BookQueries.java ---
+package com.bookrecommender.server.queries;
+
+import com.bookrecommender.common.dto.Book;
+import com.bookrecommender.common.dto.BookInfo;
+import com.bookrecommender.common.dto.Rating;
+import com.bookrecommender.common.dto.Suggestion;
+import com.bookrecommender.server.DatabaseManager;
+import org.intellij.lang.annotations.Language;
+
+import java.util.LinkedList;
+
+/**
+ * Classe di utility per la ricerca e il recupero dei libri dal database.
+ * Utilizza l'operatore ILIKE per ricerche case-insensitive.
+ *
+ * @author Lorenzo Monachino 757393 VA
+ * @author Lyan Curcio 757579 VA
+ * @author Sergio Saldarriaga 757394 VA
+ * @author Nash Guizzardi 756941 VA
+ */
+public class BookQueries {
+
+    public synchronized static BookInfo getBookInfo(int bookId) {
+        @Language("PostgreSQL")
+        String query = """
+            SELECT * FROM "Libri"
+            WHERE id = ?
+        """;
+        Book book = DatabaseManager.getInstance().executeQuery(
+            query,
+            Book::new,
+            new Object[] {bookId}
+        ).getFirst();
+
+        query = """
+            SELECT * FROM "ValutazioniLibri"
+            WHERE libro_id = ?
+        """;
+        LinkedList<Rating> ratings = DatabaseManager.getInstance().executeQuery(
+            query,
+            Rating::new,
+            new Object[] {bookId}
+        );
+
+        query = """
+            SELECT * FROM "ConsigliLibri"
+            WHERE libro_sorgente_id = ?
+        """;
+        LinkedList<Suggestion> suggestions = DatabaseManager.getInstance().executeQuery(
+            query,
+            Suggestion::new,
+            new Object[] {bookId}
+        );
+
+        return new BookInfo(book, ratings, suggestions);
+    }
+
+    /**
+     * Recupera tutti i libri presenti nel database.
+     * @return lista completa dei libri
+     */
+    public synchronized static LinkedList<Book> selectAll() {
+        @Language("PostgreSQL")
+        String query = "SELECT * FROM \"Libri\"";
+        return DatabaseManager.getInstance().executeQuery(
+                query,
+                Book::new,
+                null
+        );
+    }
+
+    /**
+     * Cerca i libri il cui titolo contiene la stringa specificata.
+     * @param title titolo o parte di esso
+     * @return lista dei libri trovati
+     */
+    public synchronized static LinkedList<Book> searchByTitle(String title) {
+        @Language("PostgreSQL")
+        String query = "SELECT * FROM \"Libri\" WHERE titolo ILIKE '%'||?||'%'";
+        return DatabaseManager.getInstance().executeQuery(
+                query,
+                Book::new,
+                new Object[] {title}
+        );
+    }
+
+    /**
+     * Cerca i libri scritti dall'autore specificato.
+     * @param author autore o parte del nome
+     * @return lista dei libri trovati
+     */
+    public synchronized static LinkedList<Book> searchByAuthor(String author) {
+        @Language("PostgreSQL")
+        String query = "SELECT * FROM \"Libri\" WHERE autori ILIKE '%'||?||'%'";
+        return DatabaseManager.getInstance().executeQuery(
+                query,
+                Book::new,
+                new Object[] {author}
+        );
+    }
+
+    /**
+     * Cerca i libri per autore e anno di pubblicazione.
+     * @param author autore
+     * @param year anno esatto
+     * @return lista dei libri trovati
+     */
+    public synchronized static LinkedList<Book> searchByAuthorAndYear(String author, int year) {
+        @Language("PostgreSQL")
+        String query = "SELECT * FROM \"Libri\" WHERE autori ILIKE '%'||?||'%' AND anno_pubblicazione = ?";
+        return DatabaseManager.getInstance().executeQuery(
+                query,
+                Book::new,
+                new Object[] {author, year}
+        );
+    }
+}\n--- END FILE: ./serverBR/src/main/java/com/bookrecommender/server/queries/BookQueries.java ---
+\n--- START FILE: ./serverBR/src/main/java/com/bookrecommender/server/queries/SuggestionQueries.java ---
+package com.bookrecommender.server.queries;
+
+import com.bookrecommender.common.dto.Rating;
+import com.bookrecommender.common.dto.Suggestion;
+import com.bookrecommender.common.enums.suggestion.AddSuggestionResult;
+import com.bookrecommender.common.enums.suggestion.RemoveSuggestionResult;
+import com.bookrecommender.server.DatabaseManager;
+import org.intellij.lang.annotations.Language;
+
+import java.sql.SQLException;
+import java.util.LinkedList;
+
+/**
+ * Classe di utility che contiene le query SQL per la gestione dei suggerimenti (correlazioni) tra libri.
+ * <p>
+ * I metodi di questa classe gestiscono la logica per cui un utente può consigliare un libro "B" a chi ha letto il libro "A".
+ * La complessità dei controlli (es. l'utente deve possedere entrambi i libri nelle proprie librerie)
+ * è delegata in parte al database tramite l'uso di funzioni SQL custom e costrutti condizionali.
+ * </p>
+ *
+ * @author Lorenzo Monachino 757393 VA
+ * @author Lyan Curcio 757579 VA
+ * @author Sergio Saldarriaga 757394 VA
+ * @author Nash Guizzardi 756941 VA
+ */
+public class SuggestionQueries {
+
+    public synchronized static LinkedList<Suggestion> getSuggestionsFrom(String userId, int bookId) {
+        @Language("PostgreSQL")
+        String query =  """
+            SELECT * FROM "ConsigliLibri"
+            WHERE userid = ? AND libro_sorgente_id = ?
+        """;
+        return DatabaseManager.getInstance().executeQuery(
+            query,
+            Suggestion::new,
+            new Object[] {userId, bookId}
+        );
+    }
+
+    /**
+     * Inserisce un nuovo suggerimento di correlazione tra due libri.
+     * <p>
+     * La query utilizza una logica complessa basata su <code>CASE WHEN</code> e sulla function PostgreSQL
+     * <code>count_libri_in_librerie(userid, libroid)</code> per verificare in un unico passaggio:
+     * </p>
+     * <ol>
+     * <li>Se l'utente possiede il libro sorgente (Codice 0 se manca).</li>
+     * <li>Se l'utente possiede il libro consigliato (Codice 1 se manca).</li>
+     * <li>Se il suggerimento esiste già (Codice 2 se duplicato).</li>
+     * <li>Se tutte le condizioni sono soddisfatte (Codice 3).</li>
+     * </ol>
+     *
+     * @param userId             l'identificativo dell'utente che crea il suggerimento
+     * @param libroSorgenteId    l'ID del libro principale (a cui si riferisce il consiglio)
+     * @param libroConsigliatoId l'ID del libro suggerito
+     * @return un valore dell'enum <code>AddSuggestionResult</code> che rispecchia l'esito dei controlli o il successo dell'operazione.
+     */
+    public synchronized static AddSuggestionResult createRating(String userId, int libroSorgenteId, int libroConsigliatoId) {
+        @Language("PostgreSQL")
+        String query = """
+            SELECT CASE
+                -- 0: Se il libro sorgente non è in nessuna libreria
+                WHEN count_libri_in_librerie(?, ?) = 0 THEN 0
+                -- 1: Se il libro consigliato non è in nessuna libreria
+                WHEN count_libri_in_librerie(?, ?) = 0 THEN 1
+                -- 2: Se esiste già un consiglio identico
+                WHEN EXISTS(
+                    SELECT 1 FROM "ConsigliLibri"
+                    WHERE userid = ? AND libro_sorgente_id = ? AND libro_consigliato_id = ?
+                ) THEN 2
+                -- 3: Se entrambi i libri sono in qualche libreria
+                ELSE 3
+            END AS r
+        """;
+
+        LinkedList<Integer> result = DatabaseManager.getInstance().executeQuery(
+                query,
+                rs ->{
+                    try
+                    {
+                        return rs.getInt("r");
+                    }
+                    catch (SQLException e)
+                    {
+                        System.err.println("Impossibile recuperare la colonna 'r' dalla query di 'createRating()'!");
+                        return null;
+                    }
+                },
+                new Object[] {
+                        userId, libroSorgenteId,
+                        userId, libroConsigliatoId,
+                        userId, libroSorgenteId, libroConsigliatoId
+                }
+        );
+
+        if (result.size() != 1 || result.getFirst() == null) return AddSuggestionResult.UNEXPECTED_ERROR;
+        else if (result.getFirst() == 0) return AddSuggestionResult.MAIN_BOOK_NOT_IN_LIBRARY;
+        else if (result.getFirst() == 1) return AddSuggestionResult.SUGGESTED_BOOK_NOT_IN_LIBRARY;
+        else if (result.getFirst() == 2) return AddSuggestionResult.ALREADY_SUGGESTED;
+
+        query = "INSERT INTO \"ConsigliLibri\" (userid, libro_sorgente_id, libro_consigliato_id) VALUES (?, ?, ?)";
+
+        if (!DatabaseManager.getInstance().execute(
+                query,
+                new Object[] {userId, libroSorgenteId, libroConsigliatoId}
+        )) return AddSuggestionResult.UNEXPECTED_ERROR;
+
+        return AddSuggestionResult.OK;
+    }
+
+    /**
+     * Rimuove un suggerimento esistente tra due libri.
+     * <p>
+     * Verifica che la correlazione esista e sia stata creata dall'utente specificato prima di procedere all'eliminazione.
+     * </p>
+     *
+     * @param userId             l'identificativo dell'utente proprietario del suggerimento
+     * @param libroSorgenteId    l'ID del libro principale
+     * @param libroConsigliatoId l'ID del libro suggerito da rimuovere
+     * @return <code>RemoveSuggestionResult.OK</code> se rimosso con successo,
+     * <code>RemoveSuggestionResult.NOT_SUGGESTED</code> se il suggerimento non esiste,
+     * <code>RemoveSuggestionResult.UNEXPECTED_ERROR</code> in caso di errore.
+     */
+    public synchronized static RemoveSuggestionResult deleteRating(String userId, int libroSorgenteId, int libroConsigliatoId) {
+        @Language("PostgreSQL")
+        String query = """
+            SELECT CASE WHEN EXISTS(
+                SELECT 1 FROM "ConsigliLibri"
+                WHERE userid = ? AND libro_sorgente_id = ? AND libro_consigliato_id = ?
+            ) THEN 1 ELSE 0
+            END AS r
+        """;
+
+        LinkedList<Integer> result = DatabaseManager.getInstance().executeQuery(
+                query,
+                rs ->{
+                    try
+                    {
+                        return rs.getInt("r");
+                    }
+                    catch (SQLException e)
+                    {
+                        System.err.println("Impossibile recuperare la colonna 'r' dalla query di 'deleteRating()'!");
+                        return null;
+                    }
+                },
+                new Object[] {userId, libroSorgenteId, libroConsigliatoId}
+        );
+
+        if (result.size() != 1 || result.getFirst() == null) return RemoveSuggestionResult.UNEXPECTED_ERROR;
+        else if (result.getFirst() == 0) return RemoveSuggestionResult.NOT_SUGGESTED;
+
+        query = """
+            DELETE FROM "ConsigliLibri"
+            WHERE userid = ? AND libro_sorgente_id = ? AND libro_consigliato_id = ?
+        """;
+
+        if (!DatabaseManager.getInstance().execute(
+                query,
+                new Object[] {userId, libroSorgenteId, libroConsigliatoId}
+        )) return RemoveSuggestionResult.UNEXPECTED_ERROR;
+
+        return RemoveSuggestionResult.OK;
+    }
+}\n--- END FILE: ./serverBR/src/main/java/com/bookrecommender/server/queries/SuggestionQueries.java ---
+\n--- START FILE: ./serverBR/src/main/java/com/bookrecommender/server/DatabaseManager.java ---
+package com.bookrecommender.server;
+
+import io.github.cdimascio.dotenv.Dotenv;
+import io.github.cdimascio.dotenv.DotenvException;
+import org.checkerframework.checker.tainting.qual.Untainted;
+import org.intellij.lang.annotations.Language;
+
+import java.io.File;
+import java.net.URISyntaxException;
+import java.sql.*;
+import java.util.LinkedList;
+import java.util.function.Function;
+
+/**
+ * Classe Singleton per la gestione della connessione al database PostgreSQL.
+ * <p>
+ * Gestisce il caricamento del driver JDBC e mantiene l'istanza di <code>Connection</code>.
+ * Fornisce metodi di utilità per eseguire query (SELECT) e aggiornamenti (INSERT, UPDATE, DELETE)
+ * in modo sicuro utilizzando <code>PreparedStatement</code>.
+ * </p>
+ *
+ * @author Lorenzo Monachino 757393 VA
+ * @author Lyan Curcio 757579 VA
+ * @author Sergio Saldarriaga 757394 VA
+ * @author Nash Guizzardi 756941 VA
+ */
+public class DatabaseManager {
+
+    /** Istanza unica (Singleton) della classe. */
+    private static DatabaseManager instance;
+
+    /** Oggetto di connessione JDBC attivo verso PostgreSQL. */
+    private Connection pgsqlConn;
+
+    /**
+     * Costruttore privato che inizializza la connessione al DB.
+     * Termina l'applicazione in caso di errore critico.
+     */
+    private DatabaseManager() {
+        String dbUrl = "";
+        String dbUser = "";
+        String dbPassword = "";
+
+        // Prova a caricare le credenziali DB da file ".env"
+        //
+        // Il path del file ".env" dipende da come si sta eseguendo il programma:
+        // - Se si sta sviluppando verranno eseguiti i file ".class"
+        //    e il file ".env" sarà cercato nella root del progetto.
+        // - Se si sta utilizzando il programma verrà eseguito un file ".jar"
+        //    e il file ".env" sarà cercato nella stessa cartella del file ".jar".
+        try {
+            Dotenv dotenv;
+
+            String jarPath = getJarPath();
+            if (jarPath != null)
+            {
+                dotenv = Dotenv
+                    .configure()
+                    .directory(new File(jarPath).getParent())
+                    .load();
+            }
+            else
+            {
+                dotenv = Dotenv.load();
+            }
+
+            String dbHost = dotenv.get("DB_HOST");
+            String dbPort = dotenv.get("DB_PORT");
+            String dbName = dotenv.get("DB_NAME");
+            dbUrl = "jdbc:postgresql://" + dbHost + ":" + dbPort + "/" + dbName;
+
+            dbUser = dotenv.get("DB_USER");
+            dbPassword = dotenv.get("DB_PASSWORD");
+        }
+        catch (DotenvException e) {
+            // Altrimenti richiedi le credenziali da stdin
+            System.out.println("Non è stato possibile caricare le credenziali del DB dal file '.env'");
+
+            String dbHost = System.console().readLine("Inserire l'host del DB [localhost]: ");
+            if (dbHost.isBlank()) dbHost = "localhost";
+            String dbPort = System.console().readLine("Inserire la porta del DB [5432]: ");
+            if (dbPort.isBlank()) dbPort = "5432";
+            String dbName = System.console().readLine("Inserire il nome del DB [bookrecommender]: ");
+            if (dbName.isBlank()) dbName = "bookrecommender";
+            dbUrl = "jdbc:postgresql://" + dbHost + ":" + dbPort + "/" + dbName;
+
+            dbUser = System.console().readLine("Inserire l'utente del DB [postgres]: ");
+            if (dbUser.isBlank()) dbUser = "postgres";
+            dbPassword = System.console().readLine("Inserire la password del DB [password]: ");
+            if (dbPassword.isBlank()) dbPassword = "password";
+        }
+
+        // Caricamento driver JDBC
+        try {
+            Class.forName("org.postgresql.Driver");
+            this.pgsqlConn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+        }
+        catch (ClassNotFoundException e) {
+            System.err.println("Errore con il caricamento del driver di postgres!");
+            System.exit(1);
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            System.err.println("Errore durante la connessione al database!");
+            System.exit(1);
+        }
+    }
+
+    /**
+     * Restituisce l'unica istanza di DatabaseManager (Singleton).
+     * @return l'istanza del manager
+     */
+    public static synchronized DatabaseManager getInstance() {
+        if (instance == null) {
+            instance = new DatabaseManager();
+        }
+        return instance;
+    }
+
+    /**
+     * Restituisce la connessione JDBC attiva.
+     * @return oggetto <code>Connection</code>
+     */
+    public Connection getPgsqlConn() {
+        return pgsqlConn;
+    }
+
+    /**
+     * Esegue una query di selezione e mappa i risultati.
+     *
+     * @param <T>               tipo del risultato mappato
+     * @param query             query SQL
+     * @param resultConstructor funzione per convertire il <code>ResultSet</code> nell'oggetto <code>T</code>
+     * @param args              argomenti per il <code>PreparedStatement</code>
+     * @return lista dei risultati o null in caso di errore
+     */
+    public <T> LinkedList<T> executeQuery(
+            @Untainted @Language("PostgreSQL")
+            String query,
+            Function<ResultSet, T> resultConstructor,
+            Object[] args
+    ) {
+        try {
+            PreparedStatement statement = pgsqlConn.prepareStatement(query);
+            if (args != null) {
+                for (int i = 0; i < args.length; ++i) {
+                    statement.setObject(i + 1, args[i]);
+                }
+            }
+
+            ResultSet rs = statement.executeQuery();
+            LinkedList<T> result = new LinkedList<>();
+
+            while (rs.next()) {
+                result.add(resultConstructor.apply(rs));
+            }
+
+            return result;
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    /**
+     * Esegue un comando di aggiornamento (INSERT, UPDATE, DELETE).
+     *
+     * @param query query SQL
+     * @param args  argomenti per il <code>PreparedStatement</code>
+     * @return true se ha successo, false altrimenti
+     */
+    public boolean execute(
+            @Untainted @Language("PostgreSQL")
+            String query,
+            Object[] args
+    ) {
+        try {
+            PreparedStatement statement = pgsqlConn.prepareStatement(query);
+            if (args != null) {
+                for (int i = 0; i < args.length; ++i) {
+                    statement.setObject(i + 1, args[i]);
+                }
+            }
+
+            statement.execute();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+
+
+    /**
+     * Recupera il path del file ".jar" che sta eseguendo il programma
+     *
+     * @return il path se si sta eseguendo un file .jar, <code>null</code> altrimenti
+     */
+    private String getJarPath() {
+        // Recupera il nome della risorsa e controlla se inizia con "jar:"
+        boolean runFromJar = DatabaseManager
+            .class
+            .getResource(
+                DatabaseManager
+                    .class
+                    .getSimpleName() + ".class"
+            )
+            .toString()
+            .startsWith("jar:");
+
+        if (!runFromJar) {
+            return null;
+        }
+
+        try {
+            return new File(
+                DatabaseManager
+                    .class
+                    .getProtectionDomain()
+                    .getCodeSource()
+                    .getLocation()
+                    .toURI()
+            ).getPath();
+        } catch (URISyntaxException e) {
+            // Non dovrebbe mai arrivare qui
+            e.printStackTrace();
+            System.exit(1);
+
+            // Per far contento java
+            return null;
+        }
+    }
+}\n--- END FILE: ./serverBR/src/main/java/com/bookrecommender/server/DatabaseManager.java ---
+\n--- START FILE: ./serverBR/src/main/java/com/bookrecommender/server/BookRepositoryImpl.java ---
+package com.bookrecommender.server;
+
+import com.bookrecommender.common.AuthedBookRepositoryService;
+import com.bookrecommender.common.BookRepositoryService;
+import com.bookrecommender.common.BRPair;
+import com.bookrecommender.common.dto.Book;
+import com.bookrecommender.common.dto.BookInfo;
+import com.bookrecommender.common.dto.User;
+import com.bookrecommender.common.enums.auth.LoginResult;
+import com.bookrecommender.common.enums.auth.RegisterResult;
+import com.bookrecommender.server.queries.AuthQueries;
+import com.bookrecommender.server.queries.BookQueries;
+import com.bookrecommender.server.queries.UserQueries;
+
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+import java.util.List;
+
+/**
+ * Implementazione del servizio RMI principale per l'accesso non autenticato.
+ * <p>
+ * Questa classe estende <code>UnicastRemoteObject</code> per permettere l'invocazione remota.
+ * Funge da punto di ingresso, gestendo le ricerche di libri e le operazioni di autenticazione.
+ * In caso di login/registrazione con successo, agisce come Factory restituendo un riferimento
+ * a un oggetto <code>AuthedBookRepositoryImpl</code> specifico per la sessione.
+ * </p>
+ *
+ * @author Lorenzo Monachino 757393 VA
+ * @author Lyan Curcio 757579 VA
+ * @author Sergio Saldarriaga 757394 VA
+ * @author Nash Guizzardi 756941 VA
+ */
+public class BookRepositoryImpl extends UnicastRemoteObject implements BookRepositoryService {
+
+    /**
+     * Costruttore protetto che esporta l'oggetto per la ricezione di chiamate RMI.
+     * @throws RemoteException in caso di errore di esportazione
+     */
+    protected BookRepositoryImpl() throws RemoteException {
+        super();
+    }
+
+    //
+    // Recupero informazioni
+    //
+
+    /** {@inheritDoc} */
+    @Override
+    public User getUserInfo(String userId) throws RemoteException {
+        return UserQueries.getUserInfo(userId);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public BookInfo getBookInfo(int bookId) throws RemoteException {
+        return BookQueries.getBookInfo(bookId);
+    }
+
+    //
+    // Ricerca libri
+    //
+
+    /** {@inheritDoc} */
+    @Override
+    public List<Book> cercaLibroPerTitolo(String titolo) throws RemoteException {
+        return BookQueries.searchByTitle(titolo);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public List<Book> cercaLibroPerAutore(String autore) throws RemoteException {
+        return BookQueries.searchByAuthor(autore);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public List<Book> cercaLibroPerAutoreEAnno(String autore, int anno) throws RemoteException {
+        return BookQueries.searchByAuthorAndYear(autore, anno);
+    }
+
+    //
+    // Autenticazione
+    //
+
+    /** {@inheritDoc} */
+    @Override
+    public BRPair<RegisterResult, AuthedBookRepositoryService> registrazione(User user, String password) throws RemoteException {
+        RegisterResult result = AuthQueries.register(user, password);
+        return new BRPair<>(
+                result,
+                result == RegisterResult.OK
+                        ? new AuthedBookRepositoryImpl(user.userId)
+                        : null
+        );
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public BRPair<LoginResult, AuthedBookRepositoryService> login(String userid, String pass) throws RemoteException {
+        LoginResult result = AuthQueries.login(userid, pass);
+        return new BRPair<>(
+                result,
+                result == LoginResult.OK
+                        ? new AuthedBookRepositoryImpl(userid)
+                        : null
+        );
+    }
+}\n--- END FILE: ./serverBR/src/main/java/com/bookrecommender/server/BookRepositoryImpl.java ---
+\n--- START FILE: ./serverBR/src/main/java/module-info.java ---
+module com.bookrecommender.serverBR {
+    requires java.rmi;
+    requires java.sql;
+    requires org.checkerframework.checker.qual;
+    requires org.jetbrains.annotations;
+
+    requires com.bookrecommender.common;
+    requires io.github.cdimascio.dotenv.java;
+    requires org.postgresql.jdbc;
+
+    exports com.bookrecommender.server;
+}\n--- END FILE: ./serverBR/src/main/java/module-info.java ---
+\n--- START FILE: ./serverBR/pom.xml ---
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.bookrecommender</groupId>
+        <artifactId>bookrecommender</artifactId>
+        <version>1.0</version>
+    </parent>
+
+    <artifactId>serverBR</artifactId>
+
+    <properties>
+        <maven.compiler.source>25</maven.compiler.source>
+        <maven.compiler.target>25</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.bookrecommender</groupId>
+            <artifactId>common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.8</version>
+        </dependency>
+
+        <!-- Per passare "SQL Strings" -->
+        <!-- Viene usato @Language("PostgreSQL") -->
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>26.0.2</version>
+        </dependency>
+
+        <!-- Per passare "safe SQL Strings" -->
+        <!-- Viene usato @Untained -->
+        <dependency>
+            <groupId>org.checkerframework</groupId>
+            <artifactId>checker-qual</artifactId>
+            <version>3.39.0</version>
+        </dependency>
+
+        <!-- Per leggere dal file .env -->
+        <dependency>
+            <groupId>io.github.cdimascio</groupId>
+            <artifactId>dotenv-java</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.8.0</version>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.bookrecommender.server.ServerMain</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>\n--- END FILE: ./serverBR/pom.xml ---
+\n--- START FILE: ./pom.xml ---
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.bookrecommender</groupId>
+    <artifactId>bookrecommender</artifactId>
+    <version>1.0</version>
+    <packaging>pom</packaging>
+    <modules>
+        <module>clientBR</module>
+        <module>serverBR</module>
+        <module>common</module>
+        <module>db_init</module>
+    </modules>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.12.0</version>
+                <configuration>
+                    <show>private</show>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+
+\n--- END FILE: ./pom.xml ---
