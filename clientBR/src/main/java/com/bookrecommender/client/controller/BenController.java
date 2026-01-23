@@ -3,10 +3,13 @@ package com.bookrecommender.client.controller;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.bookrecommender.common.dto.Book;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -23,10 +26,17 @@ public class BenController {
     @FXML private SplitMenuButton tipiDiRicerca;
     @FXML private Label listLabel;
     @FXML private ListView<String> listaLibri;
+    @FXML private Button btnInfoLibro;
+
+    public static Book libro;
+
+
+    private HashMap<String, Book> ricercaLibriMap = new HashMap<>();
 
     @FXML
     private void initialize()
     {
+        btnInfoLibro.setVisible(false);
         if(LoginController.user == Utente.REGISTRATO)
         {
             listLabel.setText("registrato");
@@ -72,8 +82,14 @@ public class BenController {
     @FXML
     void btnClickResearch(ActionEvent event)
     {
+        listLabel.setText("");
         List<Book> libri = null;
-
+        btnInfoLibro.setVisible(false);
+        if(tfRicerca.getText().isEmpty())
+        {
+            listLabel.setText("Ricerca non valida");
+            return;
+        }
         try
         {
             if (tipoDiRicerca == TipoDiRicerca.TITOLO)
@@ -105,6 +121,7 @@ public class BenController {
                 }
 
                 libri = App.getInstance().bookRepository.cercaLibroPerAutoreEAnno(tfRicerca.getText(), anno);
+                listLabel.setText("");
             }
         }
         catch (RemoteException e)
@@ -122,8 +139,11 @@ public class BenController {
             return;
         }
 
-        // Pulisci il messaggio nel caso fosse "sporco"
-        listLabel.setText("");
+        ricercaLibriMap.clear();
+
+        libri.forEach(l -> {
+            ricercaLibriMap.put(l.toStringInfo(), l);
+        });
 
         listaLibri.setItems(
             FXCollections.observableArrayList(
@@ -132,7 +152,24 @@ public class BenController {
                     .collect(Collectors.toList())
             )
         );
+
+
+        listaLibri.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observableValue, String s, String t1)
+            {
+                libro = ricercaLibriMap.get(listaLibri.getSelectionModel().getSelectedItem());
+                btnInfoLibro.setVisible(true);
+            }
+        });
     }
+
+    @FXML
+    void btnClickInfoLibro(ActionEvent event)
+    {
+        App.getInstance().changeScene("Valutazione.fxml");
+    }
+
     //bottoni di navigazione se si è ospite
     @FXML
     void accedi(ActionEvent event) throws IOException

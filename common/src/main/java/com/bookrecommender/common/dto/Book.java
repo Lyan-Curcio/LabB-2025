@@ -130,7 +130,7 @@ public class Book implements Serializable {
      * @return una stringa formattata con titolo, autori e anno
      */
     public String toStringInfo() {
-        return titolo + " - Da: " + String.join(", ", autori) + " - (" + annoPubblicazione + ")";
+        return titolo + "\n - Da: " + String.join(", ", autori) + "\n - (" + annoPubblicazione + ")";
     }
 
     /**
