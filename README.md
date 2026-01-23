@@ -19,3 +19,5 @@ Utilizza il comando `mvn clean javafx:run` direttamente nel terminale del proget
 - [ ] Terminare manuale tecnico
 - [ ] Scrivere in latex manuale utente una volta che Nash lo ha terminato
 
+### TODO Lyan
+- [ ] (Opzionale, se ho tempo) i metodi di get non ritornano nessun enum di errore, implementarlo
