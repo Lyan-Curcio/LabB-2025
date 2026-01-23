@@ -6,6 +6,7 @@ module com.bookrecommender.clientBR {
     requires javafx.graphics;
 
     requires com.bookrecommender.common;
+    requires java.desktop;
 
     opens com.bookrecommender.client to javafx.fxml;
     opens com.bookrecommender.client.controller to javafx.fxml;

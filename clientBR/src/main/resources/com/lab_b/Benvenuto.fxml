@@ -16,7 +16,7 @@
    <children>
       <Pane prefHeight="600.0" prefWidth="200.0" style="-fx-background-color: grey;">
          <children>
-            <VBox fx:id="buttonList" prefHeight="302.0" prefWidth="200.0" style="-fx-border-color: black; -fx-border-width: 4;">
+            <VBox fx:id="buttonList" prefHeight="302.0" prefWidth="200.0" style="-fx-border-width: 4;">
                <children>
                   <Button fx:id="btnReg" mnemonicParsing="false" onAction="#registrati" prefHeight="49.0" prefWidth="200.0" text="Registrati">
                      <font>
@@ -66,18 +66,13 @@
       <Pane layoutX="348.0" layoutY="159.0" prefHeight="340.0" prefWidth="440.0">
          <children>
             <ListView fx:id="listaLibri" prefHeight="340.0" prefWidth="440.0" />
-            <Label fx:id="listLabel" alignment="CENTER" prefHeight="340.0" prefWidth="440.0">
+            <Label fx:id="listLabel" alignment="CENTER" layoutY="1.0" mouseTransparent="true" prefHeight="340.0" prefWidth="440.0">
                <font>
                   <Font size="24.0" />
                </font>
             </Label>
          </children>
       </Pane>
-      <Label fx:id="infoBook" alignment="CENTER" layoutX="245.0" layoutY="507.0" prefHeight="49.0" prefWidth="622.0" text="Informazioni libro">
-         <font>
-            <Font size="24.0" />
-         </font>
-      </Label>
       <SplitMenuButton fx:id="tipiDiRicerca" layoutX="257.0" layoutY="109.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="135.0" text="Titolo">
         <items>
             <MenuItem onAction="#ricercaTitolo" text="Titolo" />
@@ -87,5 +82,10 @@
       </SplitMenuButton>
       <Label layoutX="257.0" layoutY="87.0" text="Cerca per:" />
       <TextField fx:id="tfRicercaAnno" disable="true" layoutX="256.0" layoutY="167.0" prefHeight="38.0" prefWidth="71.0" promptText="Anno" style="-fx-border-color: black; -fx-border-width: 4; -fx-background-radius: 7; -fx-border-radius: 4; -fx-font-size: 14;" />
+      <Button fx:id="btnInfoLibro" layoutX="514.0" layoutY="510.0" mnemonicParsing="false" onAction="#btnClickInfoLibro" prefHeight="50.0" prefWidth="107.0" style="-fx-effect: dropshadow(gaussian, rgba(0,0,3,2.4), 6, 0.3, 3, 2); -fx-background-insets: 0;" text="InfoLibro">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>
