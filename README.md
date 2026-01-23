@@ -13,9 +13,9 @@ Utilizza il comando `mvn clean javafx:run` direttamente nel terminale del proget
 ### TO-DO Lorenzo
 - [ ] Fare javadoc parte client (in attesa di sergio)
 - [ ] Completare javadoc resto dopo modifiche lyan
-- [ ] Aggiungere al manuale tecnico l'aggiunta di lyan e l'analisi e specifica dei requisiti di nash
+- [X] Aggiungere al manuale tecnico l'aggiunta di lyan e l'analisi e specifica dei requisiti di nash
 - [ ] Disegnare con draw.io il diagramma ER (gia fatto da nash) e il class (deve ancora farlo)
-- [ ] Fare i due diagrammi di sequenza per far capire il funzionamento
+- [X] Fare i due diagrammi di sequenza per far capire il funzionamento
 - [ ] Terminare manuale tecnico
 - [ ] Scrivere in latex manuale utente una volta che Nash lo ha terminato
 
