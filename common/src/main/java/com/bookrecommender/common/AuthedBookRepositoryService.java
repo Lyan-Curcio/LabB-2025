@@ -42,20 +42,28 @@ public interface AuthedBookRepositoryService extends Remote {
     /**
      * Cerca le librerie nel sistema che contengono la stringa specificata nel nome.
      *
-     * @param nomeLibreria la stringa (o parte di essa) da cercare nel nome della libreria
+     * @param nomeLibreria il nome (o parte del nome) da cercare tra i nomi delle librerie
      * @return una lista di oggetti {@link Library} che soddisfano i criteri di ricerca
      * @throws RemoteException se si verifica un errore di comunicazione RMI
      */
     LinkedList<Library> cercaLibreriePerNome(String nomeLibreria) throws RemoteException;
 
     /**
-     * Cerca tutte le librerie appartenenti a uno specifico utente.
+     * Cerca tutte le librerie appartenenti a un utente con l'id contenente la striga specificata.
      *
-     * @param userId l'identificativo dell'utente proprietario delle librerie
+     * @param userId l'identificativo (o parte dell'identificativo) dell'utente proprietario delle librerie
      * @return una lista di oggetti {@link Library} appartenenti all'utente specificato
      * @throws RemoteException se si verifica un errore di comunicazione RMI
      */
     LinkedList<Library> cercaLibreriePerUtente(String userId) throws RemoteException;
+
+    /**
+     * Recupera le librerie create dall'utente loggato.
+     *
+     * @return una lista di oggetti {@link Library} appartenenti all'utente loggato
+     * @throws RemoteException se si verifica un errore di comunicazione RMI
+     */
+    LinkedList<Library> getMyLibrerie() throws RemoteException;
 
     /**
      * Crea una nuova libreria associata all'utente.

@@ -78,6 +78,12 @@ public class AuthedBookRepositoryImpl extends UnicastRemoteObject implements Aut
     }
 
     /** {@inheritDoc} */
+    public LinkedList<Library> getMyLibrerie() throws RemoteException {
+        return LibraryQueries.getLibrerieFrom(loggedUserId);
+    }
+
+
+    /** {@inheritDoc} */
     @Override
     public CreateLibResult creaLibreria(String nomeLibreria) throws RemoteException {
         return LibraryQueries.createLibrary(loggedUserId, nomeLibreria);
