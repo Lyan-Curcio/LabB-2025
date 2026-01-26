@@ -1,5 +1,6 @@
 package com.bookrecommender.server.queries;
 
+import com.bookrecommender.common.dto.Book;
 import com.bookrecommender.common.dto.Library;
 import com.bookrecommender.common.enums.library.AddBookToLibResult;
 import com.bookrecommender.common.enums.library.CreateLibResult;
@@ -32,7 +33,7 @@ public class LibraryQueries {
      * Cerca nel database le librerie il cui nome contiene la stringa specificata (case-insensitive).
      *
      * @param libraryName il nome (o parte del nome) da cercare
-     * @return una lista collegata di oggetti {@link Library} trovati
+     * @return una lista di oggetti {@link Library} trovati
      */
     public synchronized static LinkedList<Library> searchLibraryByName(String libraryName) {
         @Language("PostgreSQL")
@@ -48,7 +49,7 @@ public class LibraryQueries {
      * Cerca nel database tutte le librerie il cui utente associato contiene la stringa specificata (case-insensitive).
      *
      * @param userId l'identificativo (o parte dell'identificativo) dell'utente proprietario
-     * @return una lista collegata di oggetti {@link Library} appartenenti all'utente
+     * @return una lista di oggetti {@link Library} appartenenti all'utente
      */
     public synchronized static LinkedList<Library> searchLibraryByUser(String userId) {
         @Language("PostgreSQL")
@@ -64,7 +65,7 @@ public class LibraryQueries {
      * Cerca nel database tutte le librerie associate a un determinato UserID.
      *
      * @param userId l'identificativo (esatto) dell'utente proprietario
-     * @return una lista collegata di oggetti {@link Library} appartenenti all'utente
+     * @return una lista di oggetti {@link Library} appartenenti all'utente
      */
     public synchronized static LinkedList<Library> getLibrerieFrom(String userId) {
         @Language("PostgreSQL")
@@ -73,6 +74,26 @@ public class LibraryQueries {
             query,
             Library::new,
             new Object[] {userId}
+        );
+    }
+
+    /**
+     * Cerca nel database tutti i libri contenuti nella libreria specificata.
+     *
+     * @param libraryId l'identificativo della libreria in cui cercare
+     * @return una lista di oggetti {@link Book} contenuti nella libreria specificata
+     */
+    public synchronized static LinkedList<Book> getLibriFromLibreria(String libraryId) {
+        @Language("PostgreSQL")
+        String query = """
+            SELECT * FROM "Libri" AS l
+            JOIN "LibriXLibrerie" AS lxl ON l.id = lxl.libro_id
+            WHERE lxl.libreria_id = ?
+        """;
+        return DatabaseManager.getInstance().executeQuery(
+            query,
+            Book::new,
+            new Object[] {libraryId}
         );
     }
 

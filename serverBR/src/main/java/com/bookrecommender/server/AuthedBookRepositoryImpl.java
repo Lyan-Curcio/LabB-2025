@@ -1,6 +1,7 @@
 package com.bookrecommender.server;
 
 import com.bookrecommender.common.AuthedBookRepositoryService;
+import com.bookrecommender.common.dto.Book;
 import com.bookrecommender.common.dto.Library;
 import com.bookrecommender.common.dto.Rating;
 import com.bookrecommender.common.dto.Suggestion;
@@ -82,6 +83,10 @@ public class AuthedBookRepositoryImpl extends UnicastRemoteObject implements Aut
         return LibraryQueries.getLibrerieFrom(loggedUserId);
     }
 
+    /** {@inheritDoc} */
+    public LinkedList<Book> getLibriFromLibreria(String libraryId) throws RemoteException {
+        return LibraryQueries.getLibriFromLibreria(libraryId);
+    }
 
     /** {@inheritDoc} */
     @Override

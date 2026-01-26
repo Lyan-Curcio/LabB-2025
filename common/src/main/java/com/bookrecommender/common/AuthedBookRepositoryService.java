@@ -1,5 +1,6 @@
 package com.bookrecommender.common;
 
+import com.bookrecommender.common.dto.Book;
 import com.bookrecommender.common.dto.Library;
 import com.bookrecommender.common.dto.Rating;
 import com.bookrecommender.common.dto.Suggestion;
@@ -64,6 +65,15 @@ public interface AuthedBookRepositoryService extends Remote {
      * @throws RemoteException se si verifica un errore di comunicazione RMI
      */
     LinkedList<Library> getMyLibrerie() throws RemoteException;
+
+    /**
+     * Recupera i libri contenuti della libreria specificata.
+     *
+     * @param libreryId
+     * @return una lista di oggetti {@link Book} contenuti nella libreria
+     * @throws RemoteException se si verifica un errore di comunicazione RMI
+     */
+    LinkedList<Book> getLibriFromLibreria(String libraryId) throws RemoteException;
 
     /**
      * Crea una nuova libreria associata all'utente.
