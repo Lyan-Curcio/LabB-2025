@@ -321,7 +321,7 @@ public class LibraryQueries {
                         return null;
                     }
                 },
-                new Object[] {libreriaId, userId, libroId}
+                new Object[] {libreriaId, userId, libreriaId, libroId}
         );
 
         if (result == null || result.size() != 1 || result.getFirst() == null) return RemoveBookFromLibResult.UNEXPECTED_ERROR;
