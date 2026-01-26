@@ -101,7 +101,7 @@ public class SuggestionQueries {
                 }
         );
 
-        if (result.size() != 1 || result.getFirst() == null) return AddSuggestionResult.UNEXPECTED_ERROR;
+        if (result == null || result.size() != 1 || result.getFirst() == null) return AddSuggestionResult.UNEXPECTED_ERROR;
         else if (result.getFirst() == 0) return AddSuggestionResult.MAIN_BOOK_NOT_IN_LIBRARY;
         else if (result.getFirst() == 1) return AddSuggestionResult.SUGGESTED_BOOK_NOT_IN_LIBRARY;
         else if (result.getFirst() == 2) return AddSuggestionResult.ALREADY_SUGGESTED;
@@ -155,7 +155,7 @@ public class SuggestionQueries {
                 new Object[] {userId, libroSorgenteId, libroConsigliatoId}
         );
 
-        if (result.size() != 1 || result.getFirst() == null) return RemoveSuggestionResult.UNEXPECTED_ERROR;
+        if (result == null || result.size() != 1 || result.getFirst() == null) return RemoveSuggestionResult.UNEXPECTED_ERROR;
         else if (result.getFirst() == 0) return RemoveSuggestionResult.NOT_SUGGESTED;
 
         query = """

@@ -84,7 +84,7 @@ public class RatingQueries {
                 new Object[] {userId, v.libroId}
         );
 
-        if (result.size() != 1 || result.getFirst() == null) return CreateRatingResult.UNEXPECTED_ERROR;
+        if (result == null || result.size() != 1 || result.getFirst() == null) return CreateRatingResult.UNEXPECTED_ERROR;
         else if (result.getFirst() == 1) return CreateRatingResult.ALREADY_RATED;
 
         query = """
@@ -146,7 +146,7 @@ public class RatingQueries {
                 new Object[] {userId, valutazioneId}
         );
 
-        if (result.size() != 1 || result.getFirst() == null) return DeleteRatingResult.UNEXPECTED_ERROR;
+        if (result == null || result.size() != 1 || result.getFirst() == null) return DeleteRatingResult.UNEXPECTED_ERROR;
         else if (result.getFirst() == 0) return DeleteRatingResult.NOT_RATED;
 
         query = "DELETE FROM \"ValutazioniLibri\" WHERE id = ?";

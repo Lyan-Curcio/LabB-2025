@@ -2630,7 +2630,7 @@ public class LibraryQueries {
                 new Object[] {userId, nomeLibreria}
         );
 
-        if (result.size() != 1 || result.getFirst() == null) return CreateLibResult.UNEXPECTED_ERROR;
+        if (result == null || result.size() != 1 || result.getFirst() == null) return CreateLibResult.UNEXPECTED_ERROR;
         else if (result.getFirst() == 1) return CreateLibResult.DUPLICATE_NAME;
 
         query = "INSERT INTO \"Librerie\" (nome, userid) VALUES (?, ?)";
@@ -2681,7 +2681,7 @@ public class LibraryQueries {
                 new Object[] {userId, libreriaId}
         );
 
-        if (result.size() != 1 || result.getFirst() == null) return DeleteLibResult.UNEXPECTED_ERROR;
+        if (result == null || result.size() != 1 || result.getFirst() == null) return DeleteLibResult.UNEXPECTED_ERROR;
         else if (result.getFirst() == 0) return DeleteLibResult.LIBRARY_NOT_FOUND;
 
         query = "DELETE FROM \"Librerie\" WHERE id = ?";
@@ -2751,7 +2751,7 @@ public class LibraryQueries {
                 new Object[] {libreriaId, userId, libroId}
         );
 
-        if (result.size() != 1 || result.getFirst() == null) return AddBookToLibResult.UNEXPECTED_ERROR;
+        if (result == null || result.size() != 1 || result.getFirst() == null) return AddBookToLibResult.UNEXPECTED_ERROR;
         else if (result.getFirst() == 0) return AddBookToLibResult.LIBRARY_NOT_FOUND;
         else if (result.getFirst() == 2) return AddBookToLibResult.BOOK_ALREADY_IN_LIBRARY;
 
@@ -2819,7 +2819,7 @@ public class LibraryQueries {
                 new Object[] {libreriaId, userId, libroId}
         );
 
-        if (result.size() != 1 || result.getFirst() == null) return RemoveBookFromLibResult.UNEXPECTED_ERROR;
+        if (result == null || result.size() != 1 || result.getFirst() == null) return RemoveBookFromLibResult.UNEXPECTED_ERROR;
         else if (result.getFirst() == 0) return RemoveBookFromLibResult.LIBRARY_NOT_FOUND;
         else if (result.getFirst() == 1) return RemoveBookFromLibResult.BOOK_NOT_IN_LIBRARY;
 
@@ -2926,7 +2926,7 @@ public class AuthQueries {
                 new Object[] {user.userId, user.codiceFiscale, user.email}
         );
 
-        if (result.size() != 1 || result.getFirst() == null) return RegisterResult.UNEXPECTED_ERROR;
+        if (result == null || result.size() != 1 || result.getFirst() == null) return RegisterResult.UNEXPECTED_ERROR;
         else if (result.getFirst()[0]) return RegisterResult.DUPLICATE_USERID;
         else if (result.getFirst()[1]) return RegisterResult.DUPLICATE_CF;
         else if (result.getFirst()[2]) return RegisterResult.DUPLICATE_EMAIL;
@@ -3004,7 +3004,7 @@ public class AuthQueries {
                 new Object[] {userid, userid, password}
         );
 
-        if (result.size() != 1 || result.getFirst() == null) return LoginResult.UNEXPECTED_ERROR;
+        if (result == null || result.size() != 1 || result.getFirst() == null) return LoginResult.UNEXPECTED_ERROR;
         else if (result.getFirst() == 0) return LoginResult.USER_ID_NOT_FOUND;
         else if (result.getFirst() == 1) return LoginResult.INCORRECT_PASSWORD;
         else if (result.getFirst() == 2) return LoginResult.OK;
@@ -3091,7 +3091,7 @@ public class RatingQueries {
                 new Object[] {userId, v.libroId}
         );
 
-        if (result.size() != 1 || result.getFirst() == null) return CreateRatingResult.UNEXPECTED_ERROR;
+        if (result == null || result.size() != 1 || result.getFirst() == null) return CreateRatingResult.UNEXPECTED_ERROR;
         else if (result.getFirst() == 1) return CreateRatingResult.ALREADY_RATED;
 
         query = """
@@ -3153,7 +3153,7 @@ public class RatingQueries {
                 new Object[] {userId, valutazioneId}
         );
 
-        if (result.size() != 1 || result.getFirst() == null) return DeleteRatingResult.UNEXPECTED_ERROR;
+        if (result == null || result.size() != 1 || result.getFirst() == null) return DeleteRatingResult.UNEXPECTED_ERROR;
         else if (result.getFirst() == 0) return DeleteRatingResult.NOT_RATED;
 
         query = "DELETE FROM \"ValutazioniLibri\" WHERE id = ?";
@@ -3381,7 +3381,7 @@ public class SuggestionQueries {
                 }
         );
 
-        if (result.size() != 1 || result.getFirst() == null) return AddSuggestionResult.UNEXPECTED_ERROR;
+        if (result == null || result.size() != 1 || result.getFirst() == null) return AddSuggestionResult.UNEXPECTED_ERROR;
         else if (result.getFirst() == 0) return AddSuggestionResult.MAIN_BOOK_NOT_IN_LIBRARY;
         else if (result.getFirst() == 1) return AddSuggestionResult.SUGGESTED_BOOK_NOT_IN_LIBRARY;
         else if (result.getFirst() == 2) return AddSuggestionResult.ALREADY_SUGGESTED;
@@ -3435,7 +3435,7 @@ public class SuggestionQueries {
                 new Object[] {userId, libroSorgenteId, libroConsigliatoId}
         );
 
-        if (result.size() != 1 || result.getFirst() == null) return RemoveSuggestionResult.UNEXPECTED_ERROR;
+        if (result == null || result.size() != 1 || result.getFirst() == null) return RemoveSuggestionResult.UNEXPECTED_ERROR;
         else if (result.getFirst() == 0) return RemoveSuggestionResult.NOT_SUGGESTED;
 
         query = """

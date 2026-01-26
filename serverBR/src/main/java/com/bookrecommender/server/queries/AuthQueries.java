@@ -69,7 +69,7 @@ public class AuthQueries {
                 new Object[] {user.userId, user.codiceFiscale, user.email}
         );
 
-        if (result.size() != 1 || result.getFirst() == null) return RegisterResult.UNEXPECTED_ERROR;
+        if (result == null || result.size() != 1 || result.getFirst() == null) return RegisterResult.UNEXPECTED_ERROR;
         else if (result.getFirst()[0]) return RegisterResult.DUPLICATE_USERID;
         else if (result.getFirst()[1]) return RegisterResult.DUPLICATE_CF;
         else if (result.getFirst()[2]) return RegisterResult.DUPLICATE_EMAIL;
@@ -147,7 +147,7 @@ public class AuthQueries {
                 new Object[] {userid, userid, password}
         );
 
-        if (result.size() != 1 || result.getFirst() == null) return LoginResult.UNEXPECTED_ERROR;
+        if (result == null || result.size() != 1 || result.getFirst() == null) return LoginResult.UNEXPECTED_ERROR;
         else if (result.getFirst() == 0) return LoginResult.USER_ID_NOT_FOUND;
         else if (result.getFirst() == 1) return LoginResult.INCORRECT_PASSWORD;
         else if (result.getFirst() == 2) return LoginResult.OK;

@@ -135,7 +135,7 @@ public class LibraryQueries {
                 new Object[] {userId, nomeLibreria}
         );
 
-        if (result.size() != 1 || result.getFirst() == null) return CreateLibResult.UNEXPECTED_ERROR;
+        if (result == null || result.size() != 1 || result.getFirst() == null) return CreateLibResult.UNEXPECTED_ERROR;
         else if (result.getFirst() == 1) return CreateLibResult.DUPLICATE_NAME;
 
         query = "INSERT INTO \"Librerie\" (nome, userid) VALUES (?, ?)";
@@ -186,7 +186,7 @@ public class LibraryQueries {
                 new Object[] {userId, libreriaId}
         );
 
-        if (result.size() != 1 || result.getFirst() == null) return DeleteLibResult.UNEXPECTED_ERROR;
+        if (result == null || result.size() != 1 || result.getFirst() == null) return DeleteLibResult.UNEXPECTED_ERROR;
         else if (result.getFirst() == 0) return DeleteLibResult.LIBRARY_NOT_FOUND;
 
         query = "DELETE FROM \"Librerie\" WHERE id = ?";
@@ -256,7 +256,7 @@ public class LibraryQueries {
                 new Object[] {libreriaId, userId, libroId}
         );
 
-        if (result.size() != 1 || result.getFirst() == null) return AddBookToLibResult.UNEXPECTED_ERROR;
+        if (result == null || result.size() != 1 || result.getFirst() == null) return AddBookToLibResult.UNEXPECTED_ERROR;
         else if (result.getFirst() == 0) return AddBookToLibResult.LIBRARY_NOT_FOUND;
         else if (result.getFirst() == 2) return AddBookToLibResult.BOOK_ALREADY_IN_LIBRARY;
 
@@ -324,7 +324,7 @@ public class LibraryQueries {
                 new Object[] {libreriaId, userId, libroId}
         );
 
-        if (result.size() != 1 || result.getFirst() == null) return RemoveBookFromLibResult.UNEXPECTED_ERROR;
+        if (result == null || result.size() != 1 || result.getFirst() == null) return RemoveBookFromLibResult.UNEXPECTED_ERROR;
         else if (result.getFirst() == 0) return RemoveBookFromLibResult.LIBRARY_NOT_FOUND;
         else if (result.getFirst() == 1) return RemoveBookFromLibResult.BOOK_NOT_IN_LIBRARY;
 
