@@ -8,6 +8,7 @@ import com.bookrecommender.server.DatabaseManager;
 import org.intellij.lang.annotations.Language;
 
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 
 /**
  * Classe di utility per la ricerca e il recupero dei libri dal database.
@@ -30,8 +31,7 @@ public class BookQueries {
      * </p>
      *
      * @param bookId l'identificativo univoco del libro
-     * @return un oggetto {@link BookInfo} contenente tutti i dati aggregati
-     * @throws java.util.NoSuchElementException se il libro con l'ID specificato non esiste
+     * @return un oggetto {@link BookInfo} contenente tutti i dati aggregati o null se il libro con l'ID specificato non esiste
      */
     public synchronized static BookInfo getBookInfo(int bookId) {
         @Language("PostgreSQL")
@@ -39,11 +39,17 @@ public class BookQueries {
             SELECT * FROM "Libri"
             WHERE id = ?
         """;
-        Book book = DatabaseManager.getInstance().executeQuery(
-                query,
-                Book::new,
-                new Object[] {bookId}
-        ).getFirst();
+        Book book;
+        try {
+            book = DatabaseManager.getInstance().executeQuery(
+                    query,
+                    Book::new,
+                    new Object[] {bookId}
+            ).getFirst();
+        }
+        catch (NoSuchElementException e) {
+            return null;
+        }
 
         query = """
             SELECT * FROM "ValutazioniLibri"

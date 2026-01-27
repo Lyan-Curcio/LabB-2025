@@ -8,6 +8,7 @@ import org.intellij.lang.annotations.Language;
 
 import java.sql.SQLException;
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 
 /**
  * Classe di utility che contiene le query SQL per la gestione delle valutazioni (recensioni) dei libri.
@@ -37,11 +38,17 @@ public class RatingQueries {
             SELECT * FROM "ValutazioniLibri"
             WHERE userid = ? AND libro_id = ?
         """;
-        return DatabaseManager.getInstance().executeQuery(
-                query,
-                Rating::new,
-                new Object[] {userId, bookId}
-        ).getFirst();
+
+        try {
+            return DatabaseManager.getInstance().executeQuery(
+                    query,
+                    Rating::new,
+                    new Object[] {userId, bookId}
+            ).getFirst();
+        }
+        catch (NoSuchElementException e) {
+            return null;
+        }
     }
 
     /**
