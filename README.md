@@ -21,3 +21,5 @@ Utilizza il comando `mvn clean javafx:run` direttamente nel terminale del proget
 
 ### TODO Lyan
 - [ ] (Opzionale, se ho tempo) i metodi di get non ritornano nessun enum di errore, implementarlo
+- [ ] (Opzionale, se ho tempo) nella creazione dei DTO con un ResultSet, il messaggio di errore non stampa bene i ResultSet.
+Cerca come stampare un ResultSet e crea un metodo apposito.
