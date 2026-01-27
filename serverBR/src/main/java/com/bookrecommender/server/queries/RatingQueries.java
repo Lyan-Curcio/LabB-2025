@@ -121,13 +121,13 @@ public class RatingQueries {
      * con l'eliminazione effettiva tramite ID.
      * </p>
      *
-     * @param userId        l'identificativo dell'utente proprietario della valutazione
-     * @param valutazioneId l'identificativo univoco della valutazione da eliminare
+     * @param userId    l'identificativo dell'utente proprietario della valutazione
+     * @param bookId    l'identificativo del libro da cui eliminare la valutazione
      * @return <code>DeleteRatingResult.OK</code> se l'eliminazione ha successo,
      * <code>DeleteRatingResult.NOT_RATED</code> se la valutazione non esiste o non appartiene all'utente,
      * <code>DeleteRatingResult.UNEXPECTED_ERROR</code> in caso di errore SQL.
      */
-    public synchronized static DeleteRatingResult deleteRating(String userId, int valutazioneId) {
+    public synchronized static DeleteRatingResult deleteRating(String userId, int bookId) {
         @Language("PostgreSQL")
         String query = """
             SELECT CASE WHEN EXISTS(
@@ -150,17 +150,17 @@ public class RatingQueries {
                         return null;
                     }
                 },
-                new Object[] {userId, valutazioneId}
+                new Object[] {userId, bookId}
         );
 
         if (result == null || result.size() != 1 || result.getFirst() == null) return DeleteRatingResult.UNEXPECTED_ERROR;
         else if (result.getFirst() == 0) return DeleteRatingResult.NOT_RATED;
 
-        query = "DELETE FROM \"ValutazioniLibri\" WHERE id = ?";
+        query = "DELETE FROM \"ValutazioniLibri\" WHERE userid = ? AND libro_id = ?";
 
         if (!DatabaseManager.getInstance().execute(
                 query,
-                new Object[] {valutazioneId}
+                new Object[] {userId, bookId}
         )) return DeleteRatingResult.UNEXPECTED_ERROR;
 
         return DeleteRatingResult.OK;

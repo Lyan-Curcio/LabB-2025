@@ -118,11 +118,11 @@ public interface AuthedBookRepositoryService extends Remote {
     /**
      * Recupera la valutazione che l'utente loggato ha rilasciato per un determinato libro.
      *
-     * @param bookId l'identificativo del libro
+     * @param libroId l'identificativo del libro
      * @return l'oggetto {@link Rating} se esiste, altrimenti null o un oggetto vuoto a seconda dell'implementazione
      * @throws RemoteException se si verifica un errore di comunicazione RMI
      */
-    Rating getMyValutazione(int bookId) throws RemoteException;
+    Rating getMyValutazione(int libroId) throws RemoteException;
 
     /**
      * Inserisce una nuova valutazione (voto e/o commento) per un libro.
@@ -139,22 +139,22 @@ public interface AuthedBookRepositoryService extends Remote {
     /**
      * Rimuove una valutazione precedentemente inserita dall'utente.
      *
-     * @param valutazioneId l'identificativo univoco della valutazione da rimuovere
+     * @param libroId l'identificativo del libro da cui eliminare la valutazione
      * @return un valore dell'enum <code>DeleteRatingResult</code> che indica l'esito dell'operazione
      * @throws RemoteException se si verifica un errore di comunicazione RMI
      */
-    DeleteRatingResult rimuoviValutazioneLibro(int valutazioneId) throws RemoteException;
+    DeleteRatingResult rimuoviValutazioneLibro(int libroId) throws RemoteException;
 
     // Suggerimenti
 
     /**
      * Recupera i suggerimenti che l'utente loggato ha creato per un determinato libro sorgente.
      *
-     * @param bookId l'identificativo del libro sorgente
+     * @param libroId l'identificativo del libro sorgente
      * @return una lista di {@link Suggestion} creati dall'utente per quel libro
      * @throws RemoteException se si verifica un errore di comunicazione RMI
      */
-    LinkedList<Suggestion> getMySuggerimenti(int bookId) throws RemoteException;
+    LinkedList<Suggestion> getMySuggerimenti(int libroId) throws RemoteException;
 
     /**
      * Inserisce un suggerimento tra due libri.

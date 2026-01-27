@@ -118,8 +118,8 @@ public class AuthedBookRepositoryImpl extends UnicastRemoteObject implements Aut
 
     /** {@inheritDoc} */
     @Override
-    public Rating getMyValutazione(int bookId) throws RemoteException {
-        return RatingQueries.getRatingFrom(loggedUserId, bookId);
+    public Rating getMyValutazione(int libroId) throws RemoteException {
+        return RatingQueries.getRatingFrom(loggedUserId, libroId);
     }
 
     /** {@inheritDoc} */
@@ -130,8 +130,8 @@ public class AuthedBookRepositoryImpl extends UnicastRemoteObject implements Aut
 
     /** {@inheritDoc} */
     @Override
-    public DeleteRatingResult rimuoviValutazioneLibro(int valutazioneId) throws RemoteException {
-        return RatingQueries.deleteRating(loggedUserId, valutazioneId);
+    public DeleteRatingResult rimuoviValutazioneLibro(int libroId) throws RemoteException {
+        return RatingQueries.deleteRating(loggedUserId, libroId);
     }
 
     //
@@ -140,8 +140,8 @@ public class AuthedBookRepositoryImpl extends UnicastRemoteObject implements Aut
 
     /** {@inheritDoc} */
     @Override
-    public LinkedList<Suggestion> getMySuggerimenti(int bookId) throws RemoteException {
-        return SuggestionQueries.getSuggestionsFrom(loggedUserId, bookId);
+    public LinkedList<Suggestion> getMySuggerimenti(int libroId) throws RemoteException {
+        return SuggestionQueries.getSuggestionsFrom(loggedUserId, libroId);
     }
 
     /** {@inheritDoc} */
