@@ -24,7 +24,7 @@ public class BenController {
     @FXML private TextField tfRicerca;
     @FXML private TextField tfRicercaAnno;
     @FXML private SplitMenuButton tipiDiRicerca;
-    @FXML private Label listLabel;
+    @FXML private Label listLabel, errorLabel;
     @FXML private ListView<String> listaLibri;
     @FXML private Button btnInfoLibro;
 
@@ -82,12 +82,14 @@ public class BenController {
     @FXML
     void btnClickResearch(ActionEvent event)
     {
+        listaLibri.getItems().clear();
         listLabel.setText("");
         List<Book> libri = null;
         btnInfoLibro.setVisible(false);
+
         if(tfRicerca.getText().isEmpty())
         {
-            listLabel.setText("Ricerca non valida");
+            errorLabel.setText("Ricerca non valida");
             return;
         }
         try
@@ -110,24 +112,24 @@ public class BenController {
                 catch (NumberFormatException e)
                 {
                     listaLibri.getItems().clear();
-                    listLabel.setText("L'anno cercato non è valido!");
+                    errorLabel.setText("L'anno cercato non è valido!");
                     return;
                 }
                 if (anno < 0 || anno > LocalDate.now().getYear())
                 {
                     listaLibri.getItems().clear();
-                    listLabel.setText("L'anno cercato non è valido!");
+                    errorLabel.setText("L'anno cercato non è valido!");
                     return;
                 }
 
                 libri = App.getInstance().bookRepository.cercaLibroPerAutoreEAnno(tfRicerca.getText(), anno);
-                listLabel.setText("");
             }
+            errorLabel.setText("");
         }
         catch (RemoteException e)
         {
             listaLibri.getItems().clear();
-            listLabel.setText("C'è stato un errore durante la ricerca!");
+            errorLabel.setText("C'è stato un errore durante la ricerca!");
             e.printStackTrace();
             return;
         }
@@ -135,7 +137,7 @@ public class BenController {
         if (libri == null || libri.isEmpty())
         {
             listaLibri.getItems().clear();
-            listLabel.setText("Nessun libro trovato");
+            errorLabel.setText("Nessun libro trovato");
             return;
         }
 
@@ -167,7 +169,7 @@ public class BenController {
     @FXML
     void btnClickInfoLibro(ActionEvent event)
     {
-        App.getInstance().changeScene("Valutazione.fxml");
+        App.getInstance().changeScene("InformazioniLibro.fxml");
     }
 
     //bottoni di navigazione se si è ospite
@@ -192,7 +194,7 @@ public class BenController {
         App.getInstance().changeScene("CreaLibreria.fxml");
     }
     @FXML
-    void btnClickRicercaLib(ActionEvent event) throws IOException
+    void btnClickRicercaLibrerie(ActionEvent event) throws IOException
     {
         App.getInstance().changeScene("RicercheLibrerie.fxml");
     }
@@ -205,6 +207,7 @@ public class BenController {
     void btnClickLogout(ActionEvent event) throws IOException
     {
         LoginController.user = Utente.OSPITE;
+        App.getInstance().authedBookRepository.logout();
         App.getInstance().changeScene("Benvenuto.fxml");
     }
 }

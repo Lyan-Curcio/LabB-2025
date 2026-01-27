@@ -13,21 +13,21 @@
    <children>
       <Pane prefHeight="600.0" prefWidth="200.0" style="-fx-background-color: grey;">
          <children>
-            <VBox prefHeight="207.0" prefWidth="200.0" style="-fx-border-color: black; -fx-border-width: 4;">
+            <VBox prefHeight="207.0" prefWidth="200.0">
                <children>
-                  <Button fx:id="btnLeTueLib" mnemonicParsing="false" onAction="#btnClickTueLib" prefHeight="49.0" prefWidth="200.0" text="Le tue librerie">
+                  <Button mnemonicParsing="false" onAction="#btnClickTueLib" prefHeight="49.0" prefWidth="200.0" text="Le tue librerie">
                      <font>
                         <Font size="15.0" />
                      </font></Button>
-                  <Button fx:id="btnRicercaLibreria" mnemonicParsing="false" onAction="#btnClickRicercaLibreria" prefHeight="49.0" prefWidth="200.0" text="Ricerca libreria">
+                  <Button mnemonicParsing="false" onAction="#btnClickRicercaLibreria" prefHeight="49.0" prefWidth="200.0" text="Ricerca libreria">
                      <font>
                         <Font size="15.0" />
                      </font></Button>
-                  <Button fx:id="btnRicercaLib" mnemonicParsing="false" onAction="#btnClickRicercaLib" prefHeight="49.0" prefWidth="208.0" text="Ricerca libri">
+                  <Button mnemonicParsing="false" onAction="#btnClickRicercaLibri" prefHeight="49.0" prefWidth="208.0" text="Ricerca libri">
                      <font>
                         <Font size="15.0" />
                      </font></Button>
-                  <Button fx:id="btnLogout" mnemonicParsing="false" onAction="#btnClickLogout" prefHeight="49.0" prefWidth="200.0" text="Logout">
+                  <Button mnemonicParsing="false" onAction="#btnClickLogout" prefHeight="49.0" prefWidth="200.0" text="Logout">
                      <font>
                         <Font size="15.0" />
                      </font></Button>
@@ -40,12 +40,17 @@
             <Font size="41.0" />
          </font>
       </Label>
-      <ListView layoutX="345.0" layoutY="191.0" prefHeight="283.0" prefWidth="415.0" />
-      <Button layoutX="660.0" layoutY="121.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="99.0" style="-fx-background-insets: 0; -fx-effect: dropshadow(gaussian, rgba(0,0,3,2.4), 6, 0.3, 3, 2);" text="Crea">
+      <ListView fx:id="listaLibrerie" layoutX="345.0" layoutY="191.0" prefHeight="283.0" prefWidth="415.0" />
+      <Button layoutX="660.0" layoutY="121.0" mnemonicParsing="false" onAction="#creaLibreria" prefHeight="40.0" prefWidth="99.0" style="-fx-background-insets: 0; -fx-effect: dropshadow(gaussian, rgba(0,0,3,2.4), 6, 0.3, 3, 2);" text="Crea">
          <font>
             <Font size="18.0" />
          </font></Button>
-      <TextField layoutX="345.0" layoutY="121.0" prefHeight="40.0" prefWidth="275.0" promptText="nome libreria " style="-fx-border-color: black; -fx-background-radius: 7; -fx-border-width: 4; -fx-border-radius: 4; -fx-font-size: 14;" />
+      <TextField fx:id="tfNomeLibreria" layoutX="345.0" layoutY="121.0" prefHeight="40.0" prefWidth="275.0" promptText="nome libreria " style="-fx-border-color: black; -fx-background-radius: 7; -fx-border-width: 4; -fx-border-radius: 4; -fx-font-size: 14;" />
       <Label layoutX="356.0" layoutY="506.0" prefHeight="40.0" prefWidth="393.0" textFill="#5fff1a" />
+      <Label fx:id="errorLabel" alignment="CENTER" layoutX="409.0" layoutY="506.0" prefHeight="40.0" prefWidth="287.0" textFill="RED">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

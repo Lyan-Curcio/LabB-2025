@@ -69,11 +69,11 @@ public interface AuthedBookRepositoryService extends Remote {
     /**
      * Recupera i libri contenuti della libreria specificata.
      *
-     * @param libreryId
+     * @param libraryId l'id della libreria da cui prendere i libri
      * @return una lista di oggetti {@link Book} contenuti nella libreria
      * @throws RemoteException se si verifica un errore di comunicazione RMI
      */
-    LinkedList<Book> getLibriFromLibreria(String libraryId) throws RemoteException;
+    LinkedList<Book> getLibriFromLibreria(int libraryId) throws RemoteException;
 
     /**
      * Crea una nuova libreria associata all'utente.

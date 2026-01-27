@@ -55,6 +55,7 @@ public class RegController {
         {
             App.getInstance().authedBookRepository = result.second();
             LoginController.user = com.bookrecommender.client.controller.Utente.REGISTRATO;
+            LoginController.userId = tfUserid.getText();
             App.getInstance().changeScene("Benvenuto.fxml");
         }
         else if(result.first() == RegisterResult.DUPLICATE_EMAIL)

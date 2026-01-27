@@ -9,7 +9,6 @@ import com.bookrecommender.common.enums.library.RemoveBookFromLibResult;
 import com.bookrecommender.server.DatabaseManager;
 import org.intellij.lang.annotations.Language;
 
-import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.LinkedList;
 
@@ -83,7 +82,7 @@ public class LibraryQueries {
      * @param libraryId l'identificativo della libreria in cui cercare
      * @return una lista di oggetti {@link Book} contenuti nella libreria specificata
      */
-    public synchronized static LinkedList<Book> getLibriFromLibreria(String libraryId) {
+    public synchronized static LinkedList<Book> getLibriFromLibreria(int libraryId) {
         @Language("PostgreSQL")
         String query = """
             SELECT * FROM "Libri" AS l
@@ -120,19 +119,19 @@ public class LibraryQueries {
         """;
 
         LinkedList<Integer> result = DatabaseManager.getInstance().executeQuery(
-                query,
-                rs ->{
-                    try
-                    {
-                        return rs.getInt("r");
-                    }
-                    catch (SQLException e)
-                    {
-                        System.err.println("Impossibile recuperare la colonna 'r' dalla query di 'createLibrary()'!");
-                        return null;
-                    }
-                },
-                new Object[] {userId, nomeLibreria}
+            query,
+            rs ->{
+                try
+                {
+                    return rs.getInt("r");
+                }
+                catch (SQLException e)
+                {
+                    System.err.println("Impossibile recuperare la colonna 'r' dalla query di 'createLibrary()'!");
+                    return null;
+                }
+            },
+            new Object[] {userId, nomeLibreria}
         );
 
         if (result == null || result.size() != 1 || result.getFirst() == null) return CreateLibResult.UNEXPECTED_ERROR;
@@ -171,19 +170,19 @@ public class LibraryQueries {
         """;
 
         LinkedList<Integer> result = DatabaseManager.getInstance().executeQuery(
-                query,
-                rs ->{
-                    try
-                    {
-                        return rs.getInt("r");
-                    }
-                    catch (SQLException e)
-                    {
-                        System.err.println("Impossibile recuperare la colonna 'r' dalla query di 'deleteLibrary()'!");
-                        return null;
-                    }
-                },
-                new Object[] {userId, libreriaId}
+            query,
+            rs ->{
+                try
+                {
+                    return rs.getInt("r");
+                }
+                catch (SQLException e)
+                {
+                    System.err.println("Impossibile recuperare la colonna 'r' dalla query di 'deleteLibrary()'!");
+                    return null;
+                }
+            },
+            new Object[] {userId, libreriaId}
         );
 
         if (result == null || result.size() != 1 || result.getFirst() == null) return DeleteLibResult.UNEXPECTED_ERROR;
@@ -224,7 +223,7 @@ public class LibraryQueries {
                     SELECT 1
                     FROM "Librerie"
                     WHERE id = ?
-                      AND userid = ?
+                        AND userid = ?
                 ) THEN 0
         
                 -- 2: La libreria esiste e contiene il libro
@@ -232,7 +231,7 @@ public class LibraryQueries {
                     SELECT 1
                     FROM "LibriXLibrerie"
                     WHERE libreria_id = ?
-                      AND libro_id = ?
+                        AND libro_id = ?
                 ) THEN 2
         
                 -- 1: La libreria esiste ma non contiene il libro
@@ -241,19 +240,19 @@ public class LibraryQueries {
         """;
 
         LinkedList<Integer> result = DatabaseManager.getInstance().executeQuery(
-                query,
-                rs ->{
-                    try
-                    {
-                        return rs.getInt("r");
-                    }
-                    catch (SQLException e)
-                    {
-                        System.err.println("Impossibile recuperare la colonna 'r' dalla query di 'addBookToLibrary()'!");
-                        return null;
-                    }
-                },
-                new Object[] {libreriaId, userId, libreriaId, libroId}
+            query,
+            rs ->{
+                try
+                {
+                    return rs.getInt("r");
+                }
+                catch (SQLException e)
+                {
+                    System.err.println("Impossibile recuperare la colonna 'r' dalla query di 'addBookToLibrary()'!");
+                    return null;
+                }
+            },
+            new Object[] {libreriaId, userId, libreriaId, libroId}
         );
 
         if (result == null || result.size() != 1 || result.getFirst() == null) return AddBookToLibResult.UNEXPECTED_ERROR;
@@ -292,7 +291,7 @@ public class LibraryQueries {
                     SELECT 1
                     FROM "Librerie"
                     WHERE id = ?
-                      AND userid = ?
+                        AND userid = ?
                 ) THEN 0
         
                 -- 2: La libreria esiste e contiene il libro
@@ -300,7 +299,7 @@ public class LibraryQueries {
                     SELECT 1
                     FROM "LibriXLibrerie"
                     WHERE libreria_id = ?
-                      AND libro_id = ?
+                        AND libro_id = ?
                 ) THEN 2
         
                 -- 1: La libreria esiste ma non contiene il libro
@@ -309,19 +308,19 @@ public class LibraryQueries {
         """;
 
         LinkedList<Integer> result = DatabaseManager.getInstance().executeQuery(
-                query,
-                rs ->{
-                    try
-                    {
-                        return rs.getInt("r");
-                    }
-                    catch (SQLException e)
-                    {
-                        System.err.println("Impossibile recuperare la colonna 'r' dalla query di 'removeBookFromLibrary()'!");
-                        return null;
-                    }
-                },
-                new Object[] {libreriaId, userId, libreriaId, libroId}
+            query,
+            rs ->{
+                try
+                {
+                    return rs.getInt("r");
+                }
+                catch (SQLException e)
+                {
+                    System.err.println("Impossibile recuperare la colonna 'r' dalla query di 'removeBookFromLibrary()'!");
+                    return null;
+                }
+            },
+            new Object[] {libreriaId, userId, libreriaId, libroId}
         );
 
         if (result == null || result.size() != 1 || result.getFirst() == null) return RemoveBookFromLibResult.UNEXPECTED_ERROR;

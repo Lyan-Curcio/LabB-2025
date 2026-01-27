@@ -31,7 +31,7 @@
                         <Font size="15.0" />
                      </font>
                   </Button>
-                  <Button fx:id="btnRicercaLib" mnemonicParsing="false" onAction="#btnClickRicercaLib" prefHeight="49.0" prefWidth="200.0" text="Ricerca Libreria">
+                  <Button fx:id="btnRicercaLib" mnemonicParsing="false" onAction="#btnClickRicercaLibrerie" prefHeight="49.0" prefWidth="200.0" text="Ricerca Libreria">
                      <font>
                         <Font size="15.0" />
                      </font>
@@ -87,5 +87,6 @@
             <Font size="18.0" />
          </font>
       </Button>
+      <Label fx:id="errorLabel" alignment="TOP_LEFT" layoutX="256.0" layoutY="510.0" prefHeight="59.0" prefWidth="232.0" textFill="RED" />
    </children>
 </AnchorPane>

@@ -17,6 +17,7 @@ public class LoginController {
     @FXML private PasswordField Password;
     @FXML private Label errorUserid, errorPassword, errorUnexpected;
 
+    public static String userId;
     public static Utente user = Utente.OSPITE;
     @FXML
     private void BtnClickLog(ActionEvent event) throws RemoteException
@@ -33,12 +34,12 @@ public class LoginController {
     
     private void CheckLogin() throws RemoteException
     {
-        String uid = UserID.getText();
+        userId = UserID.getText();
         String pwd = Password.getText();
 
         resetErrorLabels();
 
-        BRPair<LoginResult, AuthedBookRepositoryService> result = App.getInstance().bookRepository.login(uid, pwd);
+        BRPair<LoginResult, AuthedBookRepositoryService> result = App.getInstance().bookRepository.login(userId, pwd);
 
         System.out.println(result);
         // Simulazione login (da sostituire con DB in futuro)
