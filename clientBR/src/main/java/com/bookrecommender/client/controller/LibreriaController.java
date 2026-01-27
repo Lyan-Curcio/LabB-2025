@@ -4,6 +4,7 @@ import com.bookrecommender.common.dto.Book;
 import com.bookrecommender.common.dto.Rating;
 import com.bookrecommender.common.dto.Suggestion;
 import com.bookrecommender.common.enums.library.RemoveBookFromLibResult;
+import com.bookrecommender.common.enums.rating.DeleteRatingResult;
 import com.bookrecommender.common.enums.suggestion.AddSuggestionResult;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -96,10 +97,13 @@ public class LibreriaController
                     valutazione = App.getInstance().authedBookRepository.getMyValutazione(libro.id);
                     if(valutazione == null || valutazione.toStringInfo().equals(""))
                     {
+                        btnRimuoviRecensione.setVisible(false);
                         btnValuta.setVisible(true);
+                        recensione.setText("");
                     }
                     else
                     {
+                        btnValuta.setVisible(false);
                         recensione.setText(valutazione.toStringInfo());
                         btnRimuoviRecensione.setVisible(true);
                     }
@@ -150,9 +154,21 @@ public class LibreriaController
         }
     }
     @FXML
-    void rimuoviValutazione(ActionEvent event)
+    void rimuoviValutazione(ActionEvent event) throws RemoteException
     {
-
+        DeleteRatingResult result = App.getInstance().authedBookRepository.rimuoviValutazioneLibro(libro.id);
+        if(result == DeleteRatingResult.OK)
+        {
+            App.getInstance().changeScene("Libreria.fxml");
+        }
+        else if(result == DeleteRatingResult.NOT_RATED)
+        {
+            errorLabel.setText(result.getMessage());
+        }
+        else
+        {
+            errorLabel.setText(result.getMessage());
+        }
     }
 
     @FXML
