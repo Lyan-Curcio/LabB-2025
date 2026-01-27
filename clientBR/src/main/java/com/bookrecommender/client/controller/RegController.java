@@ -32,6 +32,13 @@ public class RegController {
         if(!password.equals(cPassword))
         {
             errorPassword.setText("le password non coincidono");
+            return;
+        }
+        if (tfnome.getText().isEmpty() || tfcognome.getText().isEmpty() || tfUserid.getText().isEmpty()
+                || tfCodiceFiscale.getText().isEmpty() || tfEmail.getText().isEmpty())
+        {
+            errorUnexpected.setText("riempire tutti i campi");
+            return;
         }
 
         User newUser = new User(

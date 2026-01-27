@@ -30,7 +30,7 @@ public class LibreriaController
     private Hashtable<String, Book> ricercaMapLibri =  new Hashtable<>();
     private Hashtable<String, Suggestion> MapSuggerimenti = new Hashtable<>();
 
-    private Book libro;
+    public static Book libro;
     public static Suggestion consiglio = null;
     private Rating valutazione = null;
 
@@ -121,7 +121,7 @@ public class LibreriaController
     @FXML
     void aggiungiValutazione(ActionEvent event)
     {
-
+        App.getInstance().changeScene("Valutazione.fxml");
     }
     @FXML
     void rimuoviConsiglio(ActionEvent event)

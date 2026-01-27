@@ -34,7 +34,7 @@ public class LoginController {
     
     private void CheckLogin() throws RemoteException
     {
-        userId = UserID.getText();
+        String userId = UserID.getText();
         String pwd = Password.getText();
 
         resetErrorLabels();
