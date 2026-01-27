@@ -9,30 +9,30 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.bookrecommender.client.controller.LibreriaController">
    <children>
       <Pane prefHeight="600.0" prefWidth="200.0" style="-fx-background-color: grey;">
          <children>
             <VBox prefHeight="258.0" prefWidth="200.0">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="49.0" prefWidth="200.0" text="Crea una libreria">
+                  <Button mnemonicParsing="false" onAction="#btnClickCreaLib" prefHeight="49.0" prefWidth="200.0" text="Crea una libreria">
                      <font>
                         <Font size="15.0" />
                      </font></Button>
-                  <Button mnemonicParsing="false" prefHeight="49.0" prefWidth="200.0" text="Le tue librerie">
+                  <Button mnemonicParsing="false" onAction="#btnClickLeTueLib" prefHeight="49.0" prefWidth="200.0" text="Le tue librerie">
                      <font>
                         <Font size="15.0" />
                      </font></Button>
-                  <Button mnemonicParsing="false" prefHeight="49.0" prefWidth="200.0" text="Ricerca librerie">
+                  <Button mnemonicParsing="false" onAction="#btnClickRicercaLibrerie" prefHeight="49.0" prefWidth="200.0" text="Ricerca librerie">
                      <font>
                         <Font size="15.0" />
                      </font></Button>
-                  <Button mnemonicParsing="false" prefHeight="49.0" prefWidth="200.0" text="Ricerca libri">
+                  <Button mnemonicParsing="false" onAction="#btnClickRicercaLibri" prefHeight="49.0" prefWidth="200.0" text="Ricerca libri">
                      <font>
                         <Font size="15.0" />
                      </font>
                   </Button>
-                  <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" text="Logout">
+                  <Button mnemonicParsing="false" onAction="#btnClickLogout" prefHeight="50.0" prefWidth="200.0" text="Logout">
                      <font>
                         <Font size="15.0" />
                      </font>
@@ -40,8 +40,8 @@
                </children>
             </VBox>
          </children></Pane>
-      <ListView layoutX="241.0" layoutY="187.0" prefHeight="225.0" prefWidth="280.0" />
-      <ListView layoutX="631.0" layoutY="187.0" prefHeight="146.0" prefWidth="237.0" />
+      <ListView fx:id="listaLibriLibreria" layoutX="241.0" layoutY="187.0" prefHeight="225.0" prefWidth="280.0" />
+      <ListView fx:id="libriConsigliati" layoutX="631.0" layoutY="187.0" prefHeight="146.0" prefWidth="237.0" />
       <Label layoutX="241.0" layoutY="143.0" prefHeight="38.0" prefWidth="70.0" text="Libreria">
          <font>
             <Font size="18.0" />
@@ -57,22 +57,22 @@
             <Font size="29.0" />
          </font>
       </Label>
-      <Button layoutX="241.0" layoutY="439.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="98.0" text="consiglia" visible="false">
+      <Button fx:id="btnConsiglia" layoutX="241.0" layoutY="439.0" mnemonicParsing="false" onAction="#aggiungiConsigliato" prefHeight="38.0" prefWidth="98.0" text="consiglia" visible="false">
          <font>
             <Font size="15.0" />
          </font>
       </Button>
-      <Button layoutX="422.0" layoutY="439.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="98.0" text="valuta" visible="false">
+      <Button fx:id="btnValuta" layoutX="422.0" layoutY="439.0" mnemonicParsing="false" onAction="#aggiungiValutazione" prefHeight="38.0" prefWidth="98.0" text="valuta" visible="false">
          <font>
             <Font size="15.0" />
          </font>
       </Button>
-      <Button fx:id="btnRimuoviLibro" layoutX="241.0" layoutY="484.0" mnemonicParsing="false" onAction="#rimuoviLibro" prefHeight="60.0" prefWidth="98.0" text="rimuovi libro" wrapText="true">
+      <Button fx:id="btnRimuoviLibro" layoutX="241.0" layoutY="484.0" mnemonicParsing="false" onAction="#rimuoviLibro" prefHeight="60.0" prefWidth="98.0" text="rimuovi libro" visible="false" wrapText="true">
          <font>
             <Font size="15.0" />
          </font>
       </Button>
-      <Button fx:id="btnRimuoviRecensione" layoutX="423.0" layoutY="484.0" mnemonicParsing="false" onAction="#rimuoviValutazione" prefHeight="60.0" prefWidth="98.0" text="rimuovi recensione" wrapText="true">
+      <Button fx:id="btnRimuoviRecensione" layoutX="423.0" layoutY="484.0" mnemonicParsing="false" onAction="#rimuoviValutazione" prefHeight="60.0" prefWidth="98.0" text="rimuovi recensione" visible="false" wrapText="true">
          <font>
             <Font size="15.0" />
          </font>
@@ -83,7 +83,7 @@
          </font>
       </Label>
       <Label fx:id="recensione" alignment="TOP_LEFT" layoutX="617.0" layoutY="382.0" prefHeight="215.0" prefWidth="280.0" />
-      <Button fx:id="btnRimuoviConsilgio" layoutX="770.0" layoutY="121.0" mnemonicParsing="false" onAction="#rimuoviConsiglio" prefHeight="60.0" prefWidth="98.0" text="rimuovi consilgio" wrapText="true">
+      <Button fx:id="btnRimuoviConsilgio" layoutX="770.0" layoutY="121.0" mnemonicParsing="false" onAction="#rimuoviConsiglio" prefHeight="60.0" prefWidth="98.0" text="rimuovi consilgio" visible="false" wrapText="true">
          <font>
             <Font size="15.0" />
          </font>

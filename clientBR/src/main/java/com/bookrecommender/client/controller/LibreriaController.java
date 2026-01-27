@@ -3,6 +3,7 @@ package com.bookrecommender.client.controller;
 import com.bookrecommender.common.dto.Book;
 import com.bookrecommender.common.dto.Rating;
 import com.bookrecommender.common.dto.Suggestion;
+import com.bookrecommender.common.enums.library.RemoveBookFromLibResult;
 import com.bookrecommender.common.enums.suggestion.AddSuggestionResult;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -28,7 +29,6 @@ public class LibreriaController
 
     private Hashtable<String, Book> ricercaMapLibri =  new Hashtable<>();
     private Hashtable<String, Suggestion> MapSuggerimenti = new Hashtable<>();
-    private Hashtable<String, Rating> MapRecensioni = new Hashtable<>();
 
     private Book libro;
     public static Suggestion consiglio = null;
@@ -60,6 +60,7 @@ public class LibreriaController
             {
                 libro  = ricercaMapLibri.get(listaLibriLibreria.getSelectionModel().getSelectedItem());
                 LinkedList<Suggestion> consigliati;
+                btnRimuoviLibro.setVisible(true);
                 try
                 {
                     btnConsiglia.setVisible(true);
@@ -93,7 +94,7 @@ public class LibreriaController
                 try
                 {
                     valutazione = App.getInstance().authedBookRepository.getMyValutazione(libro.id);
-                    if(valutazione.toStringInfo().equals("") || valutazione==null)
+                    if(valutazione == null || valutazione.toStringInfo().equals(""))
                     {
                         btnValuta.setVisible(true);
                     }
@@ -115,7 +116,7 @@ public class LibreriaController
     @FXML
     void aggiungiConsigliato(ActionEvent event)
     {
-        App.getInstance().changeScene("Benvenuto.fxml");
+
     }
     @FXML
     void aggiungiValutazione(ActionEvent event)
@@ -128,9 +129,25 @@ public class LibreriaController
 
     }
     @FXML
-    void rimuoviLibro(ActionEvent event)
+    void rimuoviLibro(ActionEvent event) throws RemoteException
     {
-
+        RemoveBookFromLibResult result = App.getInstance().authedBookRepository.rimuoviLibroDaLibreria(LibrerieUtenteController.libreria.id, libro.id);
+        if (result == RemoveBookFromLibResult.OK)
+        {
+            App.getInstance().changeScene("Libreria.fxml");
+        }
+        else if(result == RemoveBookFromLibResult.BOOK_NOT_IN_LIBRARY)
+        {
+            errorLabel.setText(result.getMessage());
+        }
+        else if(result == RemoveBookFromLibResult.LIBRARY_NOT_FOUND)
+        {
+            errorLabel.setText(result.getMessage());
+        }
+        else
+        {
+            errorLabel.setText(result.getMessage());
+        }
     }
     @FXML
     void rimuoviValutazione(ActionEvent event)
