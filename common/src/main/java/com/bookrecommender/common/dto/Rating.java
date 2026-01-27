@@ -137,7 +137,7 @@ public class Rating implements Serializable {
         try {
             _id = rs.getInt("id");
             _libroId = rs.getInt("libro_id");
-            _userId = rs.getString("user_id");
+            _userId = rs.getString("userid");
 
             _stile = rs.getInt("stile");
             _contenuto = rs.getInt("contenuto");
