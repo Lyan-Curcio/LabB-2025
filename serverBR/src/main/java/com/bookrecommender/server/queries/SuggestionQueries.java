@@ -76,8 +76,13 @@ public class SuggestionQueries {
                     SELECT 1 FROM "ConsigliLibri"
                     WHERE userid = ? AND libro_sorgente_id = ? AND libro_consigliato_id = ?
                 ) THEN 2
-                -- 3: Se entrambi i libri sono in qualche libreria
-                ELSE 3
+                -- 3: Se ci sono già 3 consigliati
+                WHEN (
+                    SELECT COUNT(*) FROM "ConsigliLibri"
+                    WHERE userid = ? AND libro_sorgente_id = ?
+                ) >= 3 THEN 3
+                -- 4: Se è tutto okay per l'aggiunta di un consigliato
+                ELSE 4
             END AS r
         """;
 
@@ -105,6 +110,7 @@ public class SuggestionQueries {
         else if (result.getFirst() == 0) return AddSuggestionResult.MAIN_BOOK_NOT_IN_LIBRARY;
         else if (result.getFirst() == 1) return AddSuggestionResult.SUGGESTED_BOOK_NOT_IN_LIBRARY;
         else if (result.getFirst() == 2) return AddSuggestionResult.ALREADY_SUGGESTED;
+        else if (result.getFirst() == 3) return AddSuggestionResult.TOO_MANY_SUGGESTIONS;
 
         query = "INSERT INTO \"ConsigliLibri\" (userid, libro_sorgente_id, libro_consigliato_id) VALUES (?, ?, ?)";
 

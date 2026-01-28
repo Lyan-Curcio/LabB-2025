@@ -152,7 +152,7 @@ CREATE OR REPLACE FUNCTION public.check_consigli_libri()
 AS $function$
 BEGIN
     IF (
-       SELECT COUNT(libro_consigliato_id) FROM "ConsigliLibri"
+       SELECT COUNT(*) FROM "ConsigliLibri"
        WHERE userid = NEW.userid AND
            libro_sorgente_id = NEW.libro_sorgente_id
     ) >= 3

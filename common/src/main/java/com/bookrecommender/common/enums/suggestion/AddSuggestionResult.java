@@ -26,6 +26,9 @@ public enum AddSuggestionResult {
     /** Esiste già un suggerimento identico inserito dall'utente. */
     ALREADY_SUGGESTED("Questo libro è già stato consigliato"),
 
+    /** Esistono già 3 suggerimenti per il libro sorgente */
+    TOO_MANY_SUGGESTIONS("Questo libro ha già 3 consigliati"),
+
     /** Si è verificato un errore imprevisto. */
     UNEXPECTED_ERROR("Errore non previsto!");
 
