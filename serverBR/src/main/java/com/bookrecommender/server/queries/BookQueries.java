@@ -5,6 +5,7 @@ import com.bookrecommender.common.dto.BookInfo;
 import com.bookrecommender.common.dto.Rating;
 import com.bookrecommender.common.dto.Suggestion;
 import com.bookrecommender.server.DatabaseManager;
+import com.bookrecommender.server.Utils;
 import org.intellij.lang.annotations.Language;
 
 import java.util.LinkedList;
@@ -20,6 +21,27 @@ import java.util.NoSuchElementException;
  * @author Nash Guizzardi 756941 VA
  */
 public class BookQueries {
+
+    /**
+     * Recupera le informazioni di un libro con l'id richiesto
+     *
+     * @param bookId l'ID del libro da recuperare
+     * @return un oggetto {@link Book} contenente i dati del libro richiesto
+     */
+    public synchronized static Book getBook(int bookId) {
+        @Language("PostgreSQL")
+        String query = "SELECT * FROM \"Libri\" WHERE id = ?";
+        try {
+            return DatabaseManager.getInstance().executeQuery(
+                query,
+                Book::new,
+                new Object[] {bookId}
+            ).getFirst();
+        }
+        catch (NoSuchElementException e) {
+            return null;
+        }
+    }
 
     /**
      * Recupera tutte le informazioni aggregate relative a un libro (Dettagli, Valutazioni, Suggerimenti).
@@ -71,7 +93,7 @@ public class BookQueries {
                 new Object[] {bookId}
         );
 
-        return new BookInfo(book, ratings, suggestions);
+        return new BookInfo(book, ratings, Utils.suggWithBooksFromSugg(suggestions));
     }
 
     /**

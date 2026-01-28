@@ -29,7 +29,7 @@ public class BookInfo implements Serializable {
     public final LinkedList<Rating> ratings;
 
     /** Lista dei suggerimenti che collegano questo libro ad altri titoli consigliati. */
-    public final LinkedList<Suggestion> suggestions;
+    public final LinkedList<SuggestionWithBooks> suggestions;
 
     /**
      * Costruisce un nuovo oggetto aggregatore {@link BookInfo}.
@@ -38,7 +38,7 @@ public class BookInfo implements Serializable {
      * @param rating      la lista delle valutazioni associate al libro
      * @param suggestions la lista dei suggerimenti associati al libro
      */
-    public BookInfo(Book book, LinkedList<Rating> rating, LinkedList<Suggestion> suggestions) {
+    public BookInfo(Book book, LinkedList<Rating> rating, LinkedList<SuggestionWithBooks> suggestions) {
         this.book = book;
         this.ratings = rating;
         this.suggestions = suggestions;

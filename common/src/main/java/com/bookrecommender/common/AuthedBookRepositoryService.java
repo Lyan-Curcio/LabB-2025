@@ -1,9 +1,6 @@
 package com.bookrecommender.common;
 
-import com.bookrecommender.common.dto.Book;
-import com.bookrecommender.common.dto.Library;
-import com.bookrecommender.common.dto.Rating;
-import com.bookrecommender.common.dto.Suggestion;
+import com.bookrecommender.common.dto.*;
 import com.bookrecommender.common.enums.library.AddBookToLibResult;
 import com.bookrecommender.common.enums.library.CreateLibResult;
 import com.bookrecommender.common.enums.library.DeleteLibResult;
@@ -151,10 +148,10 @@ public interface AuthedBookRepositoryService extends Remote {
      * Recupera i suggerimenti che l'utente loggato ha creato per un determinato libro sorgente.
      *
      * @param libroId l'identificativo del libro sorgente
-     * @return una lista di {@link Suggestion} creati dall'utente per quel libro
+     * @return una lista di {@link SuggestionWithBooks} creati dall'utente per quel libro
      * @throws RemoteException se si verifica un errore di comunicazione RMI
      */
-    LinkedList<Suggestion> getMySuggerimenti(int libroId) throws RemoteException;
+    LinkedList<SuggestionWithBooks> getMySuggerimenti(int libroId) throws RemoteException;
 
     /**
      * Inserisce un suggerimento tra due libri.

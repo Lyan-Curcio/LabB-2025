@@ -1,10 +1,7 @@
 package com.bookrecommender.server;
 
 import com.bookrecommender.common.AuthedBookRepositoryService;
-import com.bookrecommender.common.dto.Book;
-import com.bookrecommender.common.dto.Library;
-import com.bookrecommender.common.dto.Rating;
-import com.bookrecommender.common.dto.Suggestion;
+import com.bookrecommender.common.dto.*;
 import com.bookrecommender.common.enums.library.AddBookToLibResult;
 import com.bookrecommender.common.enums.library.CreateLibResult;
 import com.bookrecommender.common.enums.library.DeleteLibResult;
@@ -17,7 +14,6 @@ import com.bookrecommender.server.queries.LibraryQueries;
 import com.bookrecommender.server.queries.RatingQueries;
 import com.bookrecommender.server.queries.SuggestionQueries;
 
-import java.rmi.Remote;
 import java.rmi.server.UnicastRemoteObject;
 import java.rmi.RemoteException;
 import java.util.LinkedList;
@@ -140,19 +136,21 @@ public class AuthedBookRepositoryImpl extends UnicastRemoteObject implements Aut
 
     /** {@inheritDoc} */
     @Override
-    public LinkedList<Suggestion> getMySuggerimenti(int libroId) throws RemoteException {
-        return SuggestionQueries.getSuggestionsFrom(loggedUserId, libroId);
+    public LinkedList<SuggestionWithBooks> getMySuggerimenti(int libroId) throws RemoteException {
+        return Utils.suggWithBooksFromSugg(
+            SuggestionQueries.getSuggestionsFrom(loggedUserId, libroId)
+        );
     }
 
     /** {@inheritDoc} */
     @Override
     public AddSuggestionResult inserisciSuggerimentoLibro(int libroSorgenteId, int libroConsigliatoId) throws RemoteException {
-        return SuggestionQueries.createRating(loggedUserId, libroSorgenteId, libroConsigliatoId);
+        return SuggestionQueries.createSuggestion(loggedUserId, libroSorgenteId, libroConsigliatoId);
     }
 
     /** {@inheritDoc} */
     @Override
     public RemoveSuggestionResult rimuoviSuggerimentoLibro(int libroSorgenteId, int libroConsigliatoId) throws RemoteException {
-        return SuggestionQueries.deleteRating(loggedUserId, libroSorgenteId, libroConsigliatoId);
+        return SuggestionQueries.deleteSuggestion(loggedUserId, libroSorgenteId, libroConsigliatoId);
     }
 }

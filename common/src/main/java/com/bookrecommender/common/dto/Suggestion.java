@@ -29,10 +29,10 @@ public class Suggestion implements Serializable {
     /** Identificativo dell'utente che ha creato il suggerimento. */
     public final String userId;
 
-    /** ID del libro sorgente (il libro a partire dal quale viene dato il consiglio). */
+    /** ID del libro sorgente (il libro sul quale viene dato il consiglio). */
     public final int mainBookId;
 
-    /** ID del libro consigliato (il libro suggerito). */
+    /** ID del libro consigliato. */
     public final int suggestedBookId;
 
     /**
