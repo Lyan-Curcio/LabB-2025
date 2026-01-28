@@ -61,7 +61,7 @@ public class InfoLibroController
         listaConsigliati.setItems(
                 FXCollections.observableArrayList(
                         bookInfo.suggestions.stream()
-                                .map(Suggestion::toStringDebug)
+                                .map(SuggestionWithBooks::toStringInfo)
                                 .collect(Collectors.toList())
                 )
         );
@@ -83,7 +83,7 @@ public class InfoLibroController
         listaConsigliati.setItems(
                 FXCollections.observableArrayList(
                         bookInfo.suggestions.stream()
-                                .map(Suggestion::toStringDebug)
+                                .map(SuggestionWithBooks::toStringInfo)
                                 .collect(Collectors.toList())
                 )
         );

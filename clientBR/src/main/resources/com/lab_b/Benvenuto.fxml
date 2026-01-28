@@ -92,7 +92,7 @@
             <Font size="18.0" />
          </font>
       </Button>
-      <Label fx:id="errorLabel" alignment="TOP_LEFT" layoutX="256.0" layoutY="510.0" prefHeight="59.0" prefWidth="232.0" textFill="RED" />
+      <Label fx:id="errorLabel" alignment="TOP_LEFT" layoutX="256.0" layoutY="510.0" prefHeight="59.0" prefWidth="232.0" textFill="RED" wrapText="true" />
       <Button fx:id="btnConsigliaLibro" layoutX="489.0" layoutY="510.0" mnemonicParsing="false" onAction="#consigliaLibro" prefHeight="50.0" prefWidth="107.0" style="-fx-effect: dropshadow(gaussian, rgba(0,0,3,2.4), 6, 0.3, 3, 2); -fx-background-insets: 0;" text="Consiglia" visible="false">
          <font>
             <Font size="18.0" />

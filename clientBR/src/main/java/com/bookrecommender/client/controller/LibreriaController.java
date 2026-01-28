@@ -3,6 +3,7 @@ package com.bookrecommender.client.controller;
 import com.bookrecommender.common.dto.Book;
 import com.bookrecommender.common.dto.Rating;
 import com.bookrecommender.common.dto.Suggestion;
+import com.bookrecommender.common.dto.SuggestionWithBooks;
 import com.bookrecommender.common.enums.library.RemoveBookFromLibResult;
 import com.bookrecommender.common.enums.rating.DeleteRatingResult;
 import com.bookrecommender.common.enums.suggestion.AddSuggestionResult;
@@ -30,11 +31,12 @@ public class LibreriaController
     @FXML private Label nomeLibreria, errorLabel, recensione;
 
     private Hashtable<String, Book> ricercaMapLibri =  new Hashtable<>();
-    private Hashtable<String, Suggestion> MapSuggerimenti = new Hashtable<>();
+    private Hashtable<String, SuggestionWithBooks> MapSuggerimenti = new Hashtable<>();
     private Rating valutazione = null;
+    private Book libroConsigliato;
 
     public static Book libro;
-    public static Suggestion consiglio;
+    public static SuggestionWithBooks consiglio;
     public static boolean consigliando = false;
     @FXML
     private void initialize() throws RemoteException
@@ -61,7 +63,7 @@ public class LibreriaController
             public void changed(ObservableValue<? extends String> observableValue, String s, String t1)
             {
                 libro  = ricercaMapLibri.get(listaLibriLibreria.getSelectionModel().getSelectedItem());
-                LinkedList<Suggestion> consigliati;
+                LinkedList<SuggestionWithBooks> consigliati;
                 btnRimuoviLibro.setVisible(true);
                 try
                 {
@@ -78,29 +80,15 @@ public class LibreriaController
 
                 MapSuggerimenti.clear();
                 consigliati.forEach(sug->{
-                    MapSuggerimenti.put(sug.toString(), sug);
+                    MapSuggerimenti.put(sug.toStringDebug(), sug);
                 });
                 libriConsigliati.setItems(
                         FXCollections.observableArrayList(
                                 consigliati.stream()
-                                        .map(Suggestion::toStringDebug)
+                                        .map(SuggestionWithBooks::toStringDebug)
                                         .collect(Collectors.toList())
                         )
                 );
-                libriConsigliati.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-                    @Override
-                    public void changed(ObservableValue<? extends String> observableValue, String s, String t1)
-                    {
-                        try
-                        {
-                            consiglio = MapSuggerimenti.get(libriConsigliati.getSelectionModel().getSelectedItem());
-                            btnRimuoviConsilgio.setVisible(true);
-                        }catch (NullPointerException e)
-                        {
-                            btnRimuoviConsilgio.setVisible(false);
-                        }
-                    }
-                });
                 try
                 {
                     valutazione = App.getInstance().authedBookRepository.getMyValutazione(libro.id);
@@ -123,6 +111,21 @@ public class LibreriaController
                 }
             }
         });
+        libriConsigliati.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observableValue, String s, String t1)
+            {
+                try
+                {
+                    consiglio = MapSuggerimenti.get(libriConsigliati.getSelectionModel().getSelectedItem());
+                    libroConsigliato = consiglio.suggestedBook;
+                    btnRimuoviConsilgio.setVisible(true);
+                }catch (NullPointerException e)
+                {
+                    btnRimuoviConsilgio.setVisible(false);
+                }
+            }
+        });
 
     }
 
@@ -140,7 +143,20 @@ public class LibreriaController
     @FXML
     void rimuoviConsiglio(ActionEvent event) throws RemoteException
     {
-        RemoveSuggestionResult result = App.getInstance().authedBookRepository.rimuoviSuggerimentoLibro(libro.id, consiglio.id);
+        System.out.println(libro.id +" "+consiglio.id);
+        RemoveSuggestionResult result = App.getInstance().authedBookRepository.rimuoviSuggerimentoLibro(libro.id, libroConsigliato.id);
+        if (result == RemoveSuggestionResult.OK)
+        {
+            App.getInstance().changeScene("Libreria.fxml");
+        }
+        else if(result == RemoveSuggestionResult.NOT_SUGGESTED)
+        {
+            errorLabel.setText(result.getMessage());
+        }
+        else
+        {
+            errorLabel.setText(result.getMessage());
+        }
     }
     @FXML
     void rimuoviLibro(ActionEvent event) throws RemoteException
