@@ -16,7 +16,7 @@
    <children>
       <Pane prefHeight="600.0" prefWidth="200.0" style="-fx-background-color: grey;">
          <children>
-            <VBox fx:id="buttonList" prefHeight="302.0" prefWidth="200.0" style="-fx-border-width: 4;">
+            <VBox fx:id="buttonList" prefHeight="440.0" prefWidth="200.0" style="-fx-border-width: 4;">
                <children>
                   <Button fx:id="btnReg" mnemonicParsing="false" onAction="#registrati" prefHeight="49.0" prefWidth="200.0" text="Registrati">
                      <font>
@@ -42,6 +42,11 @@
                      </font>
                   </Button>
                   <Button fx:id="btnLogout" mnemonicParsing="false" onAction="#btnClickLogout" prefHeight="49.0" prefWidth="200.0" text="Logout">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="btnRitorno" mnemonicParsing="false" onAction="#btnClickReturn" prefHeight="49.0" prefWidth="200.0" text="&lt;--">
                      <font>
                         <Font size="15.0" />
                      </font>
@@ -82,11 +87,16 @@
       </SplitMenuButton>
       <Label layoutX="257.0" layoutY="87.0" text="Cerca per:" />
       <TextField fx:id="tfRicercaAnno" disable="true" layoutX="256.0" layoutY="167.0" prefHeight="38.0" prefWidth="71.0" promptText="Anno" style="-fx-border-color: black; -fx-border-width: 4; -fx-background-radius: 7; -fx-border-radius: 4; -fx-font-size: 14;" />
-      <Button fx:id="btnInfoLibro" layoutX="514.0" layoutY="510.0" mnemonicParsing="false" onAction="#btnClickInfoLibro" prefHeight="50.0" prefWidth="107.0" style="-fx-effect: dropshadow(gaussian, rgba(0,0,3,2.4), 6, 0.3, 3, 2); -fx-background-insets: 0;" text="InfoLibro">
+      <Button fx:id="btnInfoLibro" layoutX="489.0" layoutY="510.0" mnemonicParsing="false" onAction="#btnClickInfoLibro" prefHeight="50.0" prefWidth="107.0" style="-fx-effect: dropshadow(gaussian, rgba(0,0,3,2.4), 6, 0.3, 3, 2); -fx-background-insets: 0;" text="InfoLibro">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
       <Label fx:id="errorLabel" alignment="TOP_LEFT" layoutX="256.0" layoutY="510.0" prefHeight="59.0" prefWidth="232.0" textFill="RED" />
+      <Button fx:id="btnConsigliaLibro" layoutX="489.0" layoutY="510.0" mnemonicParsing="false" onAction="#consigliaLibro" prefHeight="50.0" prefWidth="107.0" style="-fx-effect: dropshadow(gaussian, rgba(0,0,3,2.4), 6, 0.3, 3, 2); -fx-background-insets: 0;" text="Consiglia" visible="false">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

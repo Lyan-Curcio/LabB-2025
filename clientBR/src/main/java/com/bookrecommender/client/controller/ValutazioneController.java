@@ -72,17 +72,37 @@ public class ValutazioneController {
             votoOriginalita = Integer.parseInt(tfOriginalita.getText());
             votoStile = Integer.parseInt(tfStile.getText());
 
-            recensione = new Rating(
-                    LibreriaController.libro.id, LoginController.userId, votoStile, votoContenuto, votoGradevolezza,
-                    votoOriginalita, votoEdizione, noteStile.getText(), noteContenuto.getText(),
-                    noteGradevolezza.getText(), noteOriginalita.getText(), noteEdizione.getText(), noteFinali.getText()
+            if (verificaRango(votoContenuto) && verificaRango(votoEdizione) && verificaRango(votoGradevolezza)
+                    && verificaRango(votoOriginalita) && verificaRango(votoStile)
+                    && verificaCaratteri(noteContenuto.getText().length()) &&  verificaCaratteri(noteEdizione.getText().length())
+                    && verificaCaratteri(noteGradevolezza.getText().length()) && verificaCaratteri(noteOriginalita.getText().length())
+                    && verificaCaratteri(noteStile.getText().length()) && verificaCaratteri(noteFinali.getText().length())
+            )
+            {
+                recensione = new Rating(
+                        LibreriaController.libro.id, LoginController.userId, votoStile, votoContenuto, votoGradevolezza,
+                        votoOriginalita, votoEdizione, noteStile.getText(), noteContenuto.getText(),
+                        noteGradevolezza.getText(), noteOriginalita.getText(), noteEdizione.getText(), noteFinali.getText()
                     );
-            return "";
+                return "";
+            }
+            else
+            {
+                return "i voti devono essere tra 1 e 5 e le note sono massimo 256 caratteri";
+            }
         }
         catch (NumberFormatException e)
         {
             return "i voti devono essere numerici";
         }
+    }
+    private boolean verificaRango(int voto)
+    {
+        return voto >= 0 && voto <= 5;
+    }
+    private boolean verificaCaratteri(int numCaratteri)
+    {
+        return numCaratteri <= 256;
     }
 
     @FXML

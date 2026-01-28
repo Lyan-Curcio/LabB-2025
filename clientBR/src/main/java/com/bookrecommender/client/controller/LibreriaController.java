@@ -6,6 +6,7 @@ import com.bookrecommender.common.dto.Suggestion;
 import com.bookrecommender.common.enums.library.RemoveBookFromLibResult;
 import com.bookrecommender.common.enums.rating.DeleteRatingResult;
 import com.bookrecommender.common.enums.suggestion.AddSuggestionResult;
+import com.bookrecommender.common.enums.suggestion.RemoveSuggestionResult;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -30,11 +31,11 @@ public class LibreriaController
 
     private Hashtable<String, Book> ricercaMapLibri =  new Hashtable<>();
     private Hashtable<String, Suggestion> MapSuggerimenti = new Hashtable<>();
-
-    public static Book libro;
-    public static Suggestion consiglio = null;
     private Rating valutazione = null;
 
+    public static Book libro;
+    public static Suggestion consiglio;
+    public static boolean consigliando = false;
     @FXML
     private void initialize() throws RemoteException
     {
@@ -74,6 +75,8 @@ public class LibreriaController
                     e.printStackTrace();
                     return;
                 }
+
+                MapSuggerimenti.clear();
                 consigliati.forEach(sug->{
                     MapSuggerimenti.put(sug.toString(), sug);
                 });
@@ -88,8 +91,14 @@ public class LibreriaController
                     @Override
                     public void changed(ObservableValue<? extends String> observableValue, String s, String t1)
                     {
-                        consiglio = MapSuggerimenti.get(libriConsigliati.getSelectionModel().getSelectedItem());
-                        btnRimuoviConsilgio.setVisible(true);
+                        try
+                        {
+                            consiglio = MapSuggerimenti.get(libriConsigliati.getSelectionModel().getSelectedItem());
+                            btnRimuoviConsilgio.setVisible(true);
+                        }catch (NullPointerException e)
+                        {
+                            btnRimuoviConsilgio.setVisible(false);
+                        }
                     }
                 });
                 try
@@ -120,7 +129,8 @@ public class LibreriaController
     @FXML
     void aggiungiConsigliato(ActionEvent event)
     {
-
+        consigliando = true;
+        App.getInstance().changeScene("Benvenuto.fxml");
     }
     @FXML
     void aggiungiValutazione(ActionEvent event)
@@ -128,9 +138,9 @@ public class LibreriaController
         App.getInstance().changeScene("Valutazione.fxml");
     }
     @FXML
-    void rimuoviConsiglio(ActionEvent event)
+    void rimuoviConsiglio(ActionEvent event) throws RemoteException
     {
-
+        RemoveSuggestionResult result = App.getInstance().authedBookRepository.rimuoviSuggerimentoLibro(libro.id, consiglio.id);
     }
     @FXML
     void rimuoviLibro(ActionEvent event) throws RemoteException
