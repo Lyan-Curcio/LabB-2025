@@ -102,7 +102,8 @@ public class SuggestionQueries {
                 new Object[] {
                         userId, libroSorgenteId,
                         userId, libroConsigliatoId,
-                        userId, libroSorgenteId, libroConsigliatoId
+                        userId, libroSorgenteId, libroConsigliatoId,
+                        userId, libroSorgenteId
                 }
         );
 
