@@ -49,8 +49,16 @@ public class CreaLibreriaController {
 
         if(result == CreateLibResult.OK)
         {
-            Library nuovaLibreria = new Library(tfNomeLibreria.getText(), LoginController.userId);
-            listaLibrerie.getItems().add(nuovaLibreria.toStringInfo());
+            // Ricarica lista
+            listaLibrerie.getItems().clear();
+            LinkedList<Library> librerie = App.getInstance().authedBookRepository.getMyLibrerie();
+            listaLibrerie.setItems(
+                FXCollections.observableArrayList(
+                    librerie.stream()
+                        .map(Library :: toStringInfo)
+                        .collect(Collectors.toList())
+                )
+            );
         }
         else if(result == CreateLibResult.DUPLICATE_NAME)
         {
