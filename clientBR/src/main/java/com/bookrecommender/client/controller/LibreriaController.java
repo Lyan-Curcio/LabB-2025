@@ -184,7 +184,7 @@ public class LibreriaController
     @FXML
     void btnClickCreaLib(ActionEvent event)
     {
-        App.getInstance().changeScene("Crealibreria.fxml");
+        App.getInstance().changeScene("CreaLibreria.fxml");
     }
     @FXML
     void btnClickLeTueLib(ActionEvent event)
