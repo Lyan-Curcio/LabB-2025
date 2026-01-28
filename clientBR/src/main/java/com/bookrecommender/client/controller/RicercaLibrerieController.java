@@ -83,13 +83,13 @@ public class RicercaLibrerieController {
 
         ricercaMapLibraries.clear();
         librerie.forEach(library ->{
-            ricercaMapLibraries.put(library.toStringDebug(), library);
+            ricercaMapLibraries.put(library.toStringInfo(), library);
         });
 
         listaLibrerie.setItems(
                 FXCollections.observableArrayList(
                         librerie.stream()
-                                .map(Library::toStringDebug)
+                                .map(Library::toStringInfo)
                                 .collect(Collectors.toList())
                 )
         );

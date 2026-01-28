@@ -39,13 +39,13 @@ public class LibrerieUtenteController {
             listLabel.setText("Nessuna libreria");
         }
         librerie.forEach(l->{
-            mapLibrerie.put(l.toStringDebug(), l);
+            mapLibrerie.put(l.toStringInfo(), l);
         });
 
         listaLibrerieUtente.setItems(
                 FXCollections.observableArrayList(
                         librerie.stream()
-                                .map(Library :: toStringDebug)
+                                .map(Library :: toStringInfo)
                                 .collect(Collectors.toList())
                 )
         );

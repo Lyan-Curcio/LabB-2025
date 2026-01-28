@@ -90,13 +90,13 @@ public class InfoLibroController
         listaLibrerieUtente.setItems(
                 FXCollections.observableArrayList(
                         librerie.stream()
-                                .map(Library::toStringDebug)
+                                .map(Library::toStringInfo)
                                 .collect(Collectors.toList())
                 )
         );
 
         librerie.forEach(l->{
-            librerieMap.put(l.toStringDebug(), l);
+            librerieMap.put(l.toStringInfo(), l);
         });
         listaLibrerieUtente.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override

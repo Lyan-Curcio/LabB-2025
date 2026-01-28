@@ -79,6 +79,15 @@ public class Library implements Serializable {
     }
 
     /**
+     * Restituisce una stringa formattata sintetica per la visualizzazione all'utente.
+     *
+     * @return una stringa formattata
+     */
+    public String toStringInfo() {
+        return "\"" + name + "\" - Di: " + userId;
+    }
+
+    /**
      * Restituisce una rappresentazione stringa della libreria per scopi di debug.
      *
      * @return una stringa contenente ID, nome e proprietario

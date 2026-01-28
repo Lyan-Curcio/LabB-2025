@@ -30,7 +30,7 @@ public class CreaLibreriaController {
         listaLibrerie.setItems(
                 FXCollections.observableArrayList(
                         librerie.stream()
-                        .map(Library :: toStringDebug)
+                        .map(Library :: toStringInfo)
                         .collect(Collectors.toList())
                 )
         );
@@ -50,7 +50,7 @@ public class CreaLibreriaController {
         if(result == CreateLibResult.OK)
         {
             Library nuovaLibreria = new Library(tfNomeLibreria.getText(), LoginController.userId);
-            listaLibrerie.getItems().add(nuovaLibreria.toStringDebug());
+            listaLibrerie.getItems().add(nuovaLibreria.toStringInfo());
         }
         else if(result == CreateLibResult.DUPLICATE_NAME)
         {
