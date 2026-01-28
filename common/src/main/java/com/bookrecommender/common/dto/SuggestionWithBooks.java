@@ -3,6 +3,19 @@ package com.bookrecommender.common.dto;
 import java.io.Serial;
 import java.io.Serializable;
 
+/**
+ * Classe DTO (Data Transfer Object) che rappresenta un suggerimento di correlazione tra due libri (memorizzando gli oggetti di tipo {@link Book}).
+ * <p>
+ * Un suggerimento indica che un utente consiglia il libro "suggestedBook" a chi ha letto o apprezzato
+ * il libro "mainBook".
+ * Implementa <code>Serializable</code> per il trasferimento dati via rete.
+ * </p>
+ *
+ * @author Lorenzo Monachino 757393 VA
+ * @author Lyan Curcio 757579 VA
+ * @author Sergio Saldarriaga 757394 VA
+ * @author Nash Guizzardi 756941 VA
+ */
 public class SuggestionWithBooks implements Serializable {
     /** Versione della classe per la serializzazione. */
     @Serial
