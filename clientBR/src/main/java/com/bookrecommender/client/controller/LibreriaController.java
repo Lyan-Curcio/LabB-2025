@@ -30,6 +30,7 @@ public class LibreriaController
     @FXML private ListView<String> libriConsigliati, listaLibriLibreria;
     @FXML private Label nomeLibreria, errorLabel, recensione;
 
+
     private Hashtable<String, Book> ricercaMapLibri =  new Hashtable<>();
     private Hashtable<String, SuggestionWithBooks> MapSuggerimenti = new Hashtable<>();
     private Rating valutazione = null;
@@ -58,6 +59,7 @@ public class LibreriaController
                 )
         );
 
+
         listaLibriLibreria.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String s, String t1)
@@ -80,12 +82,12 @@ public class LibreriaController
 
                 MapSuggerimenti.clear();
                 consigliati.forEach(sug->{
-                    MapSuggerimenti.put(sug.toStringDebug(), sug);
+                    MapSuggerimenti.put(sug.toStringInfo(), sug);
                 });
                 libriConsigliati.setItems(
                         FXCollections.observableArrayList(
                                 consigliati.stream()
-                                        .map(SuggestionWithBooks::toStringDebug)
+                                        .map(SuggestionWithBooks::toStringInfo)
                                         .collect(Collectors.toList())
                         )
                 );
@@ -173,6 +175,10 @@ public class LibreriaController
         else if(result == RemoveBookFromLibResult.LIBRARY_NOT_FOUND)
         {
             errorLabel.setText(result.getMessage());
+        }
+        else if(consiglio == null)
+        {
+            errorLabel.setText("il libro è consigliato, rimuovilo dai consigliati e puoi eliminare il libro");
         }
         else
         {

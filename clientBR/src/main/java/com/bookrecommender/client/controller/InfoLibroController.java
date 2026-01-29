@@ -18,7 +18,8 @@ import java.util.stream.Collectors;
 
 public class InfoLibroController
 {
-    @FXML private Label infoLibro, errorLabel, labelListaLibrerie;
+    @FXML private Label infoLibro, errorLabel, labelListaLibrerie, labelListRecensioni, labelRecensioni,
+            labelListConsigliati, labelConsigliaiti;
     @FXML private ListView<String> listaConsigliati, listaRecensioni, listaLibrerieUtente;
     @FXML private Button btnAggiungiLibro;
 
@@ -58,6 +59,7 @@ public class InfoLibroController
                                 .collect(Collectors.toList())
                 )
         );
+
         listaConsigliati.setItems(
                 FXCollections.observableArrayList(
                         bookInfo.suggestions.stream()
@@ -65,6 +67,8 @@ public class InfoLibroController
                                 .collect(Collectors.toList())
                 )
         );
+        verificheListeRecensioniConsigliati();
+
     }
     private void registrato() throws RemoteException
     {
@@ -87,6 +91,8 @@ public class InfoLibroController
                                 .collect(Collectors.toList())
                 )
         );
+        verificheListeRecensioniConsigliati();
+
         listaLibrerieUtente.setItems(
                 FXCollections.observableArrayList(
                         librerie.stream()
@@ -106,6 +112,39 @@ public class InfoLibroController
                 btnAggiungiLibro.setVisible(true);
             }
         });
+    }
+
+    private void verificheListeRecensioniConsigliati()
+    {
+        if(!listaRecensioni.getItems().isEmpty())
+        {
+            labelListRecensioni.setText("");
+
+            int mediaStile = 0, mediaContenuto=0, mediaGradevolezza, mediaOriginalita, mediaEdizione;
+            int sommaStile = 0, sommaContenuto = 0, sommaGradevolezza = 0, sommaOriginalita = 0, sommaEdizione = 0;
+            for (Rating rating : bookInfo.ratings)
+            {
+                sommaStile = rating.stile;
+                sommaContenuto += rating.contenuto;
+                sommaGradevolezza += rating.gradevolezza;
+                sommaOriginalita += rating.originalita;
+                sommaEdizione += rating.edizione;
+            }
+            mediaStile = sommaStile / bookInfo.ratings.size();
+            mediaContenuto = sommaContenuto / bookInfo.ratings.size();
+            mediaGradevolezza = sommaGradevolezza / bookInfo.ratings.size();
+            mediaOriginalita = sommaOriginalita / bookInfo.ratings.size();
+            mediaEdizione = sommaEdizione / bookInfo.ratings.size();
+            labelRecensioni.setText("Numero di recensioni "+bookInfo.ratings.size()+"\nStile "+mediaStile+
+                    "\nContenuto "+mediaContenuto+"\nGradevolezza "
+                    +mediaGradevolezza+"\nOrignilalita "+mediaGradevolezza+"\nEdizione "+mediaEdizione
+            );
+        }
+
+        if(!listaConsigliati.getItems().isEmpty())
+        {
+            labelListConsigliati.setText("");
+        }
     }
 
     @FXML

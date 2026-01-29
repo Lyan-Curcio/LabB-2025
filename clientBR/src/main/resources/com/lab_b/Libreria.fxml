@@ -84,7 +84,7 @@
             <Font size="15.0" />
          </font>
       </Button>
-      <Label fx:id="errorLabel" alignment="TOP_LEFT" layoutX="241.0" layoutY="551.0" prefHeight="38.0" prefWidth="326.0" textFill="RED" />
+      <Label fx:id="errorLabel" alignment="TOP_LEFT" layoutX="200.0" layoutY="544.0" prefHeight="50.0" prefWidth="318.0" textFill="RED" wrapText="true" />
    </children>
    <cursor>
       <Cursor fx:constant="SE_RESIZE" />
