@@ -7,6 +7,7 @@ module com.bookrecommender.clientBR {
 
     requires com.bookrecommender.common;
     requires java.desktop;
+    requires org.apache.commons.validator;
 
     opens com.bookrecommender.client to javafx.fxml;
     opens com.bookrecommender.client.controller to javafx.fxml;

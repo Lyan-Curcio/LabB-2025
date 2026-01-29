@@ -6,10 +6,12 @@ import com.bookrecommender.common.AuthedBookRepositoryService;
 import com.bookrecommender.common.BRPair;
 import com.bookrecommender.common.dto.User;
 import com.bookrecommender.common.enums.auth.RegisterResult;
+import org.apache.commons.validator.routines.EmailValidator;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+
 
 public class RegController {
 
@@ -29,6 +31,10 @@ public class RegController {
 
         resetErrorLabels();
 
+        if (!checkEmail().equals(""))
+        {
+            errorEmail.setText(checkEmail());
+        }
         if(!password.equals(cPassword))
         {
             errorPassword.setText("le password non coincidono");
@@ -80,6 +86,14 @@ public class RegController {
         {
             this.errorUnexpected.setText(result.first().getMessage());
         }
+    }
+    private String checkEmail()
+    {
+        if (EmailValidator.getInstance().isValid(tfEmail.getText()))
+        {
+            return "";
+        }
+        return "l'email non è valida";
     }
 
     @FXML
