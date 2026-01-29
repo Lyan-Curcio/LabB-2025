@@ -19,10 +19,6 @@
                      <font>
                         <Font size="15.0" />
                      </font></Button>
-                  <Button mnemonicParsing="false" onAction="#btnClickRicercaLibreria" prefHeight="49.0" prefWidth="200.0" text="Ricerca libreria">
-                     <font>
-                        <Font size="15.0" />
-                     </font></Button>
                   <Button mnemonicParsing="false" onAction="#btnClickRicercaLibri" prefHeight="49.0" prefWidth="208.0" text="Ricerca libri">
                      <font>
                         <Font size="15.0" />

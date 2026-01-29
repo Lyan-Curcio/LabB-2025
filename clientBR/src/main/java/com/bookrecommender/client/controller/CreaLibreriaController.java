@@ -43,6 +43,7 @@ public class CreaLibreriaController {
         if(tfNomeLibreria.getText().isEmpty())
         {
             errorLabel.setText("inserire il nome della libreria");
+            return;
         }
 
         CreateLibResult result = App.getInstance().authedBookRepository.creaLibreria(tfNomeLibreria.getText());
@@ -86,12 +87,6 @@ public class CreaLibreriaController {
     void btnClickRicercaLibri(ActionEvent event) throws IOException
     {
         App.getInstance().changeScene("Benvenuto.fxml");
-    }
-
-    @FXML
-    void btnClickRicercaLibreria(ActionEvent event) throws IOException
-    {
-        App.getInstance().changeScene("RicercheLibrerie.fxml");
     }
 
     @FXML

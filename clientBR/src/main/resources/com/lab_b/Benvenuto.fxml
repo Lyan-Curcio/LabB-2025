@@ -31,11 +31,6 @@
                         <Font size="15.0" />
                      </font>
                   </Button>
-                  <Button fx:id="btnRicercaLib" mnemonicParsing="false" onAction="#btnClickRicercaLibrerie" prefHeight="49.0" prefWidth="200.0" text="Ricerca Libreria">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                  </Button>
                   <Button fx:id="btnLeTueLib" mnemonicParsing="false" onAction="#btnClickLeTueLib" prefHeight="49.0" prefWidth="200.0" text="Le tue librerie">
                      <font>
                         <Font size="15.0" />

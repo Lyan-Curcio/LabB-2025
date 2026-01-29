@@ -89,11 +89,6 @@ public class LibrerieUtenteController {
         App.getInstance().changeScene("CreaLibreria.fxml");
     }
     @FXML
-    void btnClickRicercaLibrerie(ActionEvent event) throws IOException
-    {
-        App.getInstance().changeScene("RicercheLibrerie.fxml");
-    }
-    @FXML
     void btnClickRicercaLibri(ActionEvent event) throws IOException
     {
         App.getInstance().changeScene("Benvenuto.fxml");

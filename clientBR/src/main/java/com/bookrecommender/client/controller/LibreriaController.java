@@ -215,11 +215,6 @@ public class LibreriaController
         App.getInstance().changeScene("Benvenuto.fxml");
     }
     @FXML
-    void btnClickRicercaLibrerie(ActionEvent event)
-    {
-        App.getInstance().changeScene("RicercheLibrerie.fxml");
-    }
-    @FXML
     void btnClickRicercaLibri(ActionEvent event)
     {
         App.getInstance().changeScene("Benvenuto.fxml");
