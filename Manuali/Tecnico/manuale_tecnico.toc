@@ -1,0 +1,50 @@
+\babel@toc {italian}{}\relax 
+\babel@toc {italian}{}\relax 
+\contentsline {chapter}{\numberline {1}Progettazione della Soluzione}{2}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Progettazione Software (UML)}{2}{section.1.1}%
+\contentsline {subsection}{\numberline {1.1.1}Struttura Statica (Class Diagram)}{2}{subsection.1.1.1}%
+\contentsline {subsubsection}{Modulo Common}{2}{section*.2}%
+\contentsline {subsubsection}{Modulo Server (Back-end)}{2}{section*.3}%
+\contentsline {subsubsection}{Modulo Client (Front-end)}{3}{section*.4}%
+\contentsline {subsection}{\numberline {1.1.2}Struttura Dinamica (Sequence Diagrams)}{3}{subsection.1.1.2}%
+\contentsline {subsubsection}{Sequence Diagram: Inserimento Suggerimento}{3}{section*.5}%
+\contentsline {section}{\numberline {1.2}Progettazione Database}{3}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Analisi dei Requisiti}{3}{section.1.3}%
+\contentsline {subsection}{\numberline {1.3.1}Requisiti Funzionali}{4}{subsection.1.3.1}%
+\contentsline {subsection}{\numberline {1.3.2}Requisiti Non Funzionali e Vincoli di Sistema}{4}{subsection.1.3.2}%
+\contentsline {subsection}{\numberline {1.3.3}Vincoli di Integrità dei Dati}{4}{subsection.1.3.3}%
+\contentsline {subsection}{\numberline {1.3.4}Schema Entity-Relationship (ER)}{5}{subsection.1.3.4}%
+\contentsline {subsection}{\numberline {1.3.5}Transizione dal Modello ER al Modello Relazionale}{6}{subsection.1.3.5}%
+\contentsline {subsection}{\numberline {1.3.6}Analisi delle Cardinalità}{6}{subsection.1.3.6}%
+\contentsline {subsection}{\numberline {1.3.7}Schema Logico Relazionale}{6}{subsection.1.3.7}%
+\contentsline {chapter}{\numberline {2}Report Tecnico della Soluzione Sviluppata}{7}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Requisiti e Ambiente di Sviluppo}{7}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Scelte Architetturali}{7}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Strategia di Gestione degli Errori e Protocollo Applicativo}{7}{subsection.2.2.1}%
+\contentsline {section}{\numberline {2.3}Gestione del Build e Gestione delle Dipendenze}{7}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}Documentazione Javadoc}{8}{subsection.2.3.1}%
+\contentsline {subsubsection}{Modularizzazione e Visibilità Javadoc}{8}{section*.6}%
+\contentsline {section}{\numberline {2.4}Script di Avvio e Automazione}{8}{section.2.4}%
+\contentsline {section}{\numberline {2.5}Design Pattern Utilizzati}{8}{section.2.5}%
+\contentsline {subsection}{\numberline {2.5.1}Pattern Singleton}{9}{subsection.2.5.1}%
+\contentsline {subsection}{\numberline {2.5.2}Pattern Data Transfer Object (DTO)}{9}{subsection.2.5.2}%
+\contentsline {subsection}{\numberline {2.5.3}Pattern Factory e Session Object}{9}{subsection.2.5.3}%
+\contentsline {subsection}{\numberline {2.5.4}Pattern MVC (Model-View-Controller)}{10}{subsection.2.5.4}%
+\contentsline {section}{\numberline {2.6}Strutture Dati e Algoritmi}{10}{section.2.6}%
+\contentsline {subsection}{\numberline {2.6.1}Strutture Dati}{10}{subsection.2.6.1}%
+\contentsline {subsection}{\numberline {2.6.2}Algoritmi e Ottimizzazioni}{10}{subsection.2.6.2}%
+\contentsline {subsubsection}{Hashing Sicuro delle Password}{10}{section*.7}%
+\contentsline {subsubsection}{Bulk Loading del Dataset (Importazione Massiva)}{10}{section*.8}%
+\contentsline {subsubsection}{Ottimizzazione delle Comunicazioni di Rete}{10}{section*.9}%
+\contentsline {subsection}{\numberline {2.6.3}Analisi delle Prestazioni e Ottimizzazioni}{11}{subsection.2.6.3}%
+\contentsline {subsubsection}{Ottimizzazione dell'Importazione Massiva}{11}{section*.10}%
+\contentsline {subsubsection}{Ricerca e Scansione Dati}{11}{section*.11}%
+\contentsline {subsubsection}{Autenticazione}{11}{section*.12}%
+\contentsline {section}{\numberline {2.7}Gestione dei File}{11}{section.2.7}%
+\contentsline {subsection}{\numberline {2.7.1}Specifica del Formato Dataset}{12}{subsection.2.7.1}%
+\contentsline {chapter}{\numberline {3}Limiti della Soluzione Sviluppata}{13}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Gestione della Connessione al Database}{13}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Scalabilità e Paginazione dei Risultati}{13}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Sicurezza del Canale di Comunicazione}{13}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Ottimizzazione del Calcolo del Voto Finale}{13}{section.3.4}%
+\contentsline {section}{\numberline {3.5}Gestione Errori nei Metodi Get}{14}{section.3.5}%

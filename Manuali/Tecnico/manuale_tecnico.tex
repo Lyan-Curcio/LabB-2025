@@ -1,0 +1,552 @@
+\documentclass[10pt, a4paper]{report}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[italian]{babel}
+\usepackage{graphicx} 
+\graphicspath{{images/}}
+\usepackage{float}    
+\usepackage{geometry} 
+\usepackage{xcolor}   
+\usepackage{listings} 
+\usepackage{hyperref} 
+
+\geometry{top=1.5cm, bottom=1.5cm, left=1.5cm, right=1.5cm}
+
+\definecolor{javared}{rgb}{0.6,0,0} 
+\definecolor{javagreen}{rgb}{0.25,0.5,0.35} 
+\definecolor{javapurple}{rgb}{0.5,0,0.35} 
+\definecolor{javadocblue}{rgb}{0.25,0.35,0.75} 
+
+\lstset{
+	language=Java,
+	basicstyle=\ttfamily\small,
+	keywordstyle=\color{javapurple}\bfseries,
+	stringstyle=\color{javared},
+	commentstyle=\color{javagreen},
+	morecomment=[s][\color{javadocblue}]{/**}{*/},
+	frame=single,
+	breaklines=true,
+	numbers=left,
+	numberstyle=\tiny\color{gray},
+	captionpos=b,
+	showstringspaces=false,
+	tabsize=4,
+	extendedchars=true,
+	inputencoding=utf8
+}
+
+\title{\textbf{Documentazione di Progetto}\\Manuale Tecnico}
+\author{
+	\textbf{Book Recommender} \\ \\
+	Lorenzo Monachino - 757393 - VA \\
+	Lyan Curcio - 757579 - VA \\
+	Sergio Saldarriaga - 757394 - VA\\
+	Nash Guizzardi - 756941 - VA
+}
+\date{Anno Accademico 2024/2025}
+
+\begin{document}
+	
+	\maketitle
+	
+	\tableofcontents
+	\newpage
+	
+	% CAPITOLO 1
+	\chapter{Progettazione della Soluzione}
+	
+	Questo capitolo illustra le scelte progettuali effettuate per la realizzazione del sistema \textit{Book Recommender}. L'analisi copre l'architettura software distribuita, definita tramite UML, e la progettazione della base di dati relazionale, con particolare attenzione ai vincoli di integrità e alla sicurezza.
+	
+	\section{Progettazione Software (UML)}
+	L'architettura del sistema segue il pattern Client-Server e sfrutta la tecnologia Java RMI per la comunicazione remota. Il progetto è organizzato in quattro moduli logici (Maven Modules), ognuno con responsabilità specifiche.
+	
+	\subsection{Struttura Statica (Class Diagram)}
+	Il diagramma delle classi (Figura \ref{fig:class_diagram}) mostra la suddivisione dei componenti e le dipendenze tra i pacchetti.
+	
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.8\textwidth, keepaspectratio]{class_diagram_2.pdf}
+	\caption{Diagramma delle Classi: Architettura Completa del Sistema}
+	\label{fig:class_diagram}
+\end{figure}
+	
+	\subsubsection{Modulo Common}
+	È il pacchetto condiviso che definisce le regole di comunicazione.
+	\begin{itemize}
+		\item \textbf{Interfacce RMI:} 
+		\begin{itemize}
+			\item \texttt{BookRepositoryService}: Interfaccia pubblica per utenti non autenticati (ricerca, login, registrazione).
+			\item \texttt{AuthedBookRepositoryService}: Interfaccia protetta per utenti autenticati, ottenibile solo post-login.
+		\end{itemize}
+		\item \textbf{DTO (Data Transfer Objects):} Classi immutabili (\texttt{Libri}, \texttt{UtentiRegistrati}, \texttt{Valutazione}) usate per il trasporto dati. Implementano \texttt{Serializable} per la trasmissione RMI.
+		\item \textbf{Enums:} Definiscono una serie di "eventi" per gestire gli esiti senza ricorrere alle eccezioni per la logica di controllo.
+	\end{itemize}
+	
+	\subsubsection{Modulo Server (Back-end)}
+	Gestisce la logica applicativa e la persistenza.
+	\begin{itemize}
+		\item \textbf{Gestione Sessione (tramite Factory Pattern):} \texttt{BookRepositoryImpl} (in caso di autenticazione) agisce da Factory. I metodi \texttt{register} e \texttt{login} restituiscono un'istanza di \texttt{AuthedBookRepositoryImpl} specifica per l'utente, incapsulando l'\texttt{userId} nella sessione.
+		\item \textbf{Database Manager:} Implementa il pattern Singleton per centralizzare la gestione della connessione JDBC.
+		\item \textbf{Queries:} Classi statiche (\texttt{AuthQueries}, \texttt{LibraryQueries}, ecc.) che isolano le query SQL dal codice RMI.
+	\end{itemize}
+	
+	\subsubsection{Modulo Client (Front-end)}
+	Applicazione JavaFX basata sul pattern MVC.
+	\begin{itemize}
+		\item \textbf{Navigazione:} La classe \texttt{App} (Singleton) gestisce lo \texttt{Stage} primario e il cambio delle scene (\texttt{changeScene}).
+		\item \textbf{Controller:} Classi come \texttt{LoginController} e \texttt{BenController} gestiscono l'interazione UI e invocano i metodi remoti.
+	\end{itemize}
+	
+	\subsection{Struttura Dinamica (Sequence Diagrams)}
+	Viene analizzato lo scenario critico di autenticazione per evidenziare la gestione della sicurezza.
+	
+\begin{figure}[htbp] 
+	\centering
+	\includegraphics[width=0.8\textwidth, keepaspectratio]{login_sequence_2.pdf}
+	\caption{Sequence Diagram: Login e creazione Sessione}
+	\label{fig:seq_login}
+\end{figure}
+	
+	Come mostrato in Figura \ref{fig:seq_login}, il Client invoca \texttt{login()}. Il Server delega la verifica hash a \texttt{AuthQueries}. Se valida, viene istanziato un oggetto remoto di sessione che viene restituito al Client all'interno di un oggetto \texttt{BRPair}.
+	
+	\subsubsection{Sequence Diagram: Inserimento Suggerimento}
+	Il seguente diagramma mostra il flusso per l'inserimento di un consiglio tra libri.
+	
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.8\textwidth,keepaspectratio]{suggest_sequence_2.pdf}
+	\caption{Sequence Diagram: Logica di validazione inserimento suggerimento}
+	\label{fig:seq_suggestion}
+\end{figure}
+	
+	\section{Progettazione Database}
+	Il livello dati è gestito da PostgreSQL. La progettazione include vincoli per garantire la coerenza dei dati.
+	
+	\section{Analisi dei Requisiti}
+	In conformità con le specifiche di progetto, il sistema è stato progettato per soddisfare requisiti funzionali distinti per tipologia di utenza e requisiti non funzionali vincolanti per l'architettura.
+	
+	\subsection{Requisiti Funzionali}
+	Il sistema prevede due livelli di accesso con funzionalità incrementali:
+	
+	\begin{itemize}
+		\item \textbf{Utente Non Registrato:}
+		\begin{itemize}
+			\item \textbf{Registrazione:} Inserimento dati anagrafici (Nome, Cognome, CF, Email, UserID, Password) per creare un nuovo account.
+			\item \textbf{Login:} Autenticazione tramite UserID e Password.
+			\item \textbf{Consultazione:} Ricerca di libri per titolo, autore o autore e anno di pubblicazione. Visualizzazione dei dettagli del libro.
+		\end{itemize}
+		
+		\item \textbf{Utente Registrato:}
+		Possiede tutte le funzionalità dell'ospite, con l'aggiunta di:
+		\begin{itemize}
+			\item \textbf{Gestione Librerie:} Creazione di librerie personali personalizzate; aggiunta e rimozione di libri dalle proprie librerie.
+			\item \textbf{Valutazioni:} Inserimento di recensioni composte da punteggi (Stile, Contenuto, Gradevolezza, Originalità, Edizione) e note testuali per i libri posseduti.
+			\item \textbf{Suggerimenti:} Possibilità di consigliare un libro correlato a un altro, a patto di possederli entrambi nelle proprie librerie.
+		\end{itemize}
+	\end{itemize}
+	
+	\subsection{Requisiti Non Funzionali e Vincoli di Sistema}
+	\begin{itemize}
+		\item \textbf{Architettura:} Client-Server distribuita basata su Java RMI.
+		\item \textbf{Persistenza:} Utilizzo di database relazionale PostgreSQL.
+		\item \textbf{Concorrenza:} Gestione di accessi multipli e contemporanei al server.
+		\item \textbf{Interfaccia:} GUI realizzata con JavaFX.
+	\end{itemize}
+	
+	\subsection{Vincoli di Integrità dei Dati}
+	Oltre ai requisiti funzionali, sono stati implementati vincoli rigidi a livello di database per garantire la consistenza semantica dei dati:
+	
+	\begin{enumerate}
+		\item \textbf{Unicità Utente:} Non è possibile registrare più utenti con lo stesso \texttt{UserID}, \texttt{Email} o \texttt{Codice Fiscale}.
+		\item \textbf{Unicità Librerie:} Un utente non può creare due librerie con lo stesso nome.
+		\item \textbf{Regola di Valutazione:} Un utente può inserire una valutazione per un libro \textit{solo se} tale libro è presente in almeno una delle sue librerie personali (gestito tramite Trigger).
+		\item \textbf{Singola Valutazione:} Un utente non può valutare lo stesso libro più di una volta.
+		\item \textbf{Regola dei Consigli:} Per suggerire un libro $B$ a chi ha letto $A$, l'utente deve possedere \textit{entrambi} i libri nelle proprie librerie (gestito tramite Trigger).
+	\end{enumerate}
+	
+	\subsection{Schema Entity-Relationship (ER)}
+	\begin{figure}[htbp]
+		\centering
+		\includegraphics[width=0.8\textwidth, keepaspectratio]{er_diagram_2.pdf}
+		\caption{Schema Entity-Relationship}
+		\label{fig:er_diagram}
+	\end{figure}
+	
+	Le entità principali (Figura \ref{fig:er_diagram}) sono:
+	\begin{itemize}
+		\item \textbf{Utente:} Contiene le credenziali e l'hash della password.
+		\item \textbf{Libro:} Catalogo statico importato da dataset CSV.
+		\item \textbf{Libreria:} Gestiscono le librerie utente.
+	\end{itemize}
+	
+	\subsection{Transizione dal Modello ER al Modello Relazionale}
+	Nel passaggio dal modello concettuale (Diagramma ER) allo schema logico relazionale (SQL), alcune relazioni sono state tradotte direttamente in tabelle fisiche ("reificazione delle associazioni").
+	
+	\begin{itemize}
+		\item \textbf{Associazione "Contiene" (Molti-a-Molti):} La relazione tra \textit{Librerie} e \textit{Libri} è di tipo N:M. Nel modello relazionale questo richiede una tabella di associazione ("bridge table") denominata \textbf{LibriXLibrerie}, la quale contiene le chiavi esterne verso le due entità collegate. La chiave primaria è composta dalla coppia (\textit{libreria\_id}, \textit{libro\_id}).
+		
+		\item \textbf{Associazione "Valuta" con attributi:} Sebbene concettualmente sia una relazione tra \textit{Utente} e \textit{Libro}, essa possiede numerosi attributi propri (i voti e le note). Pertanto, è stata tradotta nella tabella \textbf{ValutazioniLibri}.
+		
+		\item \textbf{Associazione "Consiglia" (Ternaria/Ricorsiva):} Questa relazione coinvolge tre soggetti: l'Utente, il Libro Sorgente e il Libro Consigliato. Nello schema logico diventa la tabella \textbf{ConsigliLibri}, dove le tre chiavi esterne garantiscono l'integrità referenziale verso l'utente e due volte verso la tabella dei libri.
+	\end{itemize}
+	
+	\subsection{Analisi delle Cardinalità}
+	Le cardinalità definiscono i vincoli numerici delle relazioni tra le entità:
+	
+	\begin{itemize}
+		\item \textbf{Utente - Libreria (1:N):} Un singolo utente può creare molteplici librerie ($N$), ma ogni libreria appartiene univocamente a un solo utente ($1$). La dipendenza è forte: la cancellazione dell'utente comporta la cancellazione a cascata delle sue librerie.
+		
+		\item \textbf{Libreria - Libro (M:N):} Una libreria può contenere un numero arbitrario di libri ($N$) e uno stesso libro può essere presente nelle librerie di più utenti diversi ($M$).
+		
+		\item \textbf{Utente - Valutazione (1:N):} Un utente può scrivere molte valutazioni, ma ogni valutazione è scritta da un solo utente. Esiste inoltre un vincolo di unicità sulla coppia (Utente, Libro), impedendo valutazioni multiple dello stesso testo.
+	\end{itemize}
+	
+	\subsection{Schema Logico Relazionale}
+	Di seguito viene riportato lo schema logico delle tabelle principali create nel database PostgreSQL, con evidenza delle chiavi primarie (sottolineate) e delle chiavi esterne (FK).
+	
+	\begin{itemize}
+		\item \textbf{UtentiRegistrati}(\underline{userid}: VARCHAR(50), nome: VARCHAR(50), cognome: VARCHAR(50), codice\_fiscale: CHAR(16), email: VARCHAR(100), password\_hash: VARCHAR(256))
+		
+		\item \textbf{Libri}(\underline{id}: SERIAL, titolo: VARCHAR(500), autori: VARCHAR(500), anno\_pubblicazione: INT, editore: VARCHAR(200), categorie: VARCHAR(200))
+		
+		\item \textbf{Librerie}(\underline{id}: SERIAL, nome: VARCHAR(100), \textit{userid}: VARCHAR(50) FK)
+		
+		\item \textbf{LibriXLibrerie}(\underline{\textit{libreria\_id}: INT FK, \textit{libro\_id}: INT FK})
+		
+		\item \textbf{ValutazioniLibri}(\underline{id}: SERIAL, \textit{userid}: VARCHAR(50) FK, \textit{libro\_id}: INT FK, stile: INT, contenuto: INT, gradevolezza: INT, originalita: INT, edizione: INT, note\_stile: VARCHAR(256), note\_contenuto: VARCHAR(256), note\_gradevolezza: VARCHAR(256), note\_originalita: VARCHAR(256), note\_edizione: VARCHAR(256), note\_finale: VARCHAR(256))
+		
+		\item \textbf{ConsigliLibri}(\underline{id}: SERIAL, \textit{userid}: VARCHAR(50) FK, \textit{libro\_sorgente\_id}: INT FK, \textit{libro\_consigliato\_id}: INT FK)
+	\end{itemize}
+	
+	
+	% CAPITOLO 2
+	\chapter{Report Tecnico della Soluzione Sviluppata}
+	In questa sezione vengono dettagliate le scelte implementative, i design pattern adottati per risolvere specifici problemi architetturali e le ottimizzazioni algoritmiche utilizzate.
+	
+	\section{Requisiti e Ambiente di Sviluppo}
+	Le seguenti versioni software sono state utilizzate per lo sviluppo e il build del progetto, come definito nei file \texttt{pom.xml} dei vari moduli Maven:
+	
+	\begin{center}
+		\begin{tabular}{|l|l|}
+			\hline
+			\textbf{Componente} & \textbf{Versione} \\ \hline
+			Java JDK & 25 \\ \hline
+			PostgreSQL Driver & 42.7.8 \\ \hline
+			JavaFX & 25.0.1 \\ \hline
+			Maven Compiler & 3.14.1 \\ \hline
+		\end{tabular}
+	\end{center}
+	
+	\section{Scelte Architetturali}
+	Il sistema \textit{Book Recommender} adotta un'architettura distribuita basata sul middleware \textbf{Java RMI} (Remote Method Invocation), che permette di invocare metodi su oggetti residenti in una Java Virtual Machine (JVM) diversa da quella del chiamante.
+	
+	Una scelta architetturale critica è stata la separazione delle interfacce nel modulo \texttt{Common}: questo permette al Client di conoscere i metodi invocabili (il "contratto") senza avere accesso al codice sorgente dell'implementazione server.
+	
+	\subsection{Strategia di Gestione degli Errori e Protocollo Applicativo}
+	Per la comunicazione degli esiti delle operazioni tra Server e Client, è stato deciso di non utilizzare le Eccezioni Java (se non per errori critici di rete RMI), preferendo un approccio basato su \textbf{Enum}.
+	
+	Ogni operazione (es. Login, Creazione Libreria) restituisce un Enum specifico (es. \texttt{LoginResult}) che codifica tutti i possibili stati logici (Successo, Password Errata, Utente non Trovato).
+	
+	\section{Gestione del Build e Gestione delle Dipendenze}
+	Il progetto adotta una struttura \textbf{Maven Multi-Module} per garantire la separazione delle responsabilità. La configurazione è definita in un \texttt{pom.xml} padre che orchestra quattro moduli figli:
+	
+	\begin{itemize}
+		\item \textbf{common:} Contiene le interfacce RMI, i DTO e gli Enum. È una dipendenza sia del Client che del Server.
+		\item \textbf{serverBR:} Dipende da \texttt{common} e dai driver PostgreSQL per la comunicazione con il DB.
+		\item \textbf{clientBR:} Dipende da \texttt{common} e dalle librerie JavaFX. Utilizza i plugin specifici di JavaFX per la gestione dei moduli grafici.
+		\item \textbf{db\_init:} Modulo di utilità per il setup iniziale, separato dal server per separare la logica di popolamento DB dal server. Dipende da \texttt{common} e da \texttt{serverBR} per la comunicazione con il DB.
+	\end{itemize}
+	
+	Questa struttura impedisce, ad esempio, che il Client possa accidentalmente accedere alle classi di connessione al Database, poiché non ha il modulo \texttt{serverBR} tra le dipendenze.
+	
+	\subsection{Documentazione Javadoc}
+	In conformità con le specifiche di progetto, l'intero codice sorgente è stato commentato seguendo lo standard Javadoc. La documentazione HTML è stata generata automaticamente tramite il plugin Maven \texttt{maven-javadoc-plugin} (configurato nel \texttt{pom.xml} padre).
+	
+	\subsubsection{Modularizzazione e Visibilità Javadoc}
+	Una scelta tecnica rilevante è stata l'adozione del \textit{Java Platform Module System} (JPMS), introdotto da Java 9 e pienamente supportato dalla versione 25 utilizzata. 
+	Ogni modulo Maven (\texttt{common}, \texttt{server}, \texttt{client}) contiene un descrittore \texttt{module-info.java}.
+	
+	Questa architettura influenza direttamente la generazione della documentazione Javadoc e la sicurezza del codice:
+	\begin{itemize}
+		\item \textbf{Incapsulamento Forte:} Solo i package esplicitamente marcati con la direttiva \texttt{exports} nel file \\\texttt{module-info.java} sono visibili agli altri moduli e inclusi nella documentazione Javadoc pubblica.
+		\item \textbf{Esempio Pratico:} Nel modulo \texttt{common}, il package \texttt{com.bookrecommender.common.dto} è esportato affinché Client e Server possano scambiarsi i dati, ed è quindi documentato. Le classi interne di utilità non esportate rimangono nascoste, mantenendo pulita l'API pubblica documentata.
+	\end{itemize}
+	
+	\begin{lstlisting}[language=Java, caption=Esempio di module-info.java nel modulo Common]
+		module com.bookrecommender.common {
+			requires java.rmi;
+			requires java.sql;
+			// Espone i DTO e le interfacce RMI alla documentazione e agli altri moduli
+			exports com.bookrecommender.common.dto;
+			exports com.bookrecommender.common;
+			exports com.bookrecommender.common.enums.auth;
+			// ... altri exports
+		}
+	\end{lstlisting}
+	
+	La documentazione completa è consultabile dal file "\texttt{target/reports/apidocs/index.html}".
+	
+	\section{Script di Avvio e Automazione}
+	Per facilitare il deployment e l'esecuzione dei vari moduli del sistema distribuito, sono stati predisposti degli script di avvio automatizzati nella root del progetto.
+	Al fine di garantire la portabilità su diversi sistemi operativi, per ogni componente è stata fornita una doppia versione dello script:
+	\begin{itemize}
+		\item \textbf{.bat (Windows Batch File):} Per ambienti Microsoft Windows.
+		\item \textbf{.sh (Shell Script):} Per ambienti Unix-like (Linux, macOS).
+	\end{itemize}
+	
+	L'utilizzo di questi script astrae la complessità dei comandi di avvio (come la definizione del \textit{classpath} o la gestione del \textit{module-path} di JavaFX), permettendo l'esecuzione dei moduli con un singolo click o comando da terminale.
+	
+	Gli script devono essere eseguiti nel seguente ordine logico per garantire il corretto funzionamento del sistema distribuito:
+	
+	\begin{enumerate}
+		\item \textbf{\texttt{InitDB.bat / .sh}}: Esegue il modulo \texttt{db\_init}. 
+		Questo script si occupa di compilare il progetto, connettersi al database PostgreSQL (utilizzando le credenziali configurate), creare lo schema delle tabelle e popolare i dati iniziali dal dataset CSV. Deve essere eseguito \textit{una tantum} o quando si desidera resettare lo stato del database.
+		
+		\item \textbf{\texttt{Server.bat / .sh}}: Esegue il modulo \texttt{serverBR}.
+		Avvia il registro RMI sulla porta 1099 e pubblica il servizio \texttt{BookRecommenderService}, mettendosi in ascolto per le connessioni in ingresso. Questo processo deve rimanere attivo affinché l'applicazione sia utilizzabile.
+		
+		\item \textbf{\texttt{Client.bat / .sh}}: Esegue il modulo \texttt{clientBR}.
+		Lancia l'interfaccia grafica JavaFX. Possono essere avviate molteplici istanze di questo script contemporaneamente per simulare l'accesso concorrente di più utenti al sistema.
+	\end{enumerate}
+	
+	\section{Design Pattern Utilizzati}
+	Per garantire un codice modulare, manutenibile e robusto, sono stati applicati diversi design pattern.
+	
+	\subsection{Pattern Singleton}
+	Il pattern Singleton è stato utilizzato nella classe \texttt{DatabaseManager} (lato Server) e nella classe \texttt{App} (lato Client).
+	\begin{itemize}
+		\item \textbf{Scopo:} Garantire che esista una e una sola istanza della connessione al database (Server) o del gestore delle scene (Client) per tutto il ciclo di vita dell'applicazione.
+		\item \textbf{Implementazione:} Il costruttore è reso privato e l'accesso all'istanza avviene tramite un metodo statico sincronizzato.
+	\end{itemize}
+	
+	\begin{lstlisting}[language=Java, caption=Implementazione Singleton in DatabaseManager.java]
+		public class DatabaseManager {
+			private static DatabaseManager instance;
+			private Connection pgsqlConn;
+			
+			private DatabaseManager() {
+				// Inizializzazione driver e connessione JDBC
+			}
+			
+			public static synchronized DatabaseManager getInstance() {
+				if (instance == null) {
+					instance = new DatabaseManager();
+				}
+				return instance;
+			}
+		}
+	\end{lstlisting}
+	
+	\subsection{Pattern Data Transfer Object (DTO)}
+	I DTO sono stati impiegati per il trasferimento dei dati tra Client e Server. Le classi \texttt{Libri}, \texttt{UtentiRegistrati} e \texttt{Valutazione} (nel package \texttt{common.dto}) ne sono l'esempio.
+	\begin{itemize}
+		\item \textbf{Caratteristiche:} Sono classi "povere" di logica, serializzabili (\texttt{implements Serializable}) e immutabili (campi \texttt{final}), progettate esclusivamente per trasportare dati attraverso la rete.
+		\item \textbf{Vantaggio:} Riducono il numero di chiamate remote permettendo di inviare interi grafi di oggetti in un'unica invocazione.
+	\end{itemize}
+	
+	\subsection{Pattern Factory e Session Object}
+	Il sistema implementa una gestione delle sessioni basata su oggetti remoti dinamici.
+	\begin{itemize}
+		\item \textbf{Funzionamento:} La classe \texttt{BookRepositoryImpl} (nel caso di registrazione o login) agisce come una \textit{Factory}. I metodi \texttt{register} e \texttt{login}, in caso di successo, istanziano e restituiscono un nuovo oggetto \\\texttt{AuthedBookRepositoryImpl}.
+		\item \textbf{Sessione:} L'oggetto restituito incapsula lo stato della sessione (l'ID dell'utente), garantendo che tutte le chiamate successive siano automaticamente autenticate.
+	\end{itemize}
+	
+	\begin{lstlisting}[language=Java, caption=Creazione dinamica della Sessione (BookRepositoryImpl.java)]
+		@Override
+		public BRPair<LoginResult, AuthedBookRepositoryService> login(String userid, String pass) throws RemoteException {
+			LoginResult result = AuthQueries.login(userid, pass);
+			return new BRPair<>(
+			result,
+			// Se login OK, crea il nuovo oggetto remoto di sessione
+			result == LoginResult.OK
+			? new AuthedBookRepositoryImpl(userid)
+			: null
+			);
+		}
+	\end{lstlisting}
+	
+	\subsection{Pattern MVC (Model-View-Controller)}
+	Lato Client, l'applicazione JavaFX segue il pattern MVC:
+	\begin{itemize}
+		\item \textbf{View:} Definita nei file \texttt{.fxml} (es. \texttt{Login.fxml}).
+		\item \textbf{Controller:} Gestisce gli eventi (es. \texttt{LoginController.java}).
+		\item \textbf{Model:} I dati sono rappresentati dai DTO ricevuti dal server (es. \texttt{LoginResult} e \\\texttt{AuthedBookRepositoryService}).
+	\end{itemize}
+	
+	\section{Strutture Dati e Algoritmi}
+	
+	\subsection{Strutture Dati}
+	\begin{itemize}
+		\item \textbf{LinkedList:} Utilizzata nella classe \texttt{DatabaseManager} per accumulare i risultati delle query. È stata preferita all'\texttt{ArrayList} per la sua efficienza nelle operazioni di inserimento in coda durante la lettura sequenziale del \texttt{ResultSet}.
+		\item \textbf{Java Record (BRPair):} È stata introdotta la classe generica \texttt{BRPair<A, B>} (implementata come \texttt{record} Java) per gestire il ritorno di valori multipli dai metodi RMI (es. Esito Operazione + Oggetto Remoto).
+	\end{itemize}
+	
+	\subsection{Algoritmi e Ottimizzazioni}
+	
+	\subsubsection{Hashing Sicuro delle Password}
+	La sicurezza non è gestita tramite algoritmi Java lato applicativo, ma delegata al DBMS tramite l'estensione \texttt{pgcrypto}.
+	L'algoritmo utilizzato è \textbf{Blowfish} (tramite \texttt{bf} salt), che è molto resistente agli attacchi di forza bruta.
+	\begin{lstlisting}[language=SQL, caption=Hashing in AuthQueries.java]
+		INSERT INTO "UtentiRegistrati" (...) 
+		VALUES (..., crypt(?, gen_salt('bf')))
+	\end{lstlisting}
+	
+	\subsubsection{Bulk Loading del Dataset (Importazione Massiva)}
+	Per il popolamento iniziale del catalogo libri (file CSV), non viene eseguito un loop di \texttt{INSERT} (che sarebbe lento a causa dell'overhead di rete per ogni riga).
+	È stato implementato l'algoritmo di \textbf{Copy Manager} di PostgreSQL Driver, che apre uno stream diretto verso il server DB.
+	\begin{lstlisting}[language=Java, caption=Ottimizzazione importazione CSV (Main.java)]
+		CopyManager copyManager = ((PGConnection) conn).getCopyAPI();
+		String sql = "COPY \"Libri\" ... FROM STDIN WITH (FORMAT csv, HEADER true)";
+		// Trasferimento diretto dallo stream del file al DB
+		copyManager.copyIn(sql, inputStream);
+	\end{lstlisting}
+	Questa soluzione riduce il tempo di importazione da diversi minuti a pochi secondi per grandi dataset.
+	
+	\subsubsection{Ottimizzazione delle Comunicazioni di Rete}
+	Un aspetto critico in un'architettura distribuita RMI è la latenza di rete. Un approccio tradizionale per l'inserimento di dati complessi (es. suggerimenti tra libri) richiederebbe più passaggi:
+	\begin{enumerate}
+		\item Interrogare il DB per verificare che i dati esistano.
+		\item Verificare che non ci siano duplicati.
+		\item Eseguire l'inserimento effettivo.
+	\end{enumerate}
+	Questo comporterebbe 3 chiamate separate tra Client e Server.
+	
+	Per risolvere questo problema, nelle classi \texttt{LibraryQueries} e \texttt{SuggestionQueries} è stata adottata una strategia di \textbf{Query Condizionale} usando il costrutto SQL \texttt{CASE WHEN}. In questo modo, tutta la logica di controllo viene eseguita direttamente dal DBMS in un'unica operazione.
+	\begin{itemize}
+		\item \textbf{Vantaggio:} L'operazione diventa atomica e riduce le interazioni di rete da 3 a 1.
+		\item \textbf{Risultato:} Il tempo di esecuzione diminuisce sensibilmente, migliorando l'esperienza utente.
+	\end{itemize}
+	
+	\subsection{Analisi delle Prestazioni e Ottimizzazioni}
+	In questa sezione si analizzano le prestazioni delle operazioni critiche del sistema, evidenziando come le scelte architetturali influenzino i tempi di risposta più che la pura complessità algoritmica asintotica.
+	
+	\subsubsection{Ottimizzazione dell'Importazione Massiva}
+	Per il popolamento iniziale del database (file CSV), il sistema evita l'approccio ingenuo basato su iterazioni di query \texttt{INSERT}.
+	\begin{itemize}
+		\item \textbf{Strategia:} Utilizzo dell'API \texttt{CopyManager} di PostgreSQL per trasferire i dati via stream diretto.
+		\item \textbf{Analisi del miglioramento:} Sebbene la complessità di lettura del file rimanga lineare rispetto alla sua dimensione, il guadagno prestazionale deriva dall'\textbf{abbattimento dell'overhead di rete}. 
+		Invece di eseguire $N$ richieste/risposte tra applicazione e database per $N$ libri, viene eseguita un'unica operazione di I/O. Questo riduce i tempi di importazione da minuti a pochi secondi, eliminando la latenza del protocollo TCP/IP per ogni singolo record.
+	\end{itemize}
+	
+	\subsubsection{Ricerca e Scansione Dati}
+	Le funzionalità di ricerca permettono all'utente di trovare libri filtrando per sottostringhe nel titolo o nell'autore (pattern SQL \texttt{\%query\%}).
+	
+	\begin{itemize}
+		\item \textbf{Lato Database (Server):} L'uso del carattere jolly iniziale (\texttt{\%}) nelle query \texttt{ILIKE} obbliga il DBMS a effettuare una scansione sequenziale della tabella. 
+		Il tempo di esecuzione dipende quindi linearmente dalla dimensione del dataset ($N$) e dall'efficienza interna dell'ottimizzatore di PostgreSQL nel gestire l'I/O.
+		
+		\item \textbf{Lato Client (Costruzione UI):} Una volta ricevuti i risultati, il Client deve mappare i DTO ricevuti in oggetti grafici per la \texttt{ListView}. Questo processo ha un costo lineare $\mathcal{O}(R)$, dove $R$ è il numero di libri restituiti dalla ricerca.
+	\end{itemize}
+	
+	\subsubsection{Autenticazione}
+	Il processo di login si compone di due fasi distinte a livello di database:
+	\begin{enumerate}
+		\item \textbf{Recupero Utente:} Il database ricerca la riga corrispondente allo \texttt{userid} fornito. Poiché \texttt{userid} è definito come Chiave Primaria, PostgreSQL utilizza un indice per questa operazione. Il costo computazionale è quindi logaritmico $\mathcal{O}(\log U)$, dove $U$ è il numero di utenti registrati.
+		\item \textbf{Verifica Hash:} Una volta trovato il record, la funzione \texttt{crypt} verifica la password. Questa operazione ha un costo costante $\mathcal{O}(1)$ rispetto alla mole di dati nel DB, dipendente solo dal fattore di costo dell'algoritmo impostato.
+	\end{enumerate}
+	
+	\section{Gestione dei File}
+	Il progetto gestisce diverse tipologie di file, utilizzando percorsi relativi (Classpath) per garantire la portabilità su diversi sistemi operativi.
+	
+	\begin{itemize}
+		\item \textbf{Dataset Dati (CSV):} Il file \texttt{BooksDatasetClean.csv} è collocato nella cartella \texttt{resources} del modulo \texttt{db\_init}. Viene letto tramite \texttt{getResourceAsStream()}, evitando path assoluti (es. \texttt{C:/Users/...}).
+		
+		\item \textbf{Script SQL:} Il file \texttt{create-tables.sql} contenente la DDL del database viene letto come stream di testo, filtrando commenti e righe vuote prima dell'esecuzione.
+		
+		\item \textbf{Interfacce Grafiche (FXML):} I file di layout JavaFX sono caricati dinamicamente dalla classe \texttt{App} utilizzando \texttt{FXMLLoader.load(getClass().getResource(...))}.
+		
+		\item \textbf{Configurazione Ambiente (.env):} È stato introdotto un meccanismo ibrido per la configurazione delle credenziali del database all'avvio del server.
+		Il sistema verifica la presenza di un file \texttt{.env} nella directory di esecuzione. 
+		\begin{itemize}
+			\item \textbf{Caricamento Automatico:} Se il file esiste, le credenziali vengono caricate automaticamente senza input utente.
+			\item \textbf{Fallback Console:} Se il file è assente, il sistema richiede le credenziali via console (come da specifiche). In questa modalità, premendo semplicemente \texttt{Invio}, vengono utilizzati i valori di default preimpostati.
+		\end{itemize}
+	\end{itemize}
+	
+	\subsection{Specifica del Formato Dataset}
+	Il sistema si aspetta in input un file denominato \texttt{BooksDatasetClean.csv}. Il file deve rispettare il formato CSV, con intestazione obbligatoria:
+	
+	\begin{lstlisting}[language=bash, caption=Struttura del file CSV atteso]
+		titolo,autori,anno_pubblicazione,editore,categorie
+		"The Great Gatsby","F. Scott Fitzgerald",1925,"Scribner","Classic,Fiction"
+		"1984","George Orwell",1949,"Secker & Warburg","Dystopian,Sci-Fi"
+		...
+	\end{lstlisting}
+	
+	La corrispondenza tra le colonne del CSV e le colonne della tabella database è mappata posizionalmente nel comando \texttt{COPY} eseguito durante l'inizializzazione.
+	% ---------------------------------------------
+	
+	\newpage
+	
+	% CAPITOLO 3
+	\chapter{Limiti della Soluzione Sviluppata}
+	Nonostante l'architettura proposta soddisfi i requisiti funzionali del progetto, un'analisi della soluzione evidenzia alcuni limiti tecnici.
+	
+	\section{Gestione della Connessione al Database}
+	Attualmente, la classe \texttt{DatabaseManager} implementa il pattern Singleton mantenendo un'unica istanza di \\\texttt{java.sql.Connection} attiva verso PostgreSQL.
+	\begin{itemize}
+		\item \textbf{Problema:} Sebbene i metodi siano sincronizzati per garantire la thread-safety, l'uso di una singola connessione serializza di fatto l'accesso al database. In uno scenario con molteplici utenti concorrenti, questo crea un bottleneck, aumentando i tempi di attesa per le operazioni di I/O.
+		\item \textbf{Soluzione Futura:} Implementazione di un \textit{Connection Pool} per gestire un pool di connessioni riutilizzabili, permettendo l'esecuzione parallela delle query.
+	\end{itemize}
+	
+	\section{Scalabilità e Paginazione dei Risultati}
+	Le metodi di ricerca nella classe \texttt{BookQueries} (es. \texttt{searchByTitle}) restituiscono una \texttt{LinkedList<Libri>} completa contenente tutti i record trovati.
+	\begin{itemize}
+		\item \textbf{Problema:} In presenza di un dataset di grandi dimensioni (migliaia di libri), caricare l'intero Result Set in memoria e trasferirlo via RMI in un unico blocco può causare un elevato consumo di RAM lato Server e latenza di rete significativa.
+		\item \textbf{Soluzione Futura:} Introduzione della paginazione lato server (SQL \texttt{LIMIT} e \texttt{OFFSET}) per restituire i dati a blocchi gestibili, migliorando la reattività dell'interfaccia utente.
+	\end{itemize}
+	
+	\section{Sicurezza del Canale di Comunicazione}
+	Il sistema gestisce la sicurezza delle password tramite hashing (pgcrypto), ma il canale di trasporto RMI utilizza socket standard.
+	\begin{itemize}
+		\item \textbf{Problema:} Il traffico di rete tra Client e Server viaggia in chiaro. Sebbene le password non siano salvate in chiaro nel DB, esse transitano sulla rete durante la fase di login/registrazione, esponendo il sistema a potenziali attacchi \textit{Man-in-the-Middle}.
+		\item \textbf{Soluzione Futura:} Configurazione di RMI per utilizzare socket SSL/TLS (RMI over SSL) per cifrare l'intero canale di comunicazione.
+	\end{itemize}
+	
+	\section{Ottimizzazione del Calcolo del Voto Finale}
+	Attualmente, il punteggio complessivo di un libro è calcolato dinamicamente a runtime, aggregando le singole recensioni (Stile, Contenuto, ecc.) ogni volta che viene richiesto il dettaglio di un libro.
+	\begin{itemize}
+		\item \textbf{Problema:} Al crescere del numero di valutazioni, l'esecuzione ripetuta di funzioni di aggregazione SQL (\texttt{AVG}) impatta negativamente sulle performance del DBMS, aumentando la latenza per l'utente finale durante la navigazione del catalogo.
+		\item \textbf{Soluzione Futura:} Si prevede di aggiungere una colonna \texttt{voto\_medio} direttamente nella tabella \texttt{Libri}, aggiornata automaticamente tramite comando SQL o processi batch ogni volta che viene inserita una nuova valutazione. Questo renderebbe la lettura del voto un'operazione immediata a costo costante.
+	\end{itemize}
+	
+	\section{Gestione Errori nei Metodi Get}
+	L'attuale implementazione dei metodi di lettura (es. getter per ID o query di ricerca) gestisce i casi di "dato non trovato" restituendo valori \texttt{null} o collezioni vuote, senza fornire un contesto dettagliato sull'esito.
+	\begin{itemize}
+		\item \textbf{Problema:} L'uso di valori \texttt{null} espone il Client al rischio di \texttt{NullPointerException} se i controlli non sono capillari e crea ambiguità semantica (non è chiaro se il dato non esiste o se c'è stato un errore di connessione).
+		\item \textbf{Soluzione Futura:} Gestire esplicitamente la presenza o l'assenza del valore, migliorando la robustezza del codice e la chiarezza.
+	\end{itemize}
+	
+	\newpage
+	
+	\begin{thebibliography}{9}
+		
+		\bibitem{javadoc}
+		Oracle,
+		\textit{Javadoc Tool Documentation},
+		\url{https://www.oracle.com/technical-resources/articles/java/javadoc-tool.html}
+		
+		\bibitem{rmi}
+		Oracle,
+		\textit{Java Remote Method Invocation (RMI) Specification},
+		\url{https://docs.oracle.com/javase/8/docs/platform/rmi/spec/rmiTOC.html}
+		
+		\bibitem{postgresql}
+		PostgreSQL Global Development Group,
+		\textit{PostgreSQL 14 Documentation},
+		\url{https://www.postgresql.org/docs/14/index.html}
+		
+		\bibitem{pgcrypto}
+		PostgreSQL Modules,
+		\textit{pgcrypto Extension - Cryptographic functions for PostgreSQL},
+		\url{https://www.postgresql.org/docs/current/pgcrypto.html}
+		
+		\bibitem{javafx}
+		OpenJFX,
+		\textit{JavaFX Documentation},
+		\url{https://openjfx.io/}
+		
+	\end{thebibliography}
+	
+\end{document}
