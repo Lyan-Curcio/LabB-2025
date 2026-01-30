@@ -16,7 +16,21 @@ public class ValutazioneController {
     @FXML private TextArea noteContenuto, noteEdizione, noteFinali, noteGradevolezza ,noteOriginalita, noteStile;
     @FXML private TextField tfContenuto, tfEdizione, tfGradevolezza, tfOriginalita, tfStile;
 
+    // --- NUOVO: Label per nome utente ---
+    @FXML private Label labelNomeUtente;
+
     private Rating recensione;
+
+    // --- NUOVO: Metodo Initialize ---
+    @FXML
+    private void initialize() {
+        if (LoginController.user == Utente.REGISTRATO) {
+            labelNomeUtente.setText("Utente: " + LoginController.userId);
+        } else {
+            labelNomeUtente.setText("Ospite");
+        }
+    }
+
     @FXML
     void confermaRecensione(ActionEvent event) throws RemoteException
     {
@@ -36,6 +50,7 @@ public class ValutazioneController {
         if(!voti().equals(""))
         {
             errorLabel.setText(voti());
+            return;
         }
 
         CreateRatingResult result = App.getInstance().authedBookRepository.inserisciValutazioneLibro(recensione);
@@ -56,17 +71,19 @@ public class ValutazioneController {
             errorLabel.setText(result.getMessage());
         }
     }
+
     private String checkRecensione()
     {
         if(
                 tfContenuto.getText().isEmpty() || tfEdizione.getText().isEmpty() || tfGradevolezza.getText().isEmpty()
-                || tfOriginalita.getText().isEmpty() || tfStile.getText().isEmpty()
+                        || tfOriginalita.getText().isEmpty() || tfStile.getText().isEmpty()
         )
         {
             return  "Riempire tutti i campi obbligatori(*)";
         }
         return "";
     }
+
     private String voti()
     {
         int votoContenuto, votoEdizione, votoGradevolezza, votoOriginalita, votoStile;
@@ -90,7 +107,7 @@ public class ValutazioneController {
                         votoOriginalita, votoEdizione, noteStile.getText(), noteContenuto.getText(),
                         noteGradevolezza.getText(), noteOriginalita.getText(), noteEdizione.getText(),
                         noteFinali.getText()
-                    );
+                );
                 return "";
             }
             else
@@ -116,5 +133,13 @@ public class ValutazioneController {
     void btnReturn(ActionEvent event)
     {
         App.getInstance().changeScene("Libreria.fxml");
+    }
+
+    @FXML
+    void btnClickLogout(ActionEvent event) throws RemoteException
+    {
+        LoginController.user = Utente.OSPITE;
+        App.getInstance().authedBookRepository.logout();
+        App.getInstance().changeScene("Benvenuto.fxml");
     }
 }

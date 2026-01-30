@@ -1,75 +1,119 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: grey;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.bookrecommender.client.controller.InfoLibroController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="600.0" prefWidth="900.0"
+            styleClass="root" stylesheets="@style.css"
+            xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.bookrecommender.client.controller.InfoLibroController">
    <children>
-      <Label layoutX="141.0" layoutY="32.0" text="Recensioni">
-         <font>
-            <Font size="25.0" />
-         </font>
-      </Label>
-      <ListView fx:id="listaRecensioni" layoutX="87.0" layoutY="71.0" prefHeight="207.0" prefWidth="227.0" />
-      <Label layoutX="636.0" layoutY="14.0" text="Informazioni Libro">
-         <font>
-            <Font size="25.0" />
-         </font>
-      </Label>
-      <Label fx:id="infoLibro" alignment="TOP_LEFT" layoutX="636.0" layoutY="52.0" prefHeight="246.0" prefWidth="250.0" wrapText="true">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
-      <Label layoutX="292.0" layoutY="307.0" text="Consigliati">
-         <font>
-            <Font size="25.0" />
-         </font>
-      </Label>
-      <ListView fx:id="listaConsigliati" layoutX="216.0" layoutY="354.0" prefHeight="207.0" prefWidth="267.0" />
-      <Button mnemonicParsing="false" onAction="#btnClickReturn" prefHeight="48.0" prefWidth="96.0" style="-fx-background-insets: 0; -fx-effect: dropshadow(gaussian, rgba(0,0,3,2.4), 6, 0.3, 3, 2);" text="&lt;--">
-         <font>
-            <Font size="25.0" />
-         </font>
-      </Button>
-      <Button fx:id="btnAggiungiLibro" layoutX="530.0" layoutY="542.0" mnemonicParsing="false" onAction="#btnClickAggiungiLibro" prefHeight="43.0" prefWidth="115.0" text="Aggiungi libro">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Button>
-      <ListView fx:id="listaLibrerieUtente" layoutX="530.0" layoutY="385.0" prefHeight="146.0" prefWidth="306.0" />
-      <Label fx:id="labelListaLibrerie" layoutX="622.0" layoutY="336.0" text="Tue librerie">
-         <font>
-            <Font size="25.0" />
-         </font>
-      </Label>
-      <Label fx:id="errorLabel" alignment="TOP_LEFT" layoutX="672.0" layoutY="539.0" prefHeight="52.0" prefWidth="214.0" textFill="RED">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
-      <Label fx:id="labelListRecensioni" alignment="CENTER" layoutX="87.0" layoutY="71.0" mouseTransparent="true" prefHeight="207.0" prefWidth="227.0" text="non ci sono valutazioni">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <Label fx:id="labelListConsigliati" alignment="CENTER" layoutX="216.0" layoutY="354.0" mouseTransparent="true" prefHeight="207.0" prefWidth="267.0" text="non ci sono libri consigliati">
-         <font>
-            <Font size="19.0" />
-         </font>
-      </Label>
-      <Label fx:id="labelRecensioni" alignment="TOP_LEFT" layoutX="371.0" layoutY="59.0" prefHeight="246.0" prefWidth="250.0" wrapText="true">
-         <font>
-            <Font size="13.0" />
-         </font></Label>
-      <ListView fx:id="listTopConsigliati" layoutX="7.0" layoutY="354.0" prefHeight="207.0" prefWidth="194.0" visible="false" />
-      <Label fx:id="labelTopConsigliati" layoutX="18.0" layoutY="307.0" text="Top consigliati" visible="false">
-         <font>
-            <Font size="25.0" />
-         </font>
-      </Label>
+
+      <Pane prefHeight="600.0" prefWidth="220.0" styleClass="sidebar">
+         <children>
+            <VBox fx:id="sidebarBox" prefHeight="600.0" prefWidth="220.0" spacing="5.0">
+               <padding>
+                  <Insets bottom="20.0" left="10.0" right="10.0" top="20.0" />
+               </padding>
+               <children>
+                  <Pane prefHeight="20.0" />
+                  <Button fx:id="btnReg" mnemonicParsing="false" onAction="#registrati" prefHeight="50.0" prefWidth="200.0" styleClass="sidebar-button" text="Registrati" />
+                  <Button fx:id="btnAcc" mnemonicParsing="false" onAction="#accedi" prefHeight="50.0" prefWidth="200.0" styleClass="sidebar-button" text="Accedi" />
+                  <Button fx:id="btnCreaLib" mnemonicParsing="false" onAction="#btnClickCreaLib" prefHeight="50.0" prefWidth="200.0" styleClass="sidebar-button" text="Crea Libreria" />
+                  <Button fx:id="btnLeTueLib" mnemonicParsing="false" onAction="#btnClickLeTueLib" prefHeight="50.0" prefWidth="200.0" styleClass="sidebar-button" text="Le tue Librerie" />
+                  <Button fx:id="btnRitorno" mnemonicParsing="false" onAction="#btnClickReturn" prefHeight="50.0" prefWidth="200.0" styleClass="sidebar-button" text="Indietro" />
+                  <Region VBox.vgrow="ALWAYS" />
+                  <Label fx:id="labelNomeUtente" alignment="CENTER" prefWidth="200.0" styleClass="sidebar-user-label" text="Ospite" wrapText="true" />
+                  <Button fx:id="btnLogout" mnemonicParsing="false" onAction="#btnClickLogout" prefHeight="45.0" prefWidth="200.0" styleClass="sidebar-logout" text="ESCI" />
+               </children>
+            </VBox>
+         </children>
+      </Pane>
+
+      <VBox layoutX="220.0" prefHeight="600.0" prefWidth="680.0" spacing="15.0">
+         <padding>
+            <Insets bottom="20.0" left="30.0" right="30.0" top="20.0" />
+         </padding>
+         <children>
+
+            <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="page-title" text="Informazioni Libro" />
+
+            <ScrollPane fitToWidth="true" minHeight="120.0" prefHeight="120.0" style="-fx-background-color: transparent; -fx-background: white; -fx-border-color: #BDC3C7; -fx-border-radius: 4;">
+               <content>
+                  <VBox spacing="5.0">
+                     <padding>
+                        <Insets bottom="10.0" left="15.0" right="15.0" top="15.0" />
+                     </padding>
+                     <children>
+                        <Label fx:id="infoLibro" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2C3E50;"
+                               text="Caricamento..." wrapText="true" />
+                     </children>
+                  </VBox>
+               </content>
+            </ScrollPane>
+
+            <HBox spacing="20.0" VBox.vgrow="ALWAYS">
+               <children>
+
+                  <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label style="-fx-font-weight: bold; -fx-text-fill: #7f8c8d;" text="RECENSIONI &amp; VOTI" />
+                        <ListView fx:id="listaRecensioni" styleClass="list-view" VBox.vgrow="ALWAYS" />
+                        <Label fx:id="labelListRecensioni" alignment="CENTER" text="Nessuna valutazione" textFill="#95a5a6" visible="false" />
+
+                        <Label style="-fx-font-weight: bold; -fx-text-fill: #7f8c8d;" text="STATISTICHE VOTI" />
+                        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent; -fx-background: white; -fx-border-color: #BDC3C7; -fx-border-radius: 4;" VBox.vgrow="ALWAYS">
+                           <content>
+                              <Label fx:id="labelRecensioni" style="-fx-padding: 8; -fx-font-size: 13px;" text="Statistiche..." wrapText="true" />
+                           </content>
+                        </ScrollPane>
+                     </children>
+                  </VBox>
+
+                  <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label style="-fx-font-weight: bold; -fx-text-fill: #7f8c8d;" text="CONSIGLIATI DAGLI UTENTI" />
+                        <ListView fx:id="listaConsigliati" styleClass="list-view" VBox.vgrow="ALWAYS" />
+                        <Label fx:id="labelListConsigliati" alignment="CENTER" text="Nessun consiglio" textFill="#95a5a6" visible="false" />
+
+                        <Label fx:id="labelTopConsigliati" style="-fx-font-weight: bold; -fx-text-fill: #7f8c8d;" text="TOP CONSIGLIATI" />
+                        <ListView fx:id="listTopConsigliati" styleClass="list-view" VBox.vgrow="ALWAYS" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+
+            <VBox fx:id="mainFooterBox" spacing="5.0" visible="false">
+               <children>
+                  <Button fx:id="btnToggleAggiungi" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#toggleSectionAggiungi" styleClass="action-button" text="▼ Aggiungi a una Libreria" />
+
+                  <VBox fx:id="sectionAggiungiContent" managed="false" spacing="10.0" style="-fx-background-color: #ECF0F1; -fx-padding: 15; -fx-background-radius: 4;" visible="false">
+                     <children>
+                        <Label style="-fx-font-size: 14px; -fx-text-fill: #2C3E50; -fx-font-weight: bold;" text="Seleziona la libreria di destinazione:" />
+                        <HBox alignment="CENTER_LEFT" spacing="15.0">
+                           <children>
+                              <ComboBox fx:id="comboLibrerie" maxWidth="1.7976931348623157E308" prefHeight="40.0" promptText="Scegli una libreria..." style="-fx-font-size: 14px; -fx-background-color: white; -fx-border-color: #BDC3C7; -fx-border-radius: 4;" HBox.hgrow="ALWAYS" />
+                              <Button fx:id="btnAggiungiLibro" disable="true" mnemonicParsing="false" onAction="#btnClickAggiungiLibro" prefHeight="40.0" prefWidth="150.0" styleClass="action-button" text="Conferma Aggiunta" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </VBox>
+
+            <Label fx:id="errorLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="status-label" wrapText="true" />
+
+         </children>
+      </VBox>
    </children>
 </AnchorPane>

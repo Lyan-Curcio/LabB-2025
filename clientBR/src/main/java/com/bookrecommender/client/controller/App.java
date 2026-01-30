@@ -61,7 +61,9 @@ public class App {
 
         if (stage.getScene() == null) {
             // La prima volta crea la scena nuova
-            stage.setScene(new Scene(root, 900, 600)); // Dimensioni default
+            Scene scene = new Scene(root, 900, 600); // Dimensioni default
+            scene.getStylesheets().add(getClass().getResource("/com/lab_b/style.css").toExternalForm());
+            stage.setScene(scene);
             stage.setResizable(false);
         } else {
             // Se la scena esiste già cambia la root

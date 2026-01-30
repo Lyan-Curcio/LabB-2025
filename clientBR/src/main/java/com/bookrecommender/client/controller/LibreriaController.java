@@ -15,6 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 
+import javax.swing.*;
 import java.rmi.RemoteException;
 import java.util.Hashtable;
 import java.util.LinkedList;
@@ -23,10 +24,10 @@ import java.util.stream.Collectors;
 
 public class LibreriaController
 {
-    @FXML private Button btnConsiglia, btnValuta;
+    @FXML private Button btnConsiglia, btnValuta, btnInfoLibro;
     @FXML private Button btnRimuoviConsilgio, btnRimuoviLibro, btnRimuoviRecensione;
     @FXML private ListView<String> libriConsigliati, listaLibriLibreria;
-    @FXML private Label nomeLibreria, errorLabel, recensione;
+    @FXML private Label nomeLibreria, errorLabel, recensione, labelNomeUtente;
 
 
     private Hashtable<String, Book> ricercaMapLibri =  new Hashtable<>();
@@ -44,6 +45,7 @@ public class LibreriaController
     @FXML
     private void initialize() throws RemoteException
     {
+
         LinkedList<Book> libri;
         nomeLibreria.setText(LibrerieUtenteController.libreria.name);
         libri = App.getInstance().authedBookRepository.getLibriFromLibreria(LibrerieUtenteController.libreria.id);
@@ -61,6 +63,9 @@ public class LibreriaController
                 )
         );
 
+        if (LoginController.user == Utente.REGISTRATO) {
+            labelNomeUtente.setText("Utente: " + LoginController.userId);
+        }
 
         listaLibriLibreria.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -71,6 +76,7 @@ public class LibreriaController
                 errorLabel.setText("");
 
                 btnRimuoviLibro.setVisible(true);
+                btnInfoLibro.setVisible(true);
                 try
                 {
                     btnConsiglia.setVisible(true);
@@ -133,6 +139,39 @@ public class LibreriaController
             }
         });
 
+        listaLibriLibreria.setCellFactory(param -> new javafx.scene.control.ListCell<String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    setText(item);
+                    setWrapText(true); // Abilita testo a capo
+                    setPrefWidth(0);   // Reset larghezza
+                    maxWidthProperty().bind(listaLibriLibreria.widthProperty().subtract(20)); // Adatta alla larghezza della lista
+                }
+            }
+        });
+
+        // --- AGGIUNGI QUESTO PER LISTA CONSIGLIATI ---
+        libriConsigliati.setCellFactory(param -> new javafx.scene.control.ListCell<String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    setText(item);
+                    setWrapText(true);
+                    setPrefWidth(0);
+                    maxWidthProperty().bind(libriConsigliati.widthProperty().subtract(20));
+                }
+            }
+        });
+
     }
 
     @FXML
@@ -168,7 +207,7 @@ public class LibreriaController
     {
         if(!confermaEliminazione)
         {
-            errorLabel.setText("se il libro non è in nessun'altra libreria le sue recensioni e i suoi consigliati verranno eliminati");
+            errorLabel.setText("ATTENZIONE! Se il libro non è in nessun'altra libreria le sue recensioni e i suoi consigliati verranno eliminati");
             confermaEliminazione = true;
         }
         else
@@ -208,6 +247,11 @@ public class LibreriaController
         {
             errorLabel.setText(result.getMessage());
         }
+    }
+    @FXML
+    void btnClickInfoLibro(ActionEvent event) {
+        BenController.libro = libro;
+        App.getInstance().changeScene("InformazioniLibro.fxml");
     }
 
     @FXML
