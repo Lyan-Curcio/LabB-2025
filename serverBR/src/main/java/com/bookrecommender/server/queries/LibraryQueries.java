@@ -226,15 +226,15 @@ public class LibraryQueries {
                         AND userid = ?
                 ) THEN 0
         
-                -- 1: La libreria esiste ma non contiene il libro
-                WHEN NOT EXISTS (
+                -- 1: La libreria esiste ma contiene già il libro
+                WHEN EXISTS (
                     SELECT 1
                     FROM "LibriXLibrerie"
                     WHERE libreria_id = ?
                         AND libro_id = ?
                 ) THEN 1
         
-                -- 2: La libreria esiste e contiene il libro
+                -- 2: La libreria esiste e non contiene il libro
                 ELSE 2
             END AS r;
         """;
