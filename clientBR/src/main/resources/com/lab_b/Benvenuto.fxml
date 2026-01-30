@@ -58,40 +58,40 @@
             <Font size="41.0" />
          </font>
       </Label>
-      <TextField fx:id="tfRicerca" layoutX="422.0" layoutY="105.0" prefHeight="40.0" prefWidth="240.0" promptText="Cerca un libro" style="-fx-border-color: black; -fx-border-width: 4; -fx-background-radius: 7; -fx-border-radius: 4; -fx-font-size: 14;" />
-      <Button fx:id="buttonResearch" layoutX="230.0" layoutY="177.0" mnemonicParsing="false" onAction="#btnClickResearch" prefHeight="40.0" prefWidth="107.0" style="-fx-background-insets: 0; -fx-effect: dropshadow(gaussian, rgba(0,0,3,2.4), 6, 0.3, 3, 2);" text="Cerca">
+      <TextField fx:id="tfRicerca" layoutX="348.0" layoutY="85.0" prefHeight="40.0" prefWidth="344.0" promptText="Cerca un libro" style="-fx-border-color: black; -fx-border-width: 4; -fx-background-radius: 7; -fx-border-radius: 4; -fx-font-size: 14;" />
+      <Button fx:id="buttonResearch" layoutX="688.0" layoutY="150.0" mnemonicParsing="false" onAction="#btnClickResearch" prefHeight="40.0" prefWidth="94.0" style="-fx-background-insets: 0; -fx-effect: dropshadow(gaussian, rgba(0,0,3,2.4), 6, 0.3, 3, 2);" text="Cerca">
          <font>
-            <Font size="18.0" />
+            <Font size="16.0" />
          </font></Button>
-      <Pane layoutX="348.0" layoutY="159.0" prefHeight="340.0" prefWidth="440.0">
+      <Pane layoutX="348.0" layoutY="197.0" prefHeight="302.0" prefWidth="440.0">
          <children>
-            <ListView fx:id="listaLibri" prefHeight="340.0" prefWidth="440.0" />
-            <Label fx:id="listLabel" alignment="CENTER" layoutY="1.0" mouseTransparent="true" prefHeight="340.0" prefWidth="440.0">
+            <ListView fx:id="listaLibri" layoutY="-1.0" prefHeight="302.0" prefWidth="440.0" />
+            <Label fx:id="listLabel" alignment="CENTER" mouseTransparent="true" prefHeight="302.0" prefWidth="440.0">
                <font>
                   <Font size="24.0" />
                </font>
             </Label>
          </children>
       </Pane>
-      <SplitMenuButton fx:id="tipiDiRicerca" layoutX="257.0" layoutY="109.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="135.0" text="Titolo">
+      <SplitMenuButton fx:id="tipiDiRicerca" layoutX="353.0" layoutY="154.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="135.0" text="Titolo">
         <items>
             <MenuItem onAction="#ricercaTitolo" text="Titolo" />
             <MenuItem onAction="#ricercaAutore" text="Autore" />
             <MenuItem onAction="#ricercaAutoreEAnno" text="Autore e anno" />
         </items>
       </SplitMenuButton>
-      <Label layoutX="257.0" layoutY="87.0" text="Cerca per:" />
-      <TextField fx:id="tfRicercaAnno" disable="true" layoutX="685.0" layoutY="106.0" prefHeight="38.0" prefWidth="71.0" promptText="Anno" style="-fx-border-color: black; -fx-border-width: 4; -fx-background-radius: 7; -fx-border-radius: 4; -fx-font-size: 14;" />
-      <Button fx:id="btnInfoLibro" layoutX="489.0" layoutY="510.0" mnemonicParsing="false" onAction="#btnClickInfoLibro" prefHeight="50.0" prefWidth="107.0" style="-fx-effect: dropshadow(gaussian, rgba(0,0,3,2.4), 6, 0.3, 3, 2); -fx-background-insets: 0;" text="InfoLibro">
+      <Label layoutX="353.0" layoutY="132.0" text="Cerca per:" />
+      <TextField fx:id="tfRicercaAnno" disable="true" layoutX="710.0" layoutY="86.0" prefHeight="38.0" prefWidth="71.0" promptText="Anno" style="-fx-border-color: black; -fx-border-width: 4; -fx-background-radius: 7; -fx-border-radius: 4; -fx-font-size: 14;" />
+      <Button fx:id="btnInfoLibro" layoutX="514.0" layoutY="510.0" mnemonicParsing="false" onAction="#btnClickInfoLibro" prefHeight="50.0" prefWidth="107.0" style="-fx-effect: dropshadow(gaussian, rgba(0,0,3,2.4), 6, 0.3, 3, 2); -fx-background-insets: 0;" text="InfoLibro">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
-      <Label fx:id="errorLabel" alignment="TOP_LEFT" layoutX="256.0" layoutY="510.0" prefHeight="59.0" prefWidth="232.0" textFill="RED" wrapText="true" />
       <Button fx:id="btnConsigliaLibro" layoutX="489.0" layoutY="510.0" mnemonicParsing="false" onAction="#consigliaLibro" prefHeight="50.0" prefWidth="107.0" style="-fx-effect: dropshadow(gaussian, rgba(0,0,3,2.4), 6, 0.3, 3, 2); -fx-background-insets: 0;" text="Consiglia" visible="false">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
+      <Label fx:id="errorLabel" alignment="TOP_LEFT" layoutX="207.0" layoutY="510.0" prefHeight="82.0" prefWidth="290.0" textFill="RED" wrapText="true" />
    </children>
 </AnchorPane>

@@ -3,6 +3,7 @@ package com.bookrecommender.client.controller;
 import com.bookrecommender.common.dto.*;
 import com.bookrecommender.common.enums.library.AddBookToLibResult;
 import com.bookrecommender.common.extended_dto.BookInfo;
+import com.bookrecommender.common.extended_dto.SuggestionCount;
 import com.bookrecommender.common.extended_dto.SuggestionWithBooks;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -21,8 +22,8 @@ import java.util.stream.Collectors;
 public class InfoLibroController
 {
     @FXML private Label infoLibro, errorLabel, labelListaLibrerie, labelListRecensioni, labelRecensioni,
-            labelListConsigliati, labelConsigliaiti;
-    @FXML private ListView<String> listaConsigliati, listaRecensioni, listaLibrerieUtente;
+            labelListConsigliati, labelTopConsigliati;
+    @FXML private ListView<String> listaConsigliati, listaRecensioni, listaLibrerieUtente, listTopConsigliati;
     @FXML private Button btnAggiungiLibro;
 
     private LinkedList<Library> librerie;
@@ -131,6 +132,17 @@ public class InfoLibroController
         if(!listaConsigliati.getItems().isEmpty())
         {
             labelListConsigliati.setText("");
+            labelTopConsigliati.setVisible(true);
+            listTopConsigliati.setVisible(true);
+            listTopConsigliati.setItems(
+                    FXCollections.observableArrayList(
+                            FXCollections.observableArrayList(
+                                    bookInfo.suggestionCounts.stream()
+                                            .map(SuggestionCount:: toStringInfo)
+                                            .collect(Collectors.toList())
+                            )
+                    )
+            );
         }
     }
 
