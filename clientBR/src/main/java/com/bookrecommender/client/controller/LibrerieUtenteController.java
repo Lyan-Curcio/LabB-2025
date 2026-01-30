@@ -27,6 +27,7 @@ public class LibrerieUtenteController {
 
     private LinkedList<Library> librerie;
     private Hashtable<String, Library> mapLibrerie =  new Hashtable<>();
+    private boolean confermaEliminazione = false;
 
     public static Library libreria;
     @FXML
@@ -54,6 +55,8 @@ public class LibrerieUtenteController {
             public void changed(ObservableValue<? extends String> observableValue, String s, String t1)
             {
                 libreria = mapLibrerie.get(listaLibrerieUtente.getSelectionModel().getSelectedItem());
+                confermaEliminazione = false;
+                errorLabel.setText("");
                 btnEliminaLibreria.setVisible(true);
                 btnGuardaLibreria.setVisible(true);
             }
@@ -63,18 +66,26 @@ public class LibrerieUtenteController {
     @FXML
     void btnClickEliminaLibreria(ActionEvent event) throws RemoteException
     {
-        DeleteLibResult result = App.getInstance().authedBookRepository.eliminaLibreria(libreria.id);
-        if(result == DeleteLibResult.OK)
+        if(!confermaEliminazione)
         {
-            App.getInstance().changeScene("LibrerieUtente.fxml");
-        }
-        else if(result == DeleteLibResult.LIBRARY_NOT_FOUND)
-        {
-            errorLabel.setText(result.getMessage());
+            errorLabel.setText("nella libreria possono esserci dei libri valutati e consigliati, e questi possono non essere in altre librerie!");
+            confermaEliminazione = true;
         }
         else
         {
-            errorLabel.setText(result.getMessage());
+            DeleteLibResult result = App.getInstance().authedBookRepository.eliminaLibreria(libreria.id);
+            if(result == DeleteLibResult.OK)
+            {
+                App.getInstance().changeScene("LibrerieUtente.fxml");
+            }
+            else if(result == DeleteLibResult.LIBRARY_NOT_FOUND)
+            {
+                errorLabel.setText(result.getMessage());
+            }
+            else
+            {
+                errorLabel.setText(result.getMessage());
+            }
         }
     }
     @FXML
