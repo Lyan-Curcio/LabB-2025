@@ -11,6 +11,8 @@ public class AverageRatings implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    public final int ratingsCount;
+
     public final float stile;
     public final float contenuto;
     public final float gradevolezza;
@@ -19,6 +21,7 @@ public class AverageRatings implements Serializable {
     public final float finale;
 
     public AverageRatings(ResultSet rs) {
+        int _ratingsCount;
         float _stile;
         float _contenuto;
         float _gradevolezza;
@@ -27,6 +30,7 @@ public class AverageRatings implements Serializable {
         float _finale;
 
         try {
+            _ratingsCount = rs.getInt("count");
             _stile = rs.getFloat("stile");
             _contenuto = rs.getFloat("contenuto");
             _gradevolezza = rs.getFloat("gradevolezza");
@@ -36,6 +40,7 @@ public class AverageRatings implements Serializable {
         }
         catch (SQLException e) {
             System.err.println("Impossibile costruire un 'AverageRatings' con il 'ResultSet': " + rs);
+            _ratingsCount = 0;
             _stile = 0;
             _contenuto = 0;
             _gradevolezza = 0;
@@ -44,6 +49,7 @@ public class AverageRatings implements Serializable {
             _finale = 0;
         }
 
+        this.ratingsCount = _ratingsCount;
         this.stile = _stile;
         this.contenuto = _contenuto;
         this.gradevolezza = _gradevolezza;

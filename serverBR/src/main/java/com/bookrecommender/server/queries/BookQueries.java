@@ -92,6 +92,7 @@ public class BookQueries {
 
         query = """
             SELECT
+                COUNT(*) as count,
                 ROUND(AVG(stile), 1) AS stile,
                 ROUND(AVG(contenuto), 1) AS contenuto,
                 ROUND(AVG(gradevolezza), 1) AS gradevolezza,
@@ -127,7 +128,8 @@ public class BookQueries {
                 WHERE libro_sorgente_id = ?
                 GROUP BY libro_consigliato_id
             ) AS cl
-                ON l.id = cl.libro_consigliato_id;
+                ON l.id = cl.libro_consigliato_id
+            ORDER BY count
         """;
         LinkedList<SuggestionCount> suggestionCounts = DatabaseManager.getInstance().executeQuery(
             query,
