@@ -10,12 +10,12 @@
 \contentsline {subsubsection}{Sequence Diagram: Inserimento Suggerimento}{3}{section*.5}%
 \contentsline {section}{\numberline {1.2}Progettazione Database}{3}{section.1.2}%
 \contentsline {section}{\numberline {1.3}Analisi dei Requisiti}{3}{section.1.3}%
-\contentsline {subsection}{\numberline {1.3.1}Requisiti Funzionali}{4}{subsection.1.3.1}%
+\contentsline {subsection}{\numberline {1.3.1}Requisiti Funzionali}{3}{subsection.1.3.1}%
 \contentsline {subsection}{\numberline {1.3.2}Requisiti Non Funzionali e Vincoli di Sistema}{4}{subsection.1.3.2}%
 \contentsline {subsection}{\numberline {1.3.3}Vincoli di Integrità dei Dati}{4}{subsection.1.3.3}%
 \contentsline {subsection}{\numberline {1.3.4}Schema Entity-Relationship (ER)}{5}{subsection.1.3.4}%
-\contentsline {subsection}{\numberline {1.3.5}Transizione dal Modello ER al Modello Relazionale}{6}{subsection.1.3.5}%
-\contentsline {subsection}{\numberline {1.3.6}Analisi delle Cardinalità}{6}{subsection.1.3.6}%
+\contentsline {subsection}{\numberline {1.3.5}Transizione dal Modello ER al Modello Relazionale}{5}{subsection.1.3.5}%
+\contentsline {subsection}{\numberline {1.3.6}Analisi delle Cardinalità e Vincoli}{5}{subsection.1.3.6}%
 \contentsline {subsection}{\numberline {1.3.7}Schema Logico Relazionale}{6}{subsection.1.3.7}%
 \contentsline {chapter}{\numberline {2}Report Tecnico della Soluzione Sviluppata}{7}{chapter.2}%
 \contentsline {section}{\numberline {2.1}Requisiti e Ambiente di Sviluppo}{7}{section.2.1}%

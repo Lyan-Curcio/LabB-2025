@@ -66,8 +66,8 @@
 	
 \begin{figure}[htbp]
 	\centering
-	\includegraphics[width=0.8\textwidth, keepaspectratio]{class_diagram_2.pdf}
 	\caption{Diagramma delle Classi: Architettura Completa del Sistema}
+	\includegraphics[width=0.8\textwidth, keepaspectratio]{class_diagram_2.pdf}
 	\label{fig:class_diagram}
 \end{figure}
 	
@@ -103,20 +103,20 @@
 	
 \begin{figure}[htbp] 
 	\centering
-	\includegraphics[width=0.8\textwidth, keepaspectratio]{login_sequence_2.pdf}
 	\caption{Sequence Diagram: Login e creazione Sessione}
+	\includegraphics[width=0.8\textwidth, keepaspectratio]{login_sequence_2.pdf}
 	\label{fig:seq_login}
 \end{figure}
 	
 	Come mostrato in Figura \ref{fig:seq_login}, il Client invoca \texttt{login()}. Il Server delega la verifica hash a \texttt{AuthQueries}. Se valida, viene istanziato un oggetto remoto di sessione che viene restituito al Client all'interno di un oggetto \texttt{BRPair}.
 	
 	\subsubsection{Sequence Diagram: Inserimento Suggerimento}
-	Il seguente diagramma mostra il flusso per l'inserimento di un consiglio tra libri.
+	Il seguente diagramma (Figura \ref{fig:seq_suggestion}) mostra il flusso per l'inserimento di un consiglio tra libri.
 	
 \begin{figure}[htbp]
 	\centering
-	\includegraphics[width=0.8\textwidth,keepaspectratio]{suggest_sequence_2.pdf}
 	\caption{Sequence Diagram: Logica di validazione inserimento suggerimento}
+	\includegraphics[width=0.8\textwidth,keepaspectratio]{suggest_sequence_2.pdf}
 	\label{fig:seq_suggestion}
 \end{figure}
 	
@@ -168,8 +168,8 @@
 	\subsection{Schema Entity-Relationship (ER)}
 	\begin{figure}[htbp]
 		\centering
-		\includegraphics[width=0.8\textwidth, keepaspectratio]{er_diagram_2.pdf}
 		\caption{Schema Entity-Relationship}
+		\includegraphics[width=0.8\textwidth, keepaspectratio]{er_diagram_3.pdf}
 		\label{fig:er_diagram}
 	\end{figure}
 	
@@ -181,42 +181,45 @@
 	\end{itemize}
 	
 	\subsection{Transizione dal Modello ER al Modello Relazionale}
-	Nel passaggio dal modello concettuale (Diagramma ER) allo schema logico relazionale (SQL), alcune relazioni sono state tradotte direttamente in tabelle fisiche ("reificazione delle associazioni").
+	Nel passaggio dal modello concettuale (Diagramma ER) allo schema logico relazionale (SQL), le entità sono state tradotte in tabelle e le associazioni complesse hanno subito un processo di "reificazione", trasformandosi a loro volta in tabelle fisiche.
 	
 	\begin{itemize}
-		\item \textbf{Associazione "Contiene" (Molti-a-Molti):} La relazione tra \textit{Librerie} e \textit{Libri} è di tipo N:M. Nel modello relazionale questo richiede una tabella di associazione ("bridge table") denominata \textbf{LibriXLibrerie}, la quale contiene le chiavi esterne verso le due entità collegate. La chiave primaria è composta dalla coppia (\textit{libreria\_id}, \textit{libro\_id}).
+		\item \textbf{Associazione "Contiene" (Molti-a-Molti):} La relazione tra \textit{Librerie} e \textit{Libri} presenta cardinalità N:M. Nel modello relazionale, questo vincolo strutturale impone la creazione di una tabella ponte ("bridge table") denominata \textbf{LibriXLibrerie}. Essa contiene le chiavi esterne verso le due entità collegate; la chiave primaria della tabella è costituita dalla chiave composta (\textit{libreria\_id}, \textit{libro\_id}).
 		
-		\item \textbf{Associazione "Valuta" con attributi:} Sebbene concettualmente sia una relazione tra \textit{Utente} e \textit{Libro}, essa possiede numerosi attributi propri (i voti e le note). Pertanto, è stata tradotta nella tabella \textbf{ValutazioniLibri}.
+		\item \textbf{Associazione "Valuta" con attributi:} Sebbene concettualmente definita come relazione tra \textit{Utente} e \textit{Libro}, questa associazione possiede numerosi attributi propri (punteggi parziali e note testuali). Pertanto, è stata tradotta nella tabella \textbf{ValutazioniLibri}.
 		
-		\item \textbf{Associazione "Consiglia" (Ternaria/Ricorsiva):} Questa relazione coinvolge tre soggetti: l'Utente, il Libro Sorgente e il Libro Consigliato. Nello schema logico diventa la tabella \textbf{ConsigliLibri}, dove le tre chiavi esterne garantiscono l'integrità referenziale verso l'utente e due volte verso la tabella dei libri.
+		\item \textbf{Associazione "Consiglia" (Ternaria):} Questa relazione coinvolge tre entità logiche: l'Utente (autore del consiglio), il Libro Sorgente e il Libro Consigliato. Nello schema logico si traduce nella tabella \textbf{ConsigliLibri}, dove tre chiavi esterne garantiscono l'integrità referenziale.
 	\end{itemize}
 	
-	\subsection{Analisi delle Cardinalità}
-	Le cardinalità definiscono i vincoli numerici delle relazioni tra le entità:
+	\subsection{Analisi delle Cardinalità e Vincoli}
+	Le cardinalità definiscono i vincoli di partecipazione e molteplicità delle relazioni:
 	
 	\begin{itemize}
-		\item \textbf{Utente - Libreria (1:N):} Un singolo utente può creare molteplici librerie ($N$), ma ogni libreria appartiene univocamente a un solo utente ($1$). La dipendenza è forte: la cancellazione dell'utente comporta la cancellazione a cascata delle sue librerie.
+		\item \textbf{Utente - Libreria (1:N):} Un singolo utente può creare molteplici librerie ($N$), ma ogni libreria appartiene univocamente a un solo utente ($1$). Esiste un vincolo di integrità referenziale forte: la cancellazione dell'utente comporta la cancellazione a cascata (\textit{ON DELETE CASCADE}) di tutte le sue librerie.
 		
-		\item \textbf{Libreria - Libro (M:N):} Una libreria può contenere un numero arbitrario di libri ($N$) e uno stesso libro può essere presente nelle librerie di più utenti diversi ($M$).
+		\item \textbf{Libreria - Libro (M:N):} Una libreria può contenere un numero arbitrario di libri e uno stesso libro può essere catalogato nelle librerie di diversi utenti.
 		
-		\item \textbf{Utente - Valutazione (1:N):} Un utente può scrivere molte valutazioni, ma ogni valutazione è scritta da un solo utente. Esiste inoltre un vincolo di unicità sulla coppia (Utente, Libro), impedendo valutazioni multiple dello stesso testo.
+		\item \textbf{Utente - Valutazione (1:N):} Un utente può redigere molte recensioni. Tuttavia, vige un vincolo di unicità sulla coppia (\textit{userid}, \textit{libro\_id}), che impedisce l'inserimento di valutazioni multiple per il medesimo libro da parte dello stesso utente.
 	\end{itemize}
 	
 	\subsection{Schema Logico Relazionale}
-	Di seguito viene riportato lo schema logico delle tabelle principali create nel database PostgreSQL, con evidenza delle chiavi primarie (sottolineate) e delle chiavi esterne (FK).
+	Di seguito viene riportato lo schema logico delle tabelle implementate nel database PostgreSQL. Sono evidenziate le chiavi primarie (sottolineate) e le chiavi esterne (FK).
 	
 	\begin{itemize}
-		\item \textbf{UtentiRegistrati}(\underline{userid}: VARCHAR(50), nome: VARCHAR(50), cognome: VARCHAR(50), codice\_fiscale: CHAR(16), email: VARCHAR(100), password\_hash: VARCHAR(256))
+		\item \textbf{UtentiRegistrati}(\underline{userid}: VARCHAR(50), nome: VARCHAR(50), cognome: VARCHAR(50), codice\_fiscale: CHAR(16) UNIQUE, email: VARCHAR(100) UNIQUE, password\_hash: VARCHAR(256))
 		
 		\item \textbf{Libri}(\underline{id}: SERIAL, titolo: VARCHAR(500), autori: VARCHAR(500), anno\_pubblicazione: INT, editore: VARCHAR(200), categorie: VARCHAR(200))
 		
-		\item \textbf{Librerie}(\underline{id}: SERIAL, nome: VARCHAR(100), \textit{userid}: VARCHAR(50) FK)
+		\item \textbf{Librerie}(\underline{id}: SERIAL, nome: VARCHAR(100), \textit{userid}: VARCHAR(50) FK) \\
+		\textit{Vincolo Unique: (nome, userid)}
 		
 		\item \textbf{LibriXLibrerie}(\underline{\textit{libreria\_id}: INT FK, \textit{libro\_id}: INT FK})
 		
-		\item \textbf{ValutazioniLibri}(\underline{id}: SERIAL, \textit{userid}: VARCHAR(50) FK, \textit{libro\_id}: INT FK, stile: INT, contenuto: INT, gradevolezza: INT, originalita: INT, edizione: INT, note\_stile: VARCHAR(256), note\_contenuto: VARCHAR(256), note\_gradevolezza: VARCHAR(256), note\_originalita: VARCHAR(256), note\_edizione: VARCHAR(256), note\_finale: VARCHAR(256))
+		\item \textbf{ValutazioniLibri}(\underline{id}: SERIAL, \textit{userid}: VARCHAR(50) FK, \textit{libro\_id}: INT FK, stile: INT, contenuto: INT, gradevolezza: INT, originalita: INT, edizione: INT, finale: INT\footnote{Attributo calcolato (Generated Column).}, note\_stile: VARCHAR(256), note\_contenuto: VARCHAR(256), note\_gradevolezza: VARCHAR(256), note\_originalita: VARCHAR(256), note\_edizione: VARCHAR(256), note\_finale: VARCHAR(256)) \\
+		\textit{Vincolo Unique: (userid, libro\_id)}
 		
-		\item \textbf{ConsigliLibri}(\underline{id}: SERIAL, \textit{userid}: VARCHAR(50) FK, \textit{libro\_sorgente\_id}: INT FK, \textit{libro\_consigliato\_id}: INT FK)
+		\item \textbf{ConsigliLibri}(\underline{id}: SERIAL, \textit{userid}: VARCHAR(50) FK, \textit{libro\_sorgente\_id}: INT FK, \textit{libro\_consigliato\_id}: INT FK) \\
+		\textit{Vincolo Unique: (userid, libro\_sorgente\_id, libro\_consigliato\_id)}
 	\end{itemize}
 	
 	
