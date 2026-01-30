@@ -154,7 +154,11 @@ public class InfoLibroController
     {
         if(!listaRecensioni.getItems().isEmpty())
         {
-            labelRecensioni.setText("Stile: "+bookInfo.averageRatings.stile+"\nContenuto "+bookInfo.averageRatings.contenuto+
+            labelListRecensioni.setText("");
+
+            labelRecensioni.setText("Hanno valutato questo libro in "+bookInfo.ratings.size()+
+                    "\n Stile: "+bookInfo.averageRatings.stile+
+                    "\nContenuto "+bookInfo.averageRatings.contenuto+
                     "\nGradevolezza "+bookInfo.averageRatings.gradevolezza+
                     "\nOriginalità "+bookInfo.averageRatings.originalita+
                     "\nEdizione "+bookInfo.averageRatings.edizione+
