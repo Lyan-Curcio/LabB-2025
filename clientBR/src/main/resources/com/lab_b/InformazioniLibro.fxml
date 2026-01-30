@@ -29,7 +29,6 @@
                   <Pane prefHeight="20.0" />
                   <Button fx:id="btnReg" mnemonicParsing="false" onAction="#registrati" prefHeight="50.0" prefWidth="200.0" styleClass="sidebar-button" text="Registrati" />
                   <Button fx:id="btnAcc" mnemonicParsing="false" onAction="#accedi" prefHeight="50.0" prefWidth="200.0" styleClass="sidebar-button" text="Accedi" />
-                  <Button fx:id="btnCreaLib" mnemonicParsing="false" onAction="#btnClickCreaLib" prefHeight="50.0" prefWidth="200.0" styleClass="sidebar-button" text="Crea Libreria" />
                   <Button fx:id="btnLeTueLib" mnemonicParsing="false" onAction="#btnClickLeTueLib" prefHeight="50.0" prefWidth="200.0" styleClass="sidebar-button" text="Le tue Librerie" />
                   <Button fx:id="btnRitorno" mnemonicParsing="false" onAction="#btnClickReturn" prefHeight="50.0" prefWidth="200.0" styleClass="sidebar-button" text="Indietro" />
                   <Region VBox.vgrow="ALWAYS" />
