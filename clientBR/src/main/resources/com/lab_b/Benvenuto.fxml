@@ -13,21 +13,16 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-            prefHeight="600.0" prefWidth="900.0"
-            styleClass="root" stylesheets="@style.css"
-            xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.bookrecommender.client.controller.BenController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" styleClass="root" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.bookrecommender.client.controller.BenController">
    <children>
 
       <Pane prefHeight="600.0" prefWidth="220.0" styleClass="sidebar">
          <children>
-            <VBox fx:id="buttonList" prefHeight="600.0" prefWidth="220.0" spacing="5.0">
+            <VBox fx:id="buttonList" layoutY="1.0" prefHeight="600.0" prefWidth="220.0" spacing="5.0">
                <padding>
-                  <Insets top="20.0" left="10.0" right="10.0" bottom="20.0"/>
+                  <Insets bottom="20.0" left="10.0" right="10.0" top="20.0" />
                </padding>
                <children>
-                  <Pane prefHeight="20.0" />
 
                   <Button fx:id="btnReg" mnemonicParsing="false" onAction="#registrati" prefHeight="50.0" prefWidth="200.0" styleClass="sidebar-button" text="Registrati" />
                   <Button fx:id="btnAcc" mnemonicParsing="false" onAction="#accedi" prefHeight="50.0" prefWidth="200.0" styleClass="sidebar-button" text="Accedi" />
