@@ -92,10 +92,11 @@
 	\section{Setup ambiente e Installazione}
 	L'applicazione non richiede un wizard di installazione classico. Il software è distribuito tramite archivi compressi contenenti gli eseguibili.
 	
-	\begin{enumerate}
-		\item Scaricare e decomprimere la cartella del progetto in una posizione locale (es. \filename{Documenti/BookRecommender}).
-		\item Assicurarsi che all'interno siano presenti i file di avvio (\filename{.bat} per Windows o \filename{.sh} per Linux/Mac).
-	\end{enumerate}
+\begin{enumerate}
+	\item Scaricare e decomprimere la cartella del progetto in una posizione locale (es. \texttt{Documenti/BookRecommender}).
+	\item Assicurarsi che all'interno siano presenti i file di avvio (\texttt{.bat} per Windows o \texttt{.sh} per Linux/Mac).
+	\item Creare un nuovo database su PostgreSQL denominato \texttt{bookrecommender} eseguendo il comando SQL: \texttt{CREATE DATABASE bookrecommender;}
+\end{enumerate}
 	
 	% -------------------------------------------------------------------
 	% CAPITOLO 3: ESECUZIONE ED USO
@@ -108,7 +109,7 @@
 	\subsection{Avvio su Windows}
 	\begin{enumerate}
 		\item Aprire la cartella contenente il software.
-		\item \textbf{Primo avvio (Inizializzazione Database):} Fare doppio clic sul file \filename{InitDB.bat}. Questo passaggio va eseguito \textbf{una sola volta} per creare il database.
+		\item \textbf{Primo avvio (Inizializzazione Database):} Fare doppio clic sul file \filename{InitDB.bat}. Questo passaggio va eseguito \textbf{una sola volta} per creare e popolare il database.
 		\item \textbf{Avvio Server:} Fare doppio clic su \filename{Server.bat}. Attendere che il server sia attivo.
 		\item \textbf{Avvio Client:} Dopo aver avviato il server, fare doppio clic su \filename{Client.bat}.
 	\end{enumerate}
@@ -142,7 +143,7 @@ Eseguire i seguenti comandi da terminale:
 	\section{Ricerca Libri}
 	La schermata \textbf{Catalogo Libri} presenta una barra di ricerca avanzata.
 	\begin{enumerate}
-		\item \textbf{Selezione Filtro:} Utilizzare il menu a tendina (SplitMenuButton) per scegliere il criterio:
+		\item \textbf{Selezione Filtro:} Utilizzare il menu a tendina per scegliere il criterio:
 		\begin{itemize}
 			\item \gui{Titolo}: Abilita solo il campo di testo principale.
 			\item \gui{Autore}: Cerca tutti i libri di uno specifico autore.
@@ -239,7 +240,7 @@ Eseguire i seguenti comandi da terminale:
 		\item Vedere la lista dei libri salvati.
 		\item \textbf{Rimuovere un libro:} Selezionarlo e premere \gui{Rimuovi}.
 		\item \textbf{Consigliare:} Selezionare un libro e premere \gui{Consiglia} per suggerirlo ad altri utenti.
-		\item \textbf{Monitorare i propri dati:} La barra laterale destra mostra automaticamente:
+		\item \textbf{Visualizzare i propri dati:} La barra laterale destra mostra automaticamente:
 		\begin{itemize}
 			\item \textit{I tuoi Consigliati:} Libri che hai suggerito correlati al libro selezionato.
 			\item \textit{La tua Recensione:} Il testo della tua valutazione, se presente.
@@ -298,8 +299,8 @@ Eseguire i seguenti comandi da terminale:
 	
 	\section{Nessun libro trovato nella ricerca}
 	\begin{itemize}
-		\item \textbf{Causa:} Il database potrebbe essere vuoto.
-		\item \textbf{Soluzione:} Se è il primo utilizzo, assicurarsi di aver eseguito lo script \filename{InitDB} per popolare il catalogo iniziale.
+		\item \textbf{Causa:} Errore di connessione al database.
+		\item \textbf{Soluzione:} Assicurarsi di aver inizializzato il database tramite il rispettivo eseguibile.
 	\end{itemize}
 	
 	% -------------------------------------------------------------------
