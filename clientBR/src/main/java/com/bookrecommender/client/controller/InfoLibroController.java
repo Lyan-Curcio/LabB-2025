@@ -26,6 +26,11 @@ import java.util.stream.Collectors;
  *   <li>Recensioni, consigliati e dati aggregati</li>
  *   <li>Sezione di aggiunta del libro a una libreria (solo utenti registrati)</li>
  * </ul>
+ *
+ * @author Lorenzo Monachino 757393 VA
+ * @author Lyan Curcio 757579 VA
+ * @author Sergio Saldarriaga 757394 VA
+ * @author Nash Guizzardi 756941 VA
  */
 public class InfoLibroController
 {

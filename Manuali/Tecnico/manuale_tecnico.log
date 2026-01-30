@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2026/dev/Arch Linux) (preloaded format=pdflatex 2026.1.26)  30 JAN 2026 22:15
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2026/dev/Arch Linux) (preloaded format=pdflatex 2026.1.26)  30 JAN 2026 23:25
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -422,6 +422,14 @@ File: images/class_diagram_3.pdf Graphic file (type pdf)
 Package pdftex.def Info: images/class_diagram_3.pdf  used on input line 88.
 (pdftex.def)             Requested size: 409.72125pt x 260.67409pt.
 
+Overfull \hbox (3.30008pt too wide) in paragraph at lines 101--102
+[]\T1/cmr/bx/n/10 "Extended" DTO: \T1/cmr/m/n/10 Clas-si im-mu-ta-bi-li (\T1/cm
+tt/m/n/10 BookInfo\T1/cmr/m/n/10 , \T1/cmtt/m/n/10 SuggestionWithBooks\T1/cmr/m
+/n/10 , \T1/cmtt/m/n/10 SuggestionCount\T1/cmr/m/n/10 , \T1/cmtt/m/n/10 Average
+Ratings\T1/cmr/m/n/10 ),
+ []
+
+
 
 [2
 
@@ -430,12 +438,12 @@ ss_diagram_3.pdf>]
 <images/login_sequence_2.pdf, id=269, 597.23125pt x 427.5975pt>
 File: images/login_sequence_2.pdf Graphic file (type pdf)
 <use images/login_sequence_2.pdf>
-Package pdftex.def Info: images/login_sequence_2.pdf  used on input line 125.
+Package pdftex.def Info: images/login_sequence_2.pdf  used on input line 126.
 (pdftex.def)             Requested size: 409.72125pt x 293.34619pt.
 <images/suggest_sequence_2.pdf, id=272, 597.23125pt x 448.67625pt>
 File: images/suggest_sequence_2.pdf Graphic file (type pdf)
 <use images/suggest_sequence_2.pdf>
-Package pdftex.def Info: images/suggest_sequence_2.pdf  used on input line 137.
+Package pdftex.def Info: images/suggest_sequence_2.pdf  used on input line 138.
 
 (pdftex.def)             Requested size: 409.72125pt x 307.80692pt.
 
@@ -444,30 +452,26 @@ Package pdftex.def Info: images/suggest_sequence_2.pdf  used on input line 137.
 
 [4 <./images/suggest_sequence_2.pdf>]
 Capitolo 2.
-<images/er_diagram_3.pdf, id=335, 598.235pt x 449.68pt>
-File: images/er_diagram_3.pdf Graphic file (type pdf)
-<use images/er_diagram_3.pdf>
-Package pdftex.def Info: images/er_diagram_3.pdf  used on input line 191.
-(pdftex.def)             Requested size: 409.72125pt x 307.98091pt.
 
 
 [5
 
 ]
+<images/er_diagram_4.pdf, id=343, 598.235pt x 449.68pt>
+File: images/er_diagram_4.pdf Graphic file (type pdf)
+<use images/er_diagram_4.pdf>
+Package pdftex.def Info: images/er_diagram_4.pdf  used on input line 195.
+(pdftex.def)             Requested size: 409.72125pt x 307.98091pt.
 
-[6 <./images/er_diagram_3.pdf>]
-Overfull \hbox (7.47961pt too wide) in paragraph at lines 237--239
-\T1/cmr/m/n/10 VAR-CHAR(256), no-te_gradevolezza: VAR-CHAR(256), no-te_original
-ita: VAR-CHAR(256), no-te_edizione: VAR-
- []
 
+[6 <./images/er_diagram_4.pdf>]
 (/usr/share/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2024/09/23 1.10c listings language file
 )
 Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on i
-nput line 249.
+nput line 253.
 LaTeX Font Info:    Font shape `T1/cmtt/bx/n' in size <9> not available
-(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 255.
+(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 259.
 
 
 [7]
@@ -494,7 +498,7 @@ Capitolo 3.
 
 ]
 LaTeX Font Info:    Font shape `T1/cmtt/bx/n' in size <10> not available
-(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 864.
+(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 868.
 
 
 [17]
@@ -519,14 +523,14 @@ Capitolo 4.
 ]
 
 [23]
-Underfull \hbox (badness 7203) in paragraph at lines 1087--1090
+Underfull \hbox (badness 7203) in paragraph at lines 1092--1095
 []\T1/cmr/m/n/10 Oracle, \T1/cmr/m/it/10 Ja-va-doc Tool Do-cu-men-ta-tion\T1/cm
 r/m/n/10 , []$\T1/cmtt/m/n/10 https : / / www . oracle . com / technical-[]reso
 urces / articles / java /
  []
 
 
-Underfull \hbox (badness 1205) in paragraph at lines 1092--1095
+Underfull \hbox (badness 1205) in paragraph at lines 1097--1100
 []\T1/cmr/m/n/10 Oracle, \T1/cmr/m/it/10 Ja-va Re-mo-te Me-thod In-vo-ca-tion (
 RMI) Spe-ci-fi-ca-tion\T1/cmr/m/n/10 , []$\T1/cmtt/m/n/10 https : / / docs . or
 acle . com / javase / 8 / docs /
@@ -541,17 +545,24 @@ acle . com / javase / 8 / docs /
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
-Package rerunfilecheck Info: File `manuale_tecnico.out' has not changed.
-(rerunfilecheck)             Checksum: 1D9259F49839259F3582CA23C551CCD1;9024.
+
+
+Package rerunfilecheck Warning: File `manuale_tecnico.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `manuale_tecnico.out':
+(rerunfilecheck)             Before: A30D5F76A2A9ECBCF133E6CA595AA55D;9052
+(rerunfilecheck)             After:  2A912948B5613388FF5CF1325D9A4C83;9057.
  ) 
 Here is how much of TeX's memory you used:
- 13790 strings out of 473190
- 209570 string characters out of 5722593
- 1271257 words of memory out of 5000000
+ 13793 strings out of 473190
+ 209591 string characters out of 5722593
+ 1251265 words of memory out of 5000000
  36211 multiletter control sequences out of 15000+600000
  576312 words of font info for 66 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,8n,79p,510b,2300s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,8n,79p,512b,2300s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/
 texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texmf-dist/font
 s/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-dist/fonts/type1/public
@@ -568,10 +579,10 @@ er/sfrm1200.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sfrm1728.pfb
 ></usr/share/texmf-dist/fonts/type1/public/cm-super/sfti1000.pfb></usr/share/te
 xmf-dist/fonts/type1/public/cm-super/sftt0900.pfb></usr/share/texmf-dist/fonts/
 type1/public/cm-super/sftt1000.pfb>
-Output written on manuale_tecnico.pdf (25 pages, 637365 bytes).
+Output written on manuale_tecnico.pdf (25 pages, 638742 bytes).
 PDF statistics:
- 1294 PDF objects out of 1440 (max. 8388607)
- 1184 compressed objects within 12 object streams
- 679 named destinations out of 1000 (max. 500000)
+ 1297 PDF objects out of 1440 (max. 8388607)
+ 1187 compressed objects within 12 object streams
+ 682 named destinations out of 1000 (max. 500000)
  349 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -14,9 +14,9 @@
 \contentsline {subsection}{\numberline {2.1.2}Requisiti Non Funzionali e Vincoli di Sistema}{5}{subsection.2.1.2}%
 \contentsline {subsection}{\numberline {2.1.3}Vincoli di Integrità dei Dati}{5}{subsection.2.1.3}%
 \contentsline {section}{\numberline {2.2}Schemi Database}{6}{section.2.2}%
-\contentsline {subsection}{\numberline {2.2.1}Shema Entity-Relationship (ER)}{6}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.1}Schema Entity-Relationship (ER)}{6}{subsection.2.2.1}%
 \contentsline {subsection}{\numberline {2.2.2}Transizione dal Modello ER al Modello Relazionale}{6}{subsection.2.2.2}%
-\contentsline {subsection}{\numberline {2.2.3}Analisi delle Cardinalità e Vincoli}{6}{subsection.2.2.3}%
+\contentsline {subsection}{\numberline {2.2.3}Analisi delle Cardinalità e Vincoli}{7}{subsection.2.2.3}%
 \contentsline {subsection}{\numberline {2.2.4}Schema Logico Relazionale}{7}{subsection.2.2.4}%
 \contentsline {section}{\numberline {2.3}Script SQL}{7}{section.2.3}%
 \contentsline {subsection}{\numberline {2.3.1}Creazione Database}{7}{subsection.2.3.1}%
@@ -50,5 +50,5 @@
 \contentsline {section}{\numberline {4.1}Gestione della Connessione al Database}{22}{section.4.1}%
 \contentsline {section}{\numberline {4.2}Scalabilità e Paginazione dei Risultati}{22}{section.4.2}%
 \contentsline {section}{\numberline {4.3}Sicurezza del Canale di Comunicazione}{22}{section.4.3}%
-\contentsline {section}{\numberline {4.4}Ottimizzazione del Calcolo del Voto Finale}{22}{section.4.4}%
+\contentsline {section}{\numberline {4.4}Ottimizzazione del Calcolo della Media dei Voti}{22}{section.4.4}%
 \contentsline {section}{\numberline {4.5}Gestione Errori nei Metodi Get}{23}{section.4.5}%
