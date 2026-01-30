@@ -18,7 +18,16 @@ public class ValutazioneController {
 
     private Rating recensione;
     @FXML
-    void confermaRecensione(ActionEvent event) throws RemoteException {
+    void confermaRecensione(ActionEvent event) throws RemoteException
+    {
+        noteContenuto.setText(noteContenuto.getText().trim()); noteEdizione.setText(noteEdizione.getText().trim());
+        noteGradevolezza.setText(noteGradevolezza.getText().trim());  noteOriginalita.setText(noteOriginalita.getText().trim());
+        noteStile.setText(noteStile.getText().trim()); noteFinali.setText(noteFinali.getText().trim());
+
+        tfContenuto.setText(tfContenuto.getText().trim()); tfEdizione.setText(tfEdizione.getText().trim());
+        tfGradevolezza.setText(tfGradevolezza.getText().trim());  tfOriginalita.setText(tfOriginalita.getText().trim());
+        tfStile.setText(tfStile.getText().trim());
+
         if(!checkRecensione().equals(""))
         {
             errorLabel.setText(checkRecensione());
@@ -81,9 +90,9 @@ public class ValutazioneController {
             {
                 recensione = new Rating(
                         LibreriaController.libro.id, LoginController.userId, votoStile, votoContenuto, votoGradevolezza,
-                        votoOriginalita, votoEdizione, noteStile.getText().trim(), noteContenuto.getText().trim(),
-                        noteGradevolezza.getText().trim(), noteOriginalita.getText().trim(), noteEdizione.getText().trim(),
-                        noteFinali.getText().trim()
+                        votoOriginalita, votoEdizione, noteStile.getText(), noteContenuto.getText(),
+                        noteGradevolezza.getText(), noteOriginalita.getText(), noteEdizione.getText(),
+                        noteFinali.getText()
                     );
                 return "";
             }
