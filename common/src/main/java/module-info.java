@@ -1,3 +1,6 @@
+/**
+ * Modulo contenente il codice condiviso da client e server
+ */
 module com.bookrecommender.common {
     requires java.rmi;
     requires java.sql;

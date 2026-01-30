@@ -18,6 +18,9 @@ import java.util.stream.Collectors;
  */
 public class Utils {
 
+    /** Vieta l'instanziamento */
+    private Utils() {}
+
     /**
      * Costruisce una lista di {@link SuggestionWithBooks} da una lista di {@link Suggestion}
      *

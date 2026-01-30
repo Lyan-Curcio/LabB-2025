@@ -82,7 +82,7 @@
 
                               <ListView fx:id="libriConsigliati" prefHeight="150.0" styleClass="list-view" />
 
-                              <Button fx:id="btnRimuoviConsilgio" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#rimuoviConsiglio" prefHeight="40.0" styleClass="delete-button" text="Rimuovi Consiglio" visible="false" />
+                              <Button fx:id="btnRimuoviConsiglio" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#rimuoviConsiglio" prefHeight="40.0" styleClass="delete-button" text="Rimuovi Consiglio" visible="false" />
                            </children>
                         </VBox>
 

@@ -1,6 +1,13 @@
 package com.bookrecommender.client.controller;
 
+/**
+ * Stato dell'utente nell'applicazione
+ */
 public enum Utente
 {
-    OSPITE, REGISTRATO;
+    /** Utente non loggato */
+    OSPITE,
+
+    /** Utente loggato */
+    REGISTRATO;
 }

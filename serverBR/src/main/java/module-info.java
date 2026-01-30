@@ -1,3 +1,6 @@
+/**
+ * Modulo contenente il codice del server
+ */
 module com.bookrecommender.serverBR {
     requires java.rmi;
     requires java.sql;

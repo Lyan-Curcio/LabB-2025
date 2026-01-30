@@ -2,7 +2,7 @@
   <configuration default="false" name="Client" type="Application" factoryName="Application">
     <option name="ALTERNATIVE_JRE_PATH" value="25" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
-    <option name="MAIN_CLASS_NAME" value="com.bookrecommender.client.ClientMain" />
+    <option name="MAIN_CLASS_NAME" value="com.bookrecommender.client.ClientApplication" />
     <module name="clientBR" />
     <method v="2">
       <option name="Make" enabled="true" />

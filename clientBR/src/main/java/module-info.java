@@ -1,3 +1,6 @@
+/**
+ * Modulo contenente il codice del client
+ */
 module com.bookrecommender.clientBR {
     requires java.rmi;
     requires javafx.base;

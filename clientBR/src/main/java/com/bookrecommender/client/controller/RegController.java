@@ -13,18 +13,56 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
-
+/**
+ * Controller per la schermata di registrazione dell'applicazione BookRecommender.
+ * Gestisce la validazione dei dati.
+ */
 public class RegController {
 
+    /** Campo di testo per inserire il nome dell'utente. */
     @FXML private TextField tfnome;
-    @FXML private TextField tfcognome;
-    @FXML private TextField tfUserid;
-    @FXML private TextField tfCodiceFiscale;
-    @FXML private TextField tfEmail;
-    @FXML private TextField tfCreaPassword;
-    @FXML private TextField tfConfermaPassword;
-    @FXML private Label errorCF, errorEmail, errorPassword, errorUserId, errorUnexpected;
 
+    /** Campo di testo per inserire il cognome dell'utente. */
+    @FXML private TextField tfcognome;
+
+    /** Campo di testo per inserire l'ID utente desiderato. */
+    @FXML private TextField tfUserid;
+
+    /** Campo di testo per inserire il codice fiscale dell'utente. */
+    @FXML private TextField tfCodiceFiscale;
+
+    /** Campo di testo per inserire l'email dell'utente. */
+    @FXML private TextField tfEmail;
+
+    /** Campo di testo per creare la password dell'utente. */
+    @FXML private TextField tfCreaPassword;
+
+    /** Campo di testo per confermare la password dell'utente. */
+    @FXML private TextField tfConfermaPassword;
+
+    /** Label per visualizzare errori relativi al codice fiscale. */
+    @FXML private Label errorCF;
+
+    /** Label per visualizzare errori relativi all'email. */
+    @FXML private Label errorEmail;
+
+    /** Label per visualizzare errori relativi alla password. */
+    @FXML private Label errorPassword;
+
+    /** Label per visualizzare errori relativi all'ID utente. */
+    @FXML private Label errorUserId;
+
+    /** Label per visualizzare errori inattesi o generici. */
+    @FXML private Label errorUnexpected;
+
+    /**
+     * Gestisce il click sul pulsante di registrazione.
+     * Verifica la validità dei dati inseriti, segnala eventuali errori
+     * e tenta di registrare l'utente tramite il servizio remoto.
+     *
+     * @param event l'evento di azione generato dal click sul pulsante
+     * @throws RemoteException se si verifica un errore di comunicazione con il servizio remoto
+     */
     @FXML
     void btnClick(ActionEvent event) throws RemoteException {
         String password = tfCreaPassword.getText();
@@ -32,28 +70,36 @@ public class RegController {
 
         resetErrorLabels();
 
+        // Controllo che tutti i campi siano compilati
         if (tfnome.getText().isEmpty() || tfcognome.getText().isEmpty() || tfUserid.getText().isEmpty()
-                || tfCodiceFiscale.getText().isEmpty() || tfEmail.getText().isEmpty())
+            || tfCodiceFiscale.getText().isEmpty() || tfEmail.getText().isEmpty())
         {
             errorUnexpected.setText("riempire tutti i campi");
             return;
         }
+
+        // Controllo validità email
         if (!checkEmail().equals(""))
         {
             errorEmail.setText(checkEmail());
             return;
         }
+
+        // Controllo validità codice fiscale
         if (!checkCF().equals(""))
         {
             errorCF.setText(checkCF());
             return;
         }
+
+        // Controllo corrispondenza password
         if(!password.equals(cPassword))
         {
             errorPassword.setText("le password non coincidono");
             return;
         }
 
+        // Creazione nuovo utente
         User newUser = new User(
             tfUserid.getText(),
             tfnome.getText(),
@@ -62,15 +108,15 @@ public class RegController {
             tfEmail.getText()
         );
 
-        // Qui andrà il codice per salvare nel DB PostgreSQL
-        // Per ora stampiamo solo a video
+        // Log temporaneo per debug
         System.out.println("Tentativo registrazione:\n" + newUser.toStringDebug());
 
         BRPair<RegisterResult, AuthedBookRepositoryService> result = App.getInstance().bookRepository.registrazione(newUser, password);
 
-        // TODO rimuovere log
+        // Log temporaneo del risultato
         System.out.println(result);
 
+        // Gestione risultato della registrazione
         if (result.first() == RegisterResult.OK)
         {
             App.getInstance().authedBookRepository = result.second();
@@ -94,6 +140,12 @@ public class RegController {
             this.errorUnexpected.setText(result.first().getMessage());
         }
     }
+
+    /**
+     * Verifica che l'email inserita sia valida.
+     *
+     * @return una stringa vuota se l'email è valida, altrimenti un messaggio di errore
+     */
     private String checkEmail()
     {
         if (EmailValidator.getInstance().isValid(tfEmail.getText()))
@@ -102,6 +154,12 @@ public class RegController {
         }
         return "l'email non è valida";
     }
+
+    /**
+     * Verifica che il codice fiscale inserito sia valido.
+     *
+     * @return una stringa vuota se il codice fiscale è valido, altrimenti un messaggio di errore
+     */
     private String checkCF()
     {
         if (Pattern.matches("^[A-Z]{6}\\d{2}[A-Z]\\d{2}[A-Z]\\d{3}[A-Z]$", tfCodiceFiscale.getText()))
@@ -111,6 +169,12 @@ public class RegController {
         return "codice fiscale non valido";
     }
 
+    /**
+     * Gestisce il click sul pulsante per tornare indietro.
+     * Reindirizza l'utente alla scena principale "Benvenuto.fxml".
+     *
+     * @param event l'evento di azione generato dal click sul pulsante
+     */
     @FXML
     void btnReturn(ActionEvent event)
     {
@@ -118,7 +182,9 @@ public class RegController {
         m.changeScene("Benvenuto.fxml");
     }
 
-    //
+    /**
+     * Resetta tutte le label di errore nella schermata di registrazione.
+     */
     private void resetErrorLabels()
     {
         this.errorCF.setText("");
