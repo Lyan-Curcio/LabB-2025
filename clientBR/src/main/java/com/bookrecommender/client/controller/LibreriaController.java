@@ -35,11 +35,11 @@ public class LibreriaController
     private Hashtable<String, SuggestionWithBooks> MapSuggerimenti = new Hashtable<>();
     LinkedList<SuggestionWithBooks> consigliati;
     private Rating valutazione = null;
-    private Book libroConsigliato;
     private boolean confermaEliminazione = false;
+    private SuggestionWithBooks consiglio;
 
     public static Book libro;
-    public static SuggestionWithBooks consiglio;
+    public static Book libroConsigliato;
     public static boolean consigliando = false;
 
     @FXML
