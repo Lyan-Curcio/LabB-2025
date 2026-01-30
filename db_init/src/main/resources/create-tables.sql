@@ -73,7 +73,7 @@ CREATE TABLE "LibriXLibrerie" (
 
     CONSTRAINT fk_libreria
         FOREIGN KEY (libreria_id) REFERENCES "Librerie"(id)
-            ON DELETE CASCADE,
+            ON DELETE RESTRICT, -- RESTRICT perché gestito da un trigger
 
     CONSTRAINT fk_libro
         FOREIGN KEY (libro_id) REFERENCES "Libri"(id)
@@ -195,27 +195,24 @@ END;
 $function$;
 
 
--- Evita di eliminare dalle librerie i libri che sono presenti in valutazioni o consigliati
+-- Elimina valutazioni o consigliati di libri che non sono più in nessuna libreria
 CREATE OR REPLACE FUNCTION public.check_delete_libri_x_librerie()
     RETURNS trigger
     LANGUAGE plpgsql
 AS $function$
     DECLARE uid varchar(50);
 BEGIN
+    -- Salvo l'userid del proprietario della libreria
     SELECT userid INTO uid
     FROM "Librerie"
     WHERE id = OLD.libreria_id;
 
-    IF count_libri_in_librerie(uid, OLD.libro_id) <= 1
-    AND EXISTS(
-        SELECT 1 FROM (
-            SELECT libro_id AS l, userid AS u FROM "ValutazioniLibri" UNION
-            SELECT libro_sorgente_id AS l, userid AS u FROM "ConsigliLibri" UNION
-            SELECT libro_consigliato_id AS l, userid AS u FROM "ConsigliLibri"
-        ) AS _
-        WHERE l = OLD.libro_id AND u = uid
-    ) THEN
-        RAISE EXCEPTION 'Eliminazione non permessa in LibriXLibrerie';
+    -- Se il libro non è presente in nessun'altra libreria elimina valutazioni e consigliati associati
+    IF count_libri_in_librerie(uid, OLD.libro_id) <= 1 THEN
+        DELETE FROM "ValutazioniLibri"
+            WHERE userid = uid AND libro_id = OLD.libro_id;
+        DELETE FROM "ConsigliLibri"
+            WHERE userid = uid AND OLD.libro_id IN (libro_sorgente_id, libro_consigliato_id);
     END IF;
 
     RETURN OLD;
@@ -227,6 +224,24 @@ CREATE TRIGGER check_table
     BEFORE delete ON "LibriXLibrerie"
     FOR EACH ROW
 EXECUTE FUNCTION public.check_delete_libri_x_librerie();
+
+
+-- Elimina ogni libro dalla libreria in questione prima di eliminare se stessa per far funzionare il trigger di LibriXLibrerie
+CREATE OR REPLACE FUNCTION public.check_delete_librerie()
+    RETURNS trigger
+    LANGUAGE plpgsql
+AS $function$
+BEGIN
+    DELETE FROM "LibriXLibrerie" WHERE libreria_id = OLD.id;
+    RETURN OLD;
+END;
+$function$;
+
+-- Crea il trigger per la funzione definita prima
+CREATE TRIGGER check_table
+    BEFORE delete ON "Librerie"
+    FOR EACH ROW
+EXECUTE FUNCTION public.check_delete_librerie();
 
 
 -- Vincolo "il libro deve essere in una tua libreria"

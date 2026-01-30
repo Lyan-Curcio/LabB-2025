@@ -21,11 +21,6 @@ public enum RemoveBookFromLibResult {
      */
     BOOK_NOT_IN_LIBRARY("Il libro non è presente nella libreria"),
 
-    /**
-     * L'operazione è fallita perché il libro indicato è solo in una libreria ed esiste uan recensione o dei consigliati collegati a esso.
-     */
-    BOOK_IS_SUGGESTED_OR_RATED("Il libro è solo in questa libreria e c'è una recensione o dei consigliati che dipendono da esso"),
-
     /** Si è verificato un errore imprevisto. */
     UNEXPECTED_ERROR("Errore non previsto!");
 
