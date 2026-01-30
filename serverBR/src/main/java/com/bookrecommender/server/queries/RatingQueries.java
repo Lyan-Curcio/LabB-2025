@@ -68,10 +68,18 @@ public class RatingQueries {
     public synchronized static CreateRatingResult createRating(String userId, Rating v) {
         @Language("PostgreSQL")
         String query = """
-            SELECT CASE WHEN EXISTS(
-                SELECT 1 FROM "ValutazioniLibri"
-                WHERE userid = ? AND libro_id = ?
-            ) THEN 1 ELSE 0
+            SELECT CASE
+                -- 0: Se esiste già una valutazione per quel libro
+                WHEN EXISTS(
+                    SELECT 1 FROM "ValutazioniLibri"
+                    WHERE userid = ? AND libro_id = ?
+                ) THEN 0
+        
+                -- 1: Se il libro sorgente non è in nessuna libreria
+                WHEN count_libri_in_librerie(?, ?) = 0 THEN 1
+        
+                -- 2: Se il libro è in una libreria e non è stato valutato
+                ELSE 2
             END AS r
         """;
 
@@ -88,11 +96,15 @@ public class RatingQueries {
                         return null;
                     }
                 },
-                new Object[] {userId, v.libroId}
+                new Object[] {
+                    userId, v.libroId,
+                    userId, v.libroId
+                }
         );
 
         if (result == null || result.size() != 1 || result.getFirst() == null) return CreateRatingResult.UNEXPECTED_ERROR;
-        else if (result.getFirst() == 1) return CreateRatingResult.ALREADY_RATED;
+        else if (result.getFirst() == 0) return CreateRatingResult.ALREADY_RATED;
+        else if (result.getFirst() == 1) return CreateRatingResult.BOOK_NOT_IN_LIBRARY;
 
         query = """
             INSERT INTO "ValutazioniLibri" (
@@ -130,10 +142,15 @@ public class RatingQueries {
     public synchronized static DeleteRatingResult deleteRating(String userId, int bookId) {
         @Language("PostgreSQL")
         String query = """
-            SELECT CASE WHEN EXISTS(
-                SELECT 1 FROM "ValutazioniLibri"
-                WHERE userid = ? AND libro_id = ?
-            ) THEN 1 ELSE 0
+            SELECT CASE
+                -- Se il libro non ha una valutazione
+                WHEN NOT EXISTS(
+                    SELECT 1 FROM "ValutazioniLibri"
+                    WHERE userid = ? AND libro_id = ?
+                ) THEN 0
+        
+                -- Se il libro ha una valutazione
+                ELSE 1
             END AS r
         """;
 

@@ -68,18 +68,22 @@ public class SuggestionQueries {
             SELECT CASE
                 -- 0: Se il libro sorgente non è in nessuna libreria
                 WHEN count_libri_in_librerie(?, ?) = 0 THEN 0
+        
                 -- 1: Se il libro consigliato non è in nessuna libreria
                 WHEN count_libri_in_librerie(?, ?) = 0 THEN 1
+        
                 -- 2: Se esiste già un consiglio identico
                 WHEN EXISTS(
                     SELECT 1 FROM "ConsigliLibri"
                     WHERE userid = ? AND libro_sorgente_id = ? AND libro_consigliato_id = ?
                 ) THEN 2
+        
                 -- 3: Se ci sono già 3 consigliati
                 WHEN (
                     SELECT COUNT(*) FROM "ConsigliLibri"
                     WHERE userid = ? AND libro_sorgente_id = ?
                 ) >= 3 THEN 3
+        
                 -- 4: Se è tutto okay per l'aggiunta di un consigliato
                 ELSE 4
             END AS r
