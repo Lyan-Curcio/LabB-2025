@@ -1,6 +1,7 @@
 package com.bookrecommender.client.controller;
 
 import java.rmi.RemoteException;
+import java.util.regex.Pattern;
 
 import com.bookrecommender.common.AuthedBookRepositoryService;
 import com.bookrecommender.common.BRPair;
@@ -31,20 +32,25 @@ public class RegController {
 
         resetErrorLabels();
 
+        if (tfnome.getText().isEmpty() || tfcognome.getText().isEmpty() || tfUserid.getText().isEmpty()
+                || tfCodiceFiscale.getText().isEmpty() || tfEmail.getText().isEmpty())
+        {
+            errorUnexpected.setText("riempire tutti i campi");
+            return;
+        }
         if (!checkEmail().equals(""))
         {
             errorEmail.setText(checkEmail());
             return;
         }
+        if (!checkCF().equals(""))
+        {
+            errorCF.setText(checkCF());
+            return;
+        }
         if(!password.equals(cPassword))
         {
             errorPassword.setText("le password non coincidono");
-            return;
-        }
-        if (tfnome.getText().isEmpty() || tfcognome.getText().isEmpty() || tfUserid.getText().isEmpty()
-                || tfCodiceFiscale.getText().isEmpty() || tfEmail.getText().isEmpty())
-        {
-            errorUnexpected.setText("riempire tutti i campi");
             return;
         }
 
@@ -95,6 +101,14 @@ public class RegController {
             return "";
         }
         return "l'email non è valida";
+    }
+    private String checkCF()
+    {
+        if (Pattern.matches("^[A-Z]{6}\\d{2}[A-Z]\\d{2}[A-Z]\\d{3}[A-Z]$", tfCodiceFiscale.getText()))
+        {
+            return "";
+        }
+        return "codice fiscale non valido";
     }
 
     @FXML

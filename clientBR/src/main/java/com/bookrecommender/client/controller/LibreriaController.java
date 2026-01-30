@@ -36,6 +36,7 @@ public class LibreriaController
     private boolean confermaEliminazione = false;
     private SuggestionWithBooks consiglio;
 
+
     public static Book libro;
     public static Book libroConsigliato;
     public static boolean consigliando = false;

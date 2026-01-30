@@ -1,4 +1,5 @@
 @echo off
 cd /d "%~dp0"
 
-javaw -jar "bin\db_init-1.0-jar-with-dependencies.jar"
+java -jar "bin\db_init-1.0-jar-with-dependencies.jar"
+pause
