@@ -26,7 +26,6 @@
                </padding>
                <children>
                   <Pane prefHeight="20.0" />
-                  <Button mnemonicParsing="false" onAction="#btnClickCreaLib" prefHeight="50.0" prefWidth="200.0" styleClass="sidebar-button" text="Crea Libreria" />
                   <Button mnemonicParsing="false" onAction="#btnClickLeTueLib" prefHeight="50.0" prefWidth="200.0" styleClass="sidebar-button" text="Le tue Librerie" />
                   <Button mnemonicParsing="false" onAction="#btnClickRicercaLibri" prefHeight="50.0" prefWidth="200.0" styleClass="sidebar-button" text="Ricerca Libri" />
 
