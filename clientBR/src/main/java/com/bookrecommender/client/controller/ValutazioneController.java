@@ -81,8 +81,9 @@ public class ValutazioneController {
             {
                 recensione = new Rating(
                         LibreriaController.libro.id, LoginController.userId, votoStile, votoContenuto, votoGradevolezza,
-                        votoOriginalita, votoEdizione, noteStile.getText(), noteContenuto.getText(),
-                        noteGradevolezza.getText(), noteOriginalita.getText(), noteEdizione.getText(), noteFinali.getText()
+                        votoOriginalita, votoEdizione, noteStile.getText().trim(), noteContenuto.getText().trim(),
+                        noteGradevolezza.getText().trim(), noteOriginalita.getText().trim(), noteEdizione.getText().trim(),
+                        noteFinali.getText().trim()
                     );
                 return "";
             }
