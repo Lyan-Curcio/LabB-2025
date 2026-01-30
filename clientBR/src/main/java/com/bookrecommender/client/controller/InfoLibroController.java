@@ -13,6 +13,7 @@ import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.stream.Collectors;
@@ -157,7 +158,7 @@ public class InfoLibroController
     private void ospite() throws RemoteException
     {
         bookInfo = App.getInstance().bookRepository.getBookInfo(BenController.libro.id);
-        infoLibro.setText(bookInfo.book.toStringInfo());
+        infoLibro.setText(bookInfo.book.toStringInfo()+"\n" + bookInfo.book.editore + "\n" + Arrays.toString(bookInfo.book.categorie));
         caricaListeComuni();
     }
 
