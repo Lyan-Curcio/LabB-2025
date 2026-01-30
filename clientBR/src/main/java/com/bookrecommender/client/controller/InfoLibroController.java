@@ -2,6 +2,8 @@ package com.bookrecommender.client.controller;
 
 import com.bookrecommender.common.dto.*;
 import com.bookrecommender.common.enums.library.AddBookToLibResult;
+import com.bookrecommender.common.extended_dto.BookInfo;
+import com.bookrecommender.common.extended_dto.SuggestionWithBooks;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;

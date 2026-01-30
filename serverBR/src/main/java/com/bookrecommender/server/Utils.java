@@ -1,7 +1,7 @@
 package com.bookrecommender.server;
 
 import com.bookrecommender.common.dto.Suggestion;
-import com.bookrecommender.common.dto.SuggestionWithBooks;
+import com.bookrecommender.common.extended_dto.SuggestionWithBooks;
 import com.bookrecommender.server.queries.BookQueries;
 
 import java.util.LinkedList;

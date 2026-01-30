@@ -1,6 +1,9 @@
 package com.bookrecommender.server.queries;
 
 import com.bookrecommender.common.dto.*;
+import com.bookrecommender.common.extended_dto.AverageRatings;
+import com.bookrecommender.common.extended_dto.BookInfo;
+import com.bookrecommender.common.extended_dto.SuggestionCount;
 import com.bookrecommender.server.DatabaseManager;
 import com.bookrecommender.server.Utils;
 import org.intellij.lang.annotations.Language;

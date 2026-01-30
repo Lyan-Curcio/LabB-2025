@@ -2,11 +2,9 @@ package com.bookrecommender.client.controller;
 
 import com.bookrecommender.common.dto.Book;
 import com.bookrecommender.common.dto.Rating;
-import com.bookrecommender.common.dto.Suggestion;
-import com.bookrecommender.common.dto.SuggestionWithBooks;
+import com.bookrecommender.common.extended_dto.SuggestionWithBooks;
 import com.bookrecommender.common.enums.library.RemoveBookFromLibResult;
 import com.bookrecommender.common.enums.rating.DeleteRatingResult;
-import com.bookrecommender.common.enums.suggestion.AddSuggestionResult;
 import com.bookrecommender.common.enums.suggestion.RemoveSuggestionResult;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;

@@ -4,7 +4,7 @@ import com.bookrecommender.common.AuthedBookRepositoryService;
 import com.bookrecommender.common.BookRepositoryService;
 import com.bookrecommender.common.BRPair;
 import com.bookrecommender.common.dto.Book;
-import com.bookrecommender.common.dto.BookInfo;
+import com.bookrecommender.common.extended_dto.BookInfo;
 import com.bookrecommender.common.dto.User;
 import com.bookrecommender.common.enums.auth.LoginResult;
 import com.bookrecommender.common.enums.auth.RegisterResult;

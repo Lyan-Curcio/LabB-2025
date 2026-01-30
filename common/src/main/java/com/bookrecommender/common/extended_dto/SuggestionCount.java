@@ -1,5 +1,7 @@
-package com.bookrecommender.common.dto;
+package com.bookrecommender.common.extended_dto;
 
+
+import com.bookrecommender.common.dto.Book;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -27,5 +29,10 @@ public class SuggestionCount implements Serializable {
 
         this.suggestedBook = suggestedBook;
         this.count = _count;
+    }
+
+
+    public String toStringInfo() {
+        return "\"" + suggestedBook.titolo + "\" è stato consigliato " + count + " volte";
     }
 }

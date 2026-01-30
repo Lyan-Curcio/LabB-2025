@@ -10,6 +10,7 @@ import com.bookrecommender.common.enums.rating.CreateRatingResult;
 import com.bookrecommender.common.enums.rating.DeleteRatingResult;
 import com.bookrecommender.common.enums.suggestion.AddSuggestionResult;
 import com.bookrecommender.common.enums.suggestion.RemoveSuggestionResult;
+import com.bookrecommender.common.extended_dto.SuggestionWithBooks;
 import com.bookrecommender.server.queries.LibraryQueries;
 import com.bookrecommender.server.queries.RatingQueries;
 import com.bookrecommender.server.queries.SuggestionQueries;

@@ -1,4 +1,6 @@
-package com.bookrecommender.common.dto;
+package com.bookrecommender.common.extended_dto;
+
+import com.bookrecommender.common.dto.Book;
 
 import java.io.Serial;
 import java.io.Serializable;
