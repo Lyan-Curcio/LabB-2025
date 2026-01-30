@@ -27,6 +27,11 @@ import java.util.stream.Collectors;
  * Questo controller permette di visualizzare i libri presenti nella libreria, aggiungere suggerimenti,
  * valutare libri, rimuovere libri o suggerimenti e visualizzare informazioni dettagliate sui libri.
  * </p>
+ *
+ * @author Lorenzo Monachino 757393 VA
+ * @author Lyan Curcio 757579 VA
+ * @author Sergio Saldarriaga 757394 VA
+ * @author Nash Guizzardi 756941 VA
  */
 public class LibreriaController {
 

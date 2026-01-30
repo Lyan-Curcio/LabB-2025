@@ -16,6 +16,11 @@ import javafx.scene.control.TextField;
 /**
  * Controller per la schermata di registrazione dell'applicazione BookRecommender.
  * Gestisce la validazione dei dati.
+ *
+ * @author Lorenzo Monachino 757393 VA
+ * @author Lyan Curcio 757579 VA
+ * @author Sergio Saldarriaga 757394 VA
+ * @author Nash Guizzardi 756941 VA
  */
 public class RegController {
 

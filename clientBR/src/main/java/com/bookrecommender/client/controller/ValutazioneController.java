@@ -13,6 +13,11 @@ import java.rmi.RemoteException;
 /**
  * Controller per la gestione della valutazione di un libro.
  * Permette all'utente di inserire voti e note su diversi aspetti del libro e di confermare o annullare la recensione.
+ *
+ * @author Lorenzo Monachino 757393 VA
+ * @author Lyan Curcio 757579 VA
+ * @author Sergio Saldarriaga 757394 VA
+ * @author Nash Guizzardi 756941 VA
  */
 public class ValutazioneController {
 
