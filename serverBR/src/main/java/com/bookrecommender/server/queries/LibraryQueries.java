@@ -294,16 +294,29 @@ public class LibraryQueries {
                         AND userid = ?
                 ) THEN 0
         
-                -- 2: La libreria esiste e contiene il libro
-                WHEN EXISTS (
+                -- 1: La libreria esiste ma non contiene il libro
+                WHEN NOT EXISTS (
                     SELECT 1
                     FROM "LibriXLibrerie"
                     WHERE libreria_id = ?
                         AND libro_id = ?
-                ) THEN 2
+                ) THEN 1
         
-                -- 1: La libreria esiste ma non contiene il libro
-                ELSE 1
+                -- 2: Se il libro è solo in questa libreria e ci sono delle recensioni o consigliati per quel libro
+                WHEN
+                    count_libri_in_librerie(?, ?) <= 1
+                    AND EXISTS(
+                        SELECT 1 FROM (
+                            SELECT libro_id AS l, userid AS u FROM "ValutazioniLibri" UNION
+                            SELECT libro_sorgente_id AS l, userid AS u FROM "ConsigliLibri" UNION
+                            SELECT libro_consigliato_id AS l, userid AS u FROM "ConsigliLibri"
+                        ) AS _
+                        WHERE l = ? AND u = ?
+                    )
+                THEN 2
+        
+                -- 3: La libreria esiste e contiene il libro e non è usato in nessun consigliato/recensione
+                ELSE 3
             END AS r;
         """;
 
@@ -320,12 +333,17 @@ public class LibraryQueries {
                     return null;
                 }
             },
-            new Object[] {libreriaId, userId, libreriaId, libroId}
+            new Object[] {
+                libreriaId, userId,
+                libreriaId, libroId,
+                userId, libroId, libroId, userId
+            }
         );
 
         if (result == null || result.size() != 1 || result.getFirst() == null) return RemoveBookFromLibResult.UNEXPECTED_ERROR;
         else if (result.getFirst() == 0) return RemoveBookFromLibResult.LIBRARY_NOT_FOUND;
         else if (result.getFirst() == 1) return RemoveBookFromLibResult.BOOK_NOT_IN_LIBRARY;
+        else if (result.getFirst() == 2) return RemoveBookFromLibResult.BOOK_IS_SUGGESTED_OR_RATED;
 
         query = "DELETE FROM \"LibriXLibrerie\" WHERE libro_id = ? AND libreria_id = ?";
 

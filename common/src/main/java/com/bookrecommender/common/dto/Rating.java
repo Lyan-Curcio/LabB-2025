@@ -144,7 +144,7 @@ public class Rating implements Serializable {
             _gradevolezza = rs.getInt("gradevolezza");
             _originalita = rs.getInt("originalita");
             _edizione = rs.getInt("edizione");
-            _finale = Math.round((_stile + _contenuto + _gradevolezza + _originalita + _edizione) / 5.0f);
+            _finale = rs.getInt("finale");
 
             _noteStile = rs.getString("note_stile");
             _noteContenuto = rs.getString("note_contenuto");

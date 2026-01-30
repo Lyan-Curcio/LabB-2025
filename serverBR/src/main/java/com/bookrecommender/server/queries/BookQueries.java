@@ -1,9 +1,6 @@
 package com.bookrecommender.server.queries;
 
-import com.bookrecommender.common.dto.Book;
-import com.bookrecommender.common.dto.BookInfo;
-import com.bookrecommender.common.dto.Rating;
-import com.bookrecommender.common.dto.Suggestion;
+import com.bookrecommender.common.dto.*;
 import com.bookrecommender.server.DatabaseManager;
 import com.bookrecommender.server.Utils;
 import org.intellij.lang.annotations.Language;
@@ -93,7 +90,52 @@ public class BookQueries {
                 new Object[] {bookId}
         );
 
-        return new BookInfo(book, ratings, Utils.suggWithBooksFromSugg(suggestions));
+        query = """
+            SELECT
+                ROUND(AVG(stile), 1) AS stile,
+                ROUND(AVG(contenuto), 1) AS contenuto,
+                ROUND(AVG(gradevolezza), 1) AS gradevolezza,
+                ROUND(AVG(originalita), 1) AS originalita,
+                ROUND(AVG(edizione), 1) AS edizione,
+                ROUND(AVG(finale), 1) AS finale
+            FROM "ValutazioniLibri"
+            WHERE libro_id = ?
+        """;
+        AverageRatings averageRatings;
+        try {
+            averageRatings = DatabaseManager.getInstance().executeQuery(
+                query,
+                AverageRatings::new,
+                new Object[] {bookId}
+            ).getFirst();
+        }
+        catch (NoSuchElementException e) {
+            System.err.println("Errore inaspettato in BookQueries.getBookInfo() nel recupero di averageRatings!");
+            return null;
+        }
+
+        query = """
+            SELECT
+                l.*,
+                cl.count AS count
+            FROM "Libri" AS l
+            JOIN (
+                SELECT
+                    libro_consigliato_id,
+                    COUNT(*) AS count
+                FROM "ConsigliLibri"
+                WHERE libro_sorgente_id = ?
+                GROUP BY libro_consigliato_id
+            ) AS cl
+                ON l.id = cl.libro_consigliato_id;
+        """;
+        LinkedList<SuggestionCount> suggestionCounts = DatabaseManager.getInstance().executeQuery(
+            query,
+            rs -> new SuggestionCount(new Book(rs), rs),
+            new Object[] {bookId}
+        );
+
+        return new BookInfo(book, ratings, Utils.suggWithBooksFromSugg(suggestions), averageRatings, suggestionCounts);
     }
 
     /**

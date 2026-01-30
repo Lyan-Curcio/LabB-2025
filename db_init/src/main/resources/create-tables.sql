@@ -95,6 +95,9 @@ CREATE TABLE "ValutazioniLibri" (
     gradevolezza    INTEGER NOT NULL CHECK (gradevolezza BETWEEN 1 AND 5),
     originalita     INTEGER NOT NULL CHECK (originalita BETWEEN 1 AND 5),
     edizione        INTEGER NOT NULL CHECK (edizione BETWEEN 1 AND 5),
+    finale          INTEGER GENERATED ALWAYS AS (
+        ROUND((stile + contenuto + gradevolezza + originalita + edizione) / 5.0 )
+    ) STORED,
 
     -- Note opzionali
     note_stile          VARCHAR(256),
@@ -209,7 +212,7 @@ BEGIN
             SELECT libro_id AS l, userid AS u FROM "ValutazioniLibri" UNION
             SELECT libro_sorgente_id AS l, userid AS u FROM "ConsigliLibri" UNION
             SELECT libro_consigliato_id AS l, userid AS u FROM "ConsigliLibri"
-        ) AS tmp
+        ) AS _
         WHERE l = OLD.libro_id AND u = uid
     ) THEN
         RAISE EXCEPTION 'Eliminazione non permessa in LibriXLibrerie';
