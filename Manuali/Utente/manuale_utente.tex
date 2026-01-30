@@ -5,7 +5,7 @@
 \usepackage[T1]{fontenc}
 \usepackage[italian]{babel}
 \usepackage{graphicx} 
-%\graphicspath{{images/}} % Decommenta se le immagini sono in una sottocartella
+\graphicspath{{images/}} % Decommenta se le immagini sono in una sottocartella
 \usepackage{float}    
 \usepackage{geometry} 
 \usepackage{xcolor}   
@@ -129,9 +129,8 @@ Eseguire i seguenti comandi da terminale:
 	
 	\begin{figure}[H]
 		\centering
-		\fbox{\begin{minipage}{0.8\textwidth}\centering \vspace{3cm} [Inserire Screenshot Benvenuto.fxml - Home] \vspace{3cm} \end{minipage}}
+		\includegraphics[width=0.8\textwidth, keepaspectratio]{ben_no_log.png}
 		\caption{Schermata iniziale ``Catalogo Libri''.}
-		\label{fig:home}
 	\end{figure}
 	
 	% -------------------------------------------------------------------
@@ -154,6 +153,7 @@ Eseguire i seguenti comandi da terminale:
 	\end{enumerate}
 	I risultati appariranno nella lista centrale.
 	
+	
 	\section{Visualizzazione Dettagli Libro}
 	Per visualizzare informazioni approfondite:
 	\begin{enumerate}
@@ -174,11 +174,9 @@ Eseguire i seguenti comandi da terminale:
 	
 	\begin{figure}[H]
 		\centering
-		\fbox{\begin{minipage}{0.8\textwidth}\centering \vspace{3cm} [Inserire Screenshot InformazioniLibro.fxml] \vspace{3cm} \end{minipage}}
+		\includegraphics[width=0.8\textwidth, keepaspectratio]{info_lib.png}
 		\caption{Schermata dettagli libro con statistiche e consigli.}
-		\label{fig:infolibro}
 	\end{figure}
-	
 	% -------------------------------------------------------------------
 	% CAPITOLO 5: USO DELLE FUNZIONALITÀ (Utenti registrati)
 	% -------------------------------------------------------------------
@@ -201,10 +199,11 @@ Eseguire i seguenti comandi da terminale:
 	
 	\begin{figure}[H]
 		\centering
-		\fbox{\begin{minipage}{0.8\textwidth}\centering \vspace{3cm} [Inserire Screenshot Registrazione.fxml] \vspace{3cm} \end{minipage}}
+		\includegraphics[width=0.8\textwidth, keepaspectratio]{reg.png}
 		\caption{Modulo di registrazione utente.}
-		\label{fig:registrazione}
 	\end{figure}
+
+	
 	
 	\section{Login e Area Utente}
 	Cliccando su \gui{Accedi} e inserendo \gui{UserID} e \gui{Password}, si effettua il login.
@@ -214,6 +213,12 @@ Eseguire i seguenti comandi da terminale:
 		\item \gui{Le tue Librerie}
 		\item \gui{Logout}
 	\end{itemize}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth, keepaspectratio]{log.png}
+		\caption{Schermata login.}
+	\end{figure}
 	
 	\section{Gestione Librerie Personali}
 	
@@ -225,6 +230,12 @@ Eseguire i seguenti comandi da terminale:
 		\item Cliccare su \gui{Crea}. La nuova libreria apparirà immediatamente nell'\textit{Elenco Librerie Esistenti}.
 	\end{enumerate}
 	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth, keepaspectratio]{all_my_libs.png}
+		\caption{Schermata creazione libreria.}
+	\end{figure}
+	
 	\subsection{Aggiungere un libro a una libreria}
 	\begin{enumerate}
 		\item Cercare un libro e aprire la scheda \gui{Info Libro}.
@@ -232,6 +243,12 @@ Eseguire i seguenti comandi da terminale:
 		\item Selezionare la libreria di destinazione dal menu a tendina.
 		\item Cliccare su \gui{Conferma Aggiunta}.
 	\end{enumerate}
+	
+			\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth, keepaspectratio]{save_libr.png}
+		\caption{Schermata salvataggio libro in libreria.}
+	\end{figure}
 	
 	\subsection{Gestione interna della Libreria}
 	Selezionando una libreria dall'elenco e cliccando \gui{Apri Libreria}, si accede alla vista dettagliata.
@@ -247,12 +264,17 @@ Eseguire i seguenti comandi da terminale:
 		\end{itemize}
 	\end{itemize}
 	
-	\begin{figure}[H]
-		\centering
-		\fbox{\begin{minipage}{0.8\textwidth}\centering \vspace{3cm} [Inserire Screenshot Libreria.fxml] \vspace{3cm} \end{minipage}}
-		\caption{Vista interna di una libreria personale.}
-		\label{fig:libreria}
-	\end{figure}
+		\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth, keepaspectratio]{sugg.png}
+	\caption{Schermata consiglia.}
+\end{figure}
+
+		\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth, keepaspectratio]{gest_lib.png}
+	\caption{Schermata gestione librerie.}
+\end{figure}
 	
 	\section{Valutazione dei Libri}
 	Un utente registrato può recensire i libri presenti nelle proprie librerie.
@@ -272,12 +294,11 @@ Eseguire i seguenti comandi da terminale:
 		\item Cliccare su \gui{Conferma Recensione} per salvare.
 	\end{enumerate}
 	
-	\begin{figure}[H]
-		\centering
-		\fbox{\begin{minipage}{0.8\textwidth}\centering \vspace{3cm} [Inserire Screenshot Valutazione.fxml] \vspace{3cm} \end{minipage}}
-		\caption{Schermata di valutazione con i 5 criteri.}
-		\label{fig:valutazione}
-	\end{figure}
+		\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth, keepaspectratio]{val.png}
+	\caption{Schermata valutazione.}
+\end{figure}
 	
 	% -------------------------------------------------------------------
 	% CAPITOLO 6: RISOLUZIONE PROBLEMI (NUOVO per principianti)

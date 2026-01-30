@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2026/dev/Arch Linux) (preloaded format=pdflatex 2026.1.26)  30 JAN 2026 22:35
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2026/dev/Arch Linux) (preloaded format=pdflatex 2026.1.26)  31 JAN 2026 00:11
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -433,42 +433,98 @@ File: lstlang1.sty 2024/09/23 1.10c listings language file
 (/usr/share/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2024/09/23 1.10c listings language file
 )
+<images/ben_no_log.png, id=197, 903.375pt x 595.22375pt>
+File: images/ben_no_log.png Graphic file (type png)
+<use images/ben_no_log.png>
+Package pdftex.def Info: images/ben_no_log.png  used on input line 132.
+(pdftex.def)             Requested size: 409.72125pt x 269.9644pt.
+
 
 [4
 
 ]
+
+[5 <./images/ben_no_log.png>]
 Capitolo 4.
+<images/info_lib.png, id=217, 889.3225pt x 592.2125pt>
+File: images/info_lib.png Graphic file (type png)
+<use images/info_lib.png>
+Package pdftex.def Info: images/info_lib.png  used on input line 177.
+(pdftex.def)             Requested size: 409.72125pt x 272.83673pt.
 
 
-[5
+[6
 
 ]
 
-[6]
+[7 <./images/info_lib.png>]
 Capitolo 5.
+<images/reg.png, id=234, 896.34875pt x 597.23125pt>
+File: images/reg.png Graphic file (type png)
+<use images/reg.png>
+Package pdftex.def Info: images/reg.png  used on input line 202.
+(pdftex.def)             Requested size: 409.72125pt x 272.98912pt.
 
 
-[7
+[8
 
-]
+ <./images/reg.png>]
+<images/log.png, id=243, 894.34125pt x 593.21625pt>
+File: images/log.png Graphic file (type png)
+<use images/log.png>
+Package pdftex.def Info: images/log.png  used on input line 219.
+(pdftex.def)             Requested size: 409.72125pt x 271.76942pt.
+<images/all_my_libs.png, id=244, 894.34125pt x 592.2125pt>
+File: images/all_my_libs.png Graphic file (type png)
+<use images/all_my_libs.png>
+Package pdftex.def Info: images/all_my_libs.png  used on input line 235.
+(pdftex.def)             Requested size: 409.72125pt x 271.30957pt.
 
-[8]
 
-[9]
+[9 <./images/log.png>]
+<images/save_libr.png, id=253, 889.3225pt x 593.21625pt>
+File: images/save_libr.png Graphic file (type png)
+<use images/save_libr.png>
+Package pdftex.def Info: images/save_libr.png  used on input line 249.
+(pdftex.def)             Requested size: 409.72125pt x 273.29916pt.
+
+
+[10 <./images/all_my_libs.png> <./images/save_libr.png>]
+<images/sugg.png, id=264, 890.32625pt x 588.1975pt>
+File: images/sugg.png Graphic file (type png)
+<use images/sugg.png>
+Package pdftex.def Info: images/sugg.png  used on input line 269.
+(pdftex.def)             Requested size: 409.72125pt x 270.68182pt.
+<images/gest_lib.png, id=265, 885.3075pt x 589.20125pt>
+File: images/gest_lib.png Graphic file (type png)
+<use images/gest_lib.png>
+Package pdftex.def Info: images/gest_lib.png  used on input line 275.
+(pdftex.def)             Requested size: 409.72125pt x 272.69011pt.
+
+
+[11 <./images/sugg.png> <./images/gest_lib.png>]
+<images/val.png, id=272, 895.345pt x 592.2125pt>
+File: images/val.png Graphic file (type png)
+<use images/val.png>
+Package pdftex.def Info: images/val.png  used on input line 299.
+(pdftex.def)             Requested size: 409.72125pt x 271.01137pt.
+
+
+[12 <./images/val.png>]
 Capitolo 6.
 
 
-[10
+[13
 
 ]
 Capitolo 7.
 
 
-[11
+[14
 
 ]
 
-[12
+[15
 
 ] (./manuale_utente.aux)
  ***********
@@ -479,13 +535,13 @@ Package rerunfilecheck Info: File `manuale_utente.out' has not changed.
 (rerunfilecheck)             Checksum: 3320DCA4EC574151A5EFFE42F76C84B7;5739.
  ) 
 Here is how much of TeX's memory you used:
- 12742 strings out of 473190
- 193246 string characters out of 5722593
- 803992 words of memory out of 5000000
- 35762 multiletter control sequences out of 15000+600000
+ 12823 strings out of 473190
+ 195008 string characters out of 5722593
+ 802685 words of memory out of 5000000
+ 35836 multiletter control sequences out of 15000+600000
  573186 words of font info for 62 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,8n,79p,378b,1176s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,6n,79p,378b,1176s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texmf-dist/fonts/type1/public/cm-super/sfbi1000.pfb></usr/share/t
 exmf-dist/fonts/type1/public/cm-super/sfbx1000.pfb></usr/share/texmf-dist/fonts
 /type1/public/cm-super/sfbx1200.pfb></usr/share/texmf-dist/fonts/type1/public/c
@@ -497,10 +553,10 @@ ic/cm-super/sfrm1000.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sfr
 m1200.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sfrm1728.pfb></usr
 /share/texmf-dist/fonts/type1/public/cm-super/sfti1000.pfb></usr/share/texmf-di
 st/fonts/type1/public/cm-super/sftt1000.pfb>
-Output written on manuale_utente.pdf (13 pages, 287686 bytes).
+Output written on manuale_utente.pdf (16 pages, 770346 bytes).
 PDF statistics:
- 365 PDF objects out of 1000 (max. 8388607)
- 319 compressed objects within 4 object streams
- 88 named destinations out of 1000 (max. 500000)
- 257 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 391 PDF objects out of 1000 (max. 8388607)
+ 333 compressed objects within 4 object streams
+ 95 named destinations out of 1000 (max. 500000)
+ 302 words of extra memory for PDF output out of 10000 (max. 10000000)
 
