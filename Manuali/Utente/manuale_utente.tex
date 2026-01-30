@@ -64,12 +64,6 @@
 	
 	L'interfaccia grafica è stata progettata con uno stile moderno e minimale (palette colori: \textit{Dark Blue} e \textit{White}), garantendo un'esperienza utente intuitiva grazie a una barra laterale di navigazione sempre presente.
 	
-	L'applicazione è destinata principalmente a:
-	\begin{itemize}
-		\item \textbf{Imprese:} Per la gestione delle librerie e il miglioramento della \textit{customer experience} tramite sistemi di valutazione e consigli.
-		\item \textbf{Utenti privati:} Per curare la propria esperienza di lettura e consultare i pareri della community.
-	\end{itemize}
-	
 	% -------------------------------------------------------------------
 	% CAPITOLO 2: INSTALLAZIONE
 	% -------------------------------------------------------------------
@@ -82,7 +76,7 @@
 	L'applicazione è stata progettata e testata sui seguenti sistemi operativi:
 	\begin{itemize}
 		\item Windows 10 / 11
-		\item ArchLinux (HyperLand 053)
+		\item ArchLinux (HyperLand 0.53)
 		\item Linux Fedora 43 (KDE Plasma 6.5.4)
 		\item ArchLinux (KDE Plasma 6.5.5)
 	\end{itemize}
@@ -91,7 +85,7 @@
 	\subsection{Software richiesto}
 	\begin{itemize}
 		\item \textbf{Java:} È essenziale avere installato correttamente \textbf{Java 25}. Versioni precedenti non sono state testate.
-		\item \textbf{PostgreSQL:} Necessario per il funzionamento del database (gestito tramite gli script di inizializzazione).
+		\item \textbf{PostgreSQL:} È necessario aver installato \textbf{PostgreSQL 18} per il funzionamento del database (gestito tramite gli script di inizializzazione).
 		\item \textbf{Connessione di rete:} Necessaria per la comunicazione Client-Server.
 	\end{itemize}
 	
@@ -114,7 +108,7 @@
 	\subsection{Avvio su Windows}
 	\begin{enumerate}
 		\item Aprire la cartella contenente il software.
-		\item \textbf{Primo avvio (Inizializzazione Database):} Fare doppio clic sul file \filename{InitDB.bat}. Questo passaggio va eseguito \textbf{una sola volta} per creare e popolare il database.
+		\item \textbf{Primo avvio (Inizializzazione Database):} Fare doppio clic sul file \filename{InitDB.bat}. Questo passaggio va eseguito \textbf{una sola volta} per creare il database.
 		\item \textbf{Avvio Server:} Fare doppio clic su \filename{Server.bat}. Attendere che il server sia attivo.
 		\item \textbf{Avvio Client:} Dopo aver avviato il server, fare doppio clic su \filename{Client.bat}.
 	\end{enumerate}
@@ -122,24 +116,13 @@
 	
 	\subsection{Avvio su Linux / macOS}
 	Si consiglia di eseguire i comandi da terminale per visualizzare eventuali errori grafici o di permessi.
-	\begin{enumerate}
-		\item Aprire il terminale e spostarsi nella cartella del progetto:
-		\begin{verbatim}
-			$ cd path/to/BookRecommender
-		\end{verbatim}
-		\item \textbf{Primo avvio (Inizializzazione Database):}
-		\begin{verbatim}
-			$ ./InitDB.sh
-		\end{verbatim}
-		\item \textbf{Avvio Server:}
-		\begin{verbatim}
-			$ ./Server.sh
-		\end{verbatim}
-		\item \textbf{Avvio Client:} Aprire un nuovo terminale ed eseguire:
-		\begin{verbatim}
-			$ ./Client.sh
-		\end{verbatim}
-	\end{enumerate}
+Eseguire i seguenti comandi da terminale:
+\begin{lstlisting}[language=bash, frame=single, numbers=none]
+	$ cd path/to/BookRecommender
+	$ ./InitDB.sh    # Solo al primo avvio (DB Setup)
+	$ ./Server.sh    # Avvia il Server (non chiudere)
+	$ ./Client.sh    # Avvia il Client (in un nuovo terminale)
+\end{lstlisting}
 	
 	All'avvio, si presenterà la schermata principale (Home).
 	

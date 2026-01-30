@@ -36,6 +36,24 @@
 	inputencoding=utf8
 }
 
+\lstdefinestyle{sqlstyle}{
+	language=SQL,
+	basicstyle=\ttfamily\small,
+	keywordstyle=\color{javapurple}\bfseries,
+	stringstyle=\color{javared},
+	commentstyle=\color{javagreen},
+	morecomment=[l][\color{javadocblue}]{--},
+	frame=single,
+	breaklines=true,
+	numbers=left,
+	numberstyle=\tiny\color{gray},
+	captionpos=b,
+	showstringspaces=false,
+	tabsize=4,
+	extendedchars=true,
+	literate={à}{{\`a}}1 {è}{{\`e}}1 {é}{{\'e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1 {À}{{\`A}}1 {È}{{\`E}}1 {É}{{\'E}}1 {Ì}{{\`I}}1 {Ò}{{\`O}}1 {Ù}{{\`U}}1
+}
+
 \title{\textbf{Documentazione di Progetto}\\Manuale Tecnico}
 \author{
 	\textbf{Book Recommender} \\ \\
@@ -120,7 +138,7 @@
 	\label{fig:seq_suggestion}
 \end{figure}
 	
-	\section{Progettazione Database}
+	\chapter{Progettazione Database}
 	Il livello dati è gestito da PostgreSQL. La progettazione include vincoli per garantire la coerenza dei dati.
 	
 	\section{Analisi dei Requisiti}
@@ -165,7 +183,8 @@
 		\item \textbf{Regola dei Consigli:} Per suggerire un libro $B$ a chi ha letto $A$, l'utente deve possedere \textit{entrambi} i libri nelle proprie librerie (gestito tramite Trigger).
 	\end{enumerate}
 	
-	\subsection{Schema Entity-Relationship (ER)}
+	\section{Schemi Database}
+	\subsection{Shema Entity-Relationship (ER)}
 	\begin{figure}[htbp]
 		\centering
 		\caption{Schema Entity-Relationship}
@@ -222,8 +241,547 @@
 		\textit{Vincolo Unique: (userid, libro\_sorgente\_id, libro\_consigliato\_id)}
 	\end{itemize}
 	
+	\section{Script SQL}
+	\subsection{Creazione Database}
 	
-	% CAPITOLO 2
+	Di seguito viene riportato il codice sorgente completo (DDL) per la creazione del database PostgreSQL. Lo script include la definizione delle tabelle, i vincoli di integrità referenziale e i trigger PL/pgSQL necessari per implementare le regole di business (gestione dei consigli e delle valutazioni).
+	
+	\begin{lstlisting}[style=sqlstyle, caption=Script completo creazione Database Book Recommender]
+		-- =============================================================================
+		-- Script di creazione database Book Recommender (Lab B)
+		-- =============================================================================
+		
+		-- Pulizia preliminare
+		DROP TABLE IF EXISTS consigli CASCADE;
+		DROP TABLE IF EXISTS valutazioni CASCADE;
+		DROP TABLE IF EXISTS libri_x_librerie CASCADE;
+		DROP TABLE IF EXISTS librerie CASCADE;
+		DROP TABLE IF EXISTS utenti CASCADE;
+		DROP TABLE IF EXISTS libri CASCADE;
+		
+		DROP TABLE IF EXISTS "ConsigliLibri" CASCADE;
+		DROP TABLE IF EXISTS "ValutazioniLibri" CASCADE;
+		DROP TABLE IF EXISTS "LibriXLibrerie" CASCADE;
+		DROP TABLE IF EXISTS "Librerie" CASCADE;
+		DROP TABLE IF EXISTS "UtentiRegistrati" CASCADE;
+		DROP TABLE IF EXISTS "Libri" CASCADE;
+		
+		-- =============================================================================
+		-- Tabella UtentiRegistrati
+		-- Contiene i dati degli utenti che si registrano all'applicazione.
+		-- =============================================================================
+		CREATE TABLE "UtentiRegistrati" (
+		userid          VARCHAR(50) PRIMARY KEY, -- UserID scelto dall'utente
+		nome            VARCHAR(50) NOT NULL,
+		cognome         VARCHAR(50) NOT NULL,
+		codice_fiscale  CHAR(16) NOT NULL UNIQUE,
+		email           VARCHAR(100) NOT NULL UNIQUE,
+		password_hash   VARCHAR(256) NOT NULL
+		);
+		
+		-- =============================================================================
+		-- Tabella Libri
+		-- Repository dei libri importati dal dataset CSV.
+		-- =============================================================================
+		CREATE TABLE "Libri" (
+		id                  SERIAL PRIMARY KEY,     -- ID autogenerato
+		titolo              VARCHAR(500) NOT NULL,
+		autori              VARCHAR(500) NOT NULL,
+		anno_pubblicazione  INTEGER NOT NULL,
+		editore             VARCHAR(200),
+		categorie           VARCHAR(200)
+		);
+		
+		-- =============================================================================
+		-- Tabella Librerie
+		-- Rappresenta le raccolte create dagli utenti.
+		-- =============================================================================
+		CREATE TABLE "Librerie" (
+		id      SERIAL PRIMARY KEY,
+		nome    VARCHAR(100) NOT NULL,
+		userid  VARCHAR(50) NOT NULL,
+		
+		-- Vincolo: Se un utente viene cancellato, le sue librerie vengono cancellate
+		CONSTRAINT fk_utente_libreria
+		FOREIGN KEY (userid) REFERENCES "UtentiRegistrati"(userid)
+		ON DELETE CASCADE,
+		
+		-- Vincolo: Un utente non puo avere due librerie con lo stesso nome
+		CONSTRAINT unique_nome_userid UNIQUE(nome, userid)
+		);
+		
+		-- =============================================================================
+		-- Tabella LibriXLibrerie (Relazione Molti-a-Molti)
+		-- Collega i Libri alle Librerie. Un libro puo stare in piu librerie.
+		-- =============================================================================
+		CREATE TABLE "LibriXLibrerie" (
+		libreria_id INTEGER NOT NULL,
+		libro_id    INTEGER NOT NULL,
+		
+		PRIMARY KEY (libreria_id, libro_id),
+		
+		CONSTRAINT fk_libreria
+		FOREIGN KEY (libreria_id) REFERENCES "Librerie"(id)
+		ON DELETE RESTRICT, -- RESTRICT perche gestito da un trigger
+		
+		CONSTRAINT fk_libro
+		FOREIGN KEY (libro_id) REFERENCES "Libri"(id)
+		ON DELETE CASCADE
+		);
+		
+		-- =============================================================================
+		-- Tabella ValutazioniLibri
+		-- Contiene i voti (1-5) e le note (max 256 char) per ogni criterio.
+		-- =============================================================================
+		CREATE TABLE "ValutazioniLibri" (
+		id          SERIAL PRIMARY KEY,
+		userid      VARCHAR(50) NOT NULL,
+		libro_id    INTEGER NOT NULL,
+		
+		-- Punteggi (Scala 1-5)
+		stile           INTEGER NOT NULL CHECK (stile BETWEEN 1 AND 5),
+		contenuto       INTEGER NOT NULL CHECK (contenuto BETWEEN 1 AND 5),
+		gradevolezza    INTEGER NOT NULL CHECK (gradevolezza BETWEEN 1 AND 5),
+		originalita     INTEGER NOT NULL CHECK (originalita BETWEEN 1 AND 5),
+		edizione        INTEGER NOT NULL CHECK (edizione BETWEEN 1 AND 5),
+		finale          INTEGER GENERATED ALWAYS AS (
+		ROUND((stile + contenuto + gradevolezza + originalita + edizione) / 5.0 )
+		) STORED,
+		
+		-- Note opzionali
+		note_stile          VARCHAR(256),
+		note_contenuto      VARCHAR(256),
+		note_gradevolezza   VARCHAR(256),
+		note_originalita    VARCHAR(256),
+		note_edizione       VARCHAR(256),
+		note_finale         VARCHAR(256),
+		
+		-- Vincolo: Un utente puo valutare lo stesso libro una sola volta
+		CONSTRAINT unique_valutazione_utente_libro UNIQUE (userid, libro_id),
+		
+		CONSTRAINT fk_valutazione_utente
+		FOREIGN KEY (userid) REFERENCES "UtentiRegistrati"(userid)
+		ON DELETE CASCADE,
+		
+		CONSTRAINT fk_valutazione_libro
+		FOREIGN KEY (libro_id) REFERENCES "Libri"(id)
+		ON DELETE CASCADE
+		);
+		
+		-- =============================================================================
+		-- Tabella ConsigliLibri
+		-- Gestisce i suggerimenti: Utente U suggerisce Libro B dato il Libro A.
+		-- =============================================================================
+		CREATE TABLE "ConsigliLibri" (
+		id                      SERIAL PRIMARY KEY,
+		userid                  VARCHAR(50) NOT NULL,
+		libro_sorgente_id       INTEGER NOT NULL, -- Il libro che si sta visualizzando
+		libro_consigliato_id    INTEGER NOT NULL, -- Il libro suggerito
+		
+		CONSTRAINT unique_consiglio UNIQUE(userid, libro_sorgente_id, libro_consigliato_id),
+		
+		CONSTRAINT fk_consiglio_utente
+		FOREIGN KEY (userid) REFERENCES "UtentiRegistrati"(userid)
+		ON DELETE CASCADE,
+		
+		CONSTRAINT fk_libro_sorgente
+		FOREIGN KEY (libro_sorgente_id) REFERENCES "Libri"(id)
+		ON DELETE CASCADE,
+		
+		CONSTRAINT fk_libro_consigliato
+		FOREIGN KEY (libro_consigliato_id) REFERENCES "Libri"(id)
+		ON DELETE CASCADE
+		);
+		
+		-- Vincolo "max 3 libri suggeriti per libro corrente e il libro deve essere in una tua libreria"
+		CREATE OR REPLACE FUNCTION public.check_consigli_libri()
+		RETURNS trigger
+		LANGUAGE plpgsql
+		AS $function$
+		BEGIN
+		IF (
+		SELECT COUNT(*) FROM "ConsigliLibri"
+		WHERE userid = NEW.userid AND
+		libro_sorgente_id = NEW.libro_sorgente_id
+		) >= 3
+		-- Questa condizione fa rispettare anche il vincolo "libro_sorgente_id <> libro_consigliato_id"
+		OR (
+		SELECT COUNT(DISTINCT lxl.libro_id)
+		FROM "Librerie" as l JOIN "LibriXLibrerie" AS lxl ON l.id = lxl.libreria_id
+		WHERE l.userid = NEW.userid AND
+		lxl.libro_id IN (NEW.libro_sorgente_id, NEW.libro_consigliato_id)
+		) < 2 THEN
+		RAISE EXCEPTION 'Il check tabella ConsigliLibri ha fallito';
+		END IF;
+		RETURN NEW;
+		END;
+		$function$;
+		
+		-- Crea il trigger per la funzione definita prima
+		CREATE TRIGGER check_table
+		BEFORE INSERT OR UPDATE ON "ConsigliLibri"
+		FOR EACH ROW
+		EXECUTE FUNCTION public.check_consigli_libri();
+		
+		-- Funzione di utility che conta quante volte un libro appare nella libreria di un utente
+		CREATE OR REPLACE FUNCTION public.count_libri_in_librerie(uid character varying, bid integer)
+		RETURNS bigint
+		LANGUAGE plpgsql
+		AS $function$
+		BEGIN
+		RETURN (
+		SELECT COUNT(lxl.libro_id)
+		FROM "Librerie" as l JOIN "LibriXLibrerie" AS lxl ON l.id = lxl.libreria_id
+		WHERE l.userid = uid AND
+		lxl.libro_id = bid
+		);
+		END;
+		$function$;
+		
+		-- Elimina valutazioni o consigliati di libri che non sono piu in nessuna libreria
+		CREATE OR REPLACE FUNCTION public.check_delete_libri_x_librerie()
+		RETURNS trigger
+		LANGUAGE plpgsql
+		AS $function$
+		DECLARE uid varchar(50);
+		BEGIN
+		-- Salvo l'userid del proprietario della libreria
+		SELECT userid INTO uid
+		FROM "Librerie"
+		WHERE id = OLD.libreria_id;
+		
+		-- Se il libro non e presente in nessun'altra libreria elimina valutazioni e consigliati associati
+		IF count_libri_in_librerie(uid, OLD.libro_id) <= 1 THEN
+		DELETE FROM "ValutazioniLibri"
+		WHERE userid = uid AND libro_id = OLD.libro_id;
+		DELETE FROM "ConsigliLibri"
+		WHERE userid = uid AND OLD.libro_id IN (libro_sorgente_id, libro_consigliato_id);
+		END IF;
+		
+		RETURN OLD;
+		END;
+		$function$;
+		
+		-- Crea il trigger per la funzione definita prima
+		CREATE TRIGGER check_table
+		BEFORE delete ON "LibriXLibrerie"
+		FOR EACH ROW
+		EXECUTE FUNCTION public.check_delete_libri_x_librerie();
+		
+		-- Elimina ogni libro dalla libreria in questione prima di eliminare se stessa
+		CREATE OR REPLACE FUNCTION public.check_delete_librerie()
+		RETURNS trigger
+		LANGUAGE plpgsql
+		AS $function$
+		BEGIN
+		DELETE FROM "LibriXLibrerie" WHERE libreria_id = OLD.id;
+		RETURN OLD;
+		END;
+		$function$;
+		
+		-- Crea il trigger per la funzione definita prima
+		CREATE TRIGGER check_table
+		BEFORE delete ON "Librerie"
+		FOR EACH ROW
+		EXECUTE FUNCTION public.check_delete_librerie();
+		
+		-- Vincolo "il libro deve essere in una tua libreria"
+		CREATE OR REPLACE FUNCTION public.check_valutazioni_libri()
+		RETURNS trigger
+		LANGUAGE plpgsql
+		AS $function$
+		BEGIN
+		IF count_libri_in_librerie(NEW.userid, NEW.libro_id) < 1 THEN
+		RAISE EXCEPTION 'Il check tabella ValutazioniLibri ha fallito';
+		END IF;
+		
+		RETURN NEW;
+		END;
+		$function$;
+		
+		-- Crea il trigger per la funzione definita prima
+		CREATE TRIGGER check_table
+		BEFORE INSERT OR UPDATE ON "ValutazioniLibri"
+		FOR EACH ROW
+		EXECUTE FUNCTION public.check_valutazioni_libri();
+	\end{lstlisting}
+	
+	\subsection{Query SQL per Funzionamento del Codice}
+	
+	Di seguito sono riportate le query SQL utilizzate all'interno delle classi Java del modulo Server (\texttt{AuthQueries}, \texttt{BookQueries}, \texttt{LibraryQueries}, \texttt{RatingQueries}, \texttt{SuggestionQueries}). 
+	Le query sono parametrizzate (uso di \texttt{?}) per essere eseguite tramite \texttt{PreparedStatement}, garantendo sicurezza contro SQL Injection e migliori performance.
+	
+	\begin{lstlisting}[style=sqlstyle, caption=Raccolta delle Query CRUD utilizzate nel Backend]
+		-- =============================================================================
+		-- AUTH QUERIES
+		-- =============================================================================
+		
+		-- register()
+		-- Controllo duplicati per registrazione utente
+		SELECT
+		EXISTS(SELECT 1 FROM "UtentiRegistrati" WHERE userid = ?) AS uid_ex,
+		EXISTS(SELECT 1 FROM "UtentiRegistrati" WHERE codice_fiscale = ?) AS cf_ex,
+		EXISTS(SELECT 1 FROM "UtentiRegistrati" WHERE email = ?) AS email_ex;
+		
+		-- Registrazione
+		INSERT INTO "UtentiRegistrati" (userid, nome, cognome, codice_fiscale, email, password_hash)
+		VALUES (?, ?, ?, ?, ?, crypt(?, gen_salt('bf')));
+		
+		-- login()
+		-- Verifica login
+		SELECT CASE
+		-- 0: L'utente non esiste
+		WHEN NOT EXISTS(
+		SELECT 1 FROM "UtentiRegistrati"
+		WHERE userid = ?
+		) THEN 0
+		-- 1: Se la password non e corretta
+		WHEN NOT EXISTS(
+		SELECT 1 FROM "UtentiRegistrati"
+		WHERE userid = ? AND password_hash = crypt(?, password_hash)
+		) THEN 1
+		-- 2: Se l'utente esiste e la password e corretta
+		ELSE 2
+		END AS r;
+		
+		-- =============================================================================
+		-- BOOK QUERIES
+		-- =============================================================================
+		
+		-- getBookInfo()
+		-- Recupero informazioni di un libro
+		SELECT * FROM "Libri" WHERE id = ?;
+		
+		-- Recupero valutazioni di un libro
+		SELECT * FROM "ValutazioniLibri" WHERE libro_id = ?;
+		
+		-- Recupero consigliati di un libro
+		SELECT * FROM "ConsigliLibri" WHERE libro_sorgente_id = ?;
+		
+		-- Calcolo media valutazioni di un libro
+		SELECT
+		COUNT(*) as count,
+		ROUND(AVG(stile), 1) AS stile,
+		ROUND(AVG(contenuto), 1) AS contenuto,
+		ROUND(AVG(gradevolezza), 1) AS gradevolezza,
+		ROUND(AVG(originalita), 1) AS originalita,
+		ROUND(AVG(edizione), 1) AS edizione,
+		ROUND(AVG(finale), 1) AS finale
+		FROM "ValutazioniLibri"
+		WHERE libro_id = ?;
+		
+		-- Calcolo top consigliati di un libro
+		SELECT
+		l.*,
+		cl.count AS count
+		FROM "Libri" AS l
+		JOIN (
+		SELECT
+		libro_consigliato_id,
+		COUNT(*) AS count
+		FROM "ConsigliLibri"
+		WHERE libro_sorgente_id = ?
+		GROUP BY libro_consigliato_id
+		) AS cl
+		ON l.id = cl.libro_consigliato_id
+		ORDER BY count;
+		
+		-- selectAll()
+		-- Recupera le informazioni di tutti i libri
+		SELECT * FROM "Libri";
+		
+		-- searchByTitle()
+		-- Ricerca di un libro per titolo
+		SELECT * FROM "Libri" WHERE titolo ILIKE '%'||?||'%';
+		
+		-- searchByAuthor()
+		-- Ricerca di un libro per autore
+		SELECT * FROM "Libri" WHERE autori ILIKE '%'||?||'%';
+		
+		-- searchByAuthorAndYear()
+		-- Ricerca di un libro per autore e anno
+		SELECT * FROM "Libri" WHERE autori ILIKE '%'||?||'%' AND anno_pubblicazione = ?;
+		
+		-- =============================================================================
+		-- LIBRARY QUERIES
+		-- =============================================================================
+		
+		-- getLibrerieFrom()
+		-- Recupero delle librerie da un utente
+		SELECT * FROM "Librerie" WHERE userid = ?;
+		
+		-- getLibriFromLibreria()
+		-- Recupero dei libri presenti in una libreria
+		SELECT * FROM "Libri" AS l
+		JOIN "LibriXLibrerie" AS lxl ON l.id = lxl.libro_id
+		WHERE lxl.libreria_id = ?;
+		
+		-- createLibrary()
+		-- Controlla se una libreria esiste gia
+		SELECT CASE WHEN EXISTS(
+		SELECT 1 FROM "Librerie"
+		WHERE userid = ? AND nome = ?
+		) THEN 1 ELSE 0
+		END AS r;
+		
+		-- Crea una libreria
+		INSERT INTO "Librerie" (nome, userid) VALUES (?, ?);
+		
+		-- deleteLibrary()
+		-- Controlla se una libreria esiste
+		SELECT CASE WHEN EXISTS(
+		SELECT 1 FROM "Librerie"
+		WHERE userid = ? AND id = ?
+		) THEN 1 ELSE 0
+		END AS r;
+		
+		-- Elimina una libreria
+		DELETE FROM "Librerie" WHERE id = ?;
+		
+		-- addBookToLibrary()
+		-- Controlla se una libreria esiste o se il libro e gia nella libreria
+		SELECT CASE
+		-- 0: La libreria non esiste
+		WHEN NOT EXISTS (
+		SELECT 1 FROM "Librerie"
+		WHERE id = ? AND userid = ?
+		) THEN 0
+		-- 1: La libreria esiste ma contiene gia il libro
+		WHEN EXISTS (
+		SELECT 1 FROM "LibriXLibrerie"
+		WHERE libreria_id = ? AND libro_id = ?
+		) THEN 1
+		-- 2: La libreria esiste e non contiene il libro
+		ELSE 2
+		END AS r;
+		
+		-- Aggiunge un libro a una libreria
+		INSERT INTO "LibriXLibrerie" (libro_id, libreria_id) VALUES (?, ?);
+		
+		-- removeBookFromLibrary()
+		-- Controlla se una libreria esiste o se un libro non e gia nella libreria
+		SELECT CASE
+		-- 0: La libreria non esiste
+		WHEN NOT EXISTS (
+		SELECT 1 FROM "Librerie"
+		WHERE id = ? AND userid = ?
+		) THEN 0
+		-- 1: La libreria esiste ma non contiene il libro
+		WHEN NOT EXISTS (
+		SELECT 1 FROM "LibriXLibrerie"
+		WHERE libreria_id = ? AND libro_id = ?
+		) THEN 1
+		-- 2: La libreria esiste e contiene il libro
+		ELSE 2
+		END AS r;
+		
+		-- Rimuove un libro da una libreria
+		DELETE FROM "LibriXLibrerie" WHERE libro_id = ? AND libreria_id = ?;
+		
+		-- =============================================================================
+		-- RATING QUERIES
+		-- =============================================================================
+		
+		-- getRatingFrom()
+		-- Recupera la valutazione fatte da un utente per un libro
+		SELECT * FROM "ValutazioniLibri"
+		WHERE userid = ? AND libro_id = ?;
+		
+		-- createRating()
+		-- Controlla se un libro e gia stato valutato da un utente o se quell'utente 
+		-- ha quel libro in una delle sue librerie
+		SELECT CASE
+		-- 0: Se esiste gia una valutazione per quel libro
+		WHEN EXISTS(
+		SELECT 1 FROM "ValutazioniLibri"
+		WHERE userid = ? AND libro_id = ?
+		) THEN 0
+		-- 1: Se il libro sorgente non e in nessuna libreria
+		WHEN count_libri_in_librerie(?, ?) = 0 THEN 1
+		-- 2: Se il libro e in una libreria e non e stato valutato
+		ELSE 2
+		END AS r;
+		
+		-- Aggiunge una valutazione
+		INSERT INTO "ValutazioniLibri" (
+		userid, libro_id,
+		stile, contenuto, gradevolezza, originalita, edizione,
+		note_stile, note_contenuto, note_gradevolezza, 
+		note_originalita, note_edizione, note_finale
+		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+		
+		-- deleteRating()
+		-- Controlla se un libro e stato valutato
+		SELECT CASE
+		-- Se il libro non ha una valutazione
+		WHEN NOT EXISTS(
+		SELECT 1 FROM "ValutazioniLibri"
+		WHERE userid = ? AND libro_id = ?
+		) THEN 0
+		-- Se il libro ha una valutazione
+		ELSE 1
+		END AS r;
+		
+		-- Elimina una valutazione
+		DELETE FROM "ValutazioniLibri" WHERE userid = ? AND libro_id = ?;
+		
+		-- =============================================================================
+		-- SUGGESTION QUERIES
+		-- =============================================================================
+		
+		-- getSuggestionsFrom()
+		-- Recupera tutti i consigliati per un libro
+		SELECT * FROM "ConsigliLibri"
+		WHERE userid = ? AND libro_sorgente_id = ?;
+		
+		-- createSuggestion()
+		-- Controlla se i libri coinvolti sono in una libreria dell'utente, 
+		-- se esiste un'associazione e se il libro ha gia 3 consigliati
+		SELECT CASE
+		-- 0: Se il libro sorgente non e in nessuna libreria
+		WHEN count_libri_in_librerie(?, ?) = 0 THEN 0
+		-- 1: Se il libro consigliato non e in nessuna libreria
+		WHEN count_libri_in_librerie(?, ?) = 0 THEN 1
+		-- 2: Se esiste gia un consiglio identico
+		WHEN EXISTS(
+		SELECT 1 FROM "ConsigliLibri"
+		WHERE userid = ? AND libro_sorgente_id = ? AND libro_consigliato_id = ?
+		) THEN 2
+		-- 3: Se ci sono gia 3 consigliati
+		WHEN (
+		SELECT COUNT(*) FROM "ConsigliLibri"
+		WHERE userid = ? AND libro_sorgente_id = ?
+		) >= 3 THEN 3
+		-- 4: Se e tutto okay per l'aggiunta di un consigliato
+		ELSE 4
+		END AS r;
+		
+		-- Crea un nuovo consiglio
+		INSERT INTO "ConsigliLibri" (userid, libro_sorgente_id, libro_consigliato_id) 
+		VALUES (?, ?, ?);
+		
+		-- deleteSuggestion()
+		-- Controlla se un utente ha consigliato un libro per un altro libro
+		SELECT CASE WHEN EXISTS(
+		SELECT 1 FROM "ConsigliLibri"
+		WHERE userid = ? AND libro_sorgente_id = ? AND libro_consigliato_id = ?
+		) THEN 1 ELSE 0
+		END AS r;
+		
+		-- Elimina un consiglio
+		DELETE FROM "ConsigliLibri"
+		WHERE userid = ? AND libro_sorgente_id = ? AND libro_consigliato_id = ?;
+		
+		-- =============================================================================
+		-- USER QUERIES
+		-- =============================================================================
+		
+		-- getUserInfo()
+		-- Recupera le informazioni di un utente
+		SELECT * FROM "UtentiRegistrati" WHERE userid = ?;
+	\end{lstlisting}
+
+
 	\chapter{Report Tecnico della Soluzione Sviluppata}
 	In questa sezione vengono dettagliate le scelte implementative, i design pattern adottati per risolvere specifici problemi architetturali e le ottimizzazioni algoritmiche utilizzate.
 	
