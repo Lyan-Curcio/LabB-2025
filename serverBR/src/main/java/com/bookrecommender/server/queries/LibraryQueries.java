@@ -29,38 +29,6 @@ import java.util.LinkedList;
 public class LibraryQueries {
 
     /**
-     * Cerca nel database le librerie il cui nome contiene la stringa specificata (case-insensitive).
-     *
-     * @param libraryName il nome (o parte del nome) da cercare
-     * @return una lista di oggetti {@link Library} trovati
-     */
-    public synchronized static LinkedList<Library> searchLibraryByName(String libraryName) {
-        @Language("PostgreSQL")
-        String query = "SELECT * FROM \"Librerie\" WHERE nome ILIKE '%'||?||'%'";
-        return DatabaseManager.getInstance().executeQuery(
-                query,
-                Library::new,
-                new Object[] {libraryName}
-        );
-    }
-
-    /**
-     * Cerca nel database tutte le librerie il cui utente associato contiene la stringa specificata (case-insensitive).
-     *
-     * @param userId l'identificativo (o parte dell'identificativo) dell'utente proprietario
-     * @return una lista di oggetti {@link Library} appartenenti all'utente
-     */
-    public synchronized static LinkedList<Library> searchLibraryByUser(String userId) {
-        @Language("PostgreSQL")
-        String query = "SELECT * FROM \"Librerie\" WHERE userid ILIKE '%'||?||'%'";
-        return DatabaseManager.getInstance().executeQuery(
-                query,
-                Library::new,
-                new Object[] {userId}
-        );
-    }
-
-    /**
      * Cerca nel database tutte le librerie associate a un determinato UserID.
      *
      * @param userId l'identificativo (esatto) dell'utente proprietario

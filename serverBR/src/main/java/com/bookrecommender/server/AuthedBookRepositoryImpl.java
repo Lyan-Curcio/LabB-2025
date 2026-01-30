@@ -64,18 +64,6 @@ public class AuthedBookRepositoryImpl extends UnicastRemoteObject implements Aut
     //
 
     /** {@inheritDoc} */
-    @Override
-    public LinkedList<Library> cercaLibreriePerNome(String nomeLibreria) throws RemoteException {
-        return LibraryQueries.searchLibraryByName(nomeLibreria);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public LinkedList<Library> cercaLibreriePerUtente(String userId) throws RemoteException {
-        return LibraryQueries.searchLibraryByUser(userId);
-    }
-
-    /** {@inheritDoc} */
     public LinkedList<Library> getMyLibrerie() throws RemoteException {
         return LibraryQueries.getLibrerieFrom(loggedUserId);
     }
