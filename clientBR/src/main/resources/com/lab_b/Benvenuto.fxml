@@ -59,7 +59,7 @@
          </font>
       </Label>
       <TextField fx:id="tfRicerca" layoutX="422.0" layoutY="105.0" prefHeight="40.0" prefWidth="240.0" promptText="Cerca un libro" style="-fx-border-color: black; -fx-border-width: 4; -fx-background-radius: 7; -fx-border-radius: 4; -fx-font-size: 14;" />
-      <Button fx:id="buttonResearch" layoutX="689.0" layoutY="105.0" mnemonicParsing="false" onAction="#btnClickResearch" prefHeight="40.0" prefWidth="99.0" style="-fx-background-insets: 0; -fx-effect: dropshadow(gaussian, rgba(0,0,3,2.4), 6, 0.3, 3, 2);" text="Cerca">
+      <Button fx:id="buttonResearch" layoutX="230.0" layoutY="177.0" mnemonicParsing="false" onAction="#btnClickResearch" prefHeight="40.0" prefWidth="107.0" style="-fx-background-insets: 0; -fx-effect: dropshadow(gaussian, rgba(0,0,3,2.4), 6, 0.3, 3, 2);" text="Cerca">
          <font>
             <Font size="18.0" />
          </font></Button>
@@ -81,7 +81,7 @@
         </items>
       </SplitMenuButton>
       <Label layoutX="257.0" layoutY="87.0" text="Cerca per:" />
-      <TextField fx:id="tfRicercaAnno" disable="true" layoutX="256.0" layoutY="167.0" prefHeight="38.0" prefWidth="71.0" promptText="Anno" style="-fx-border-color: black; -fx-border-width: 4; -fx-background-radius: 7; -fx-border-radius: 4; -fx-font-size: 14;" />
+      <TextField fx:id="tfRicercaAnno" disable="true" layoutX="685.0" layoutY="106.0" prefHeight="38.0" prefWidth="71.0" promptText="Anno" style="-fx-border-color: black; -fx-border-width: 4; -fx-background-radius: 7; -fx-border-radius: 4; -fx-font-size: 14;" />
       <Button fx:id="btnInfoLibro" layoutX="489.0" layoutY="510.0" mnemonicParsing="false" onAction="#btnClickInfoLibro" prefHeight="50.0" prefWidth="107.0" style="-fx-effect: dropshadow(gaussian, rgba(0,0,3,2.4), 6, 0.3, 3, 2); -fx-background-insets: 0;" text="InfoLibro">
          <font>
             <Font size="18.0" />
