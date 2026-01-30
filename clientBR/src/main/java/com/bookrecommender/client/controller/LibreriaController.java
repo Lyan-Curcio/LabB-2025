@@ -145,7 +145,6 @@ public class LibreriaController
     @FXML
     void rimuoviConsiglio(ActionEvent event) throws RemoteException
     {
-        System.out.println(libro.id +" "+consiglio.id);
         RemoveSuggestionResult result = App.getInstance().authedBookRepository.rimuoviSuggerimentoLibro(libro.id, libroConsigliato.id);
         if (result == RemoveSuggestionResult.OK)
         {

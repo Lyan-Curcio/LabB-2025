@@ -68,7 +68,6 @@ public class InfoLibroController
                 )
         );
         verificheListeRecensioniConsigliati();
-
     }
     private void registrato() throws RemoteException
     {
