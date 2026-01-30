@@ -119,18 +119,16 @@ public class InfoLibroController
         {
             labelListRecensioni.setText("");
 
-            labelRecensioni.setText("");
+            labelRecensioni.setText("Stile: "+bookInfo.averageRatings.stile+"\nContenuto "+bookInfo.averageRatings.contenuto+
+                    "\nGradevolezza "+bookInfo.averageRatings.gradevolezza+
+                    "\nOriginalita "+bookInfo.averageRatings.originalita+
+                    "\nEdizione "+bookInfo.averageRatings.edizione+
+                    "\nFinale "+bookInfo.averageRatings.finale);
         }
 
         if(!listaConsigliati.getItems().isEmpty())
         {
-            labelListConsigliati.setText(
-                    "Stile: "+bookInfo.averageRatings.stile+"\nContenuto "+bookInfo.averageRatings.contenuto+
-                            "\nGradevolezza "+bookInfo.averageRatings.gradevolezza+
-                            "\nOriginalita "+bookInfo.averageRatings.originalita+
-                            "\nEdizione "+bookInfo.averageRatings.edizione+
-                            "\nFinale "+bookInfo.averageRatings.finale
-                    );
+            labelListConsigliati.setText("");
         }
     }
 
