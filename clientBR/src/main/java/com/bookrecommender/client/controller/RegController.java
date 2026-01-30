@@ -34,6 +34,7 @@ public class RegController {
         if (!checkEmail().equals(""))
         {
             errorEmail.setText(checkEmail());
+            return;
         }
         if(!password.equals(cPassword))
         {
