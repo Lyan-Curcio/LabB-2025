@@ -119,30 +119,18 @@ public class InfoLibroController
         {
             labelListRecensioni.setText("");
 
-            int mediaStile = 0, mediaContenuto=0, mediaGradevolezza, mediaOriginalita, mediaEdizione;
-            int sommaStile = 0, sommaContenuto = 0, sommaGradevolezza = 0, sommaOriginalita = 0, sommaEdizione = 0;
-            for (Rating rating : bookInfo.ratings)
-            {
-                sommaStile = rating.stile;
-                sommaContenuto += rating.contenuto;
-                sommaGradevolezza += rating.gradevolezza;
-                sommaOriginalita += rating.originalita;
-                sommaEdizione += rating.edizione;
-            }
-            mediaStile = sommaStile / bookInfo.ratings.size();
-            mediaContenuto = sommaContenuto / bookInfo.ratings.size();
-            mediaGradevolezza = sommaGradevolezza / bookInfo.ratings.size();
-            mediaOriginalita = sommaOriginalita / bookInfo.ratings.size();
-            mediaEdizione = sommaEdizione / bookInfo.ratings.size();
-            labelRecensioni.setText("Numero di recensioni "+bookInfo.ratings.size()+"\nStile "+mediaStile+
-                    "\nContenuto "+mediaContenuto+"\nGradevolezza "
-                    +mediaGradevolezza+"\nOrignilalita "+mediaGradevolezza+"\nEdizione "+mediaEdizione
-            );
+            labelRecensioni.setText("");
         }
 
         if(!listaConsigliati.getItems().isEmpty())
         {
-            labelListConsigliati.setText("");
+            labelListConsigliati.setText(
+                    "Stile: "+bookInfo.averageRatings.stile+"\nContenuto "+bookInfo.averageRatings.contenuto+
+                            "\nGradevolezza "+bookInfo.averageRatings.gradevolezza+
+                            "\nOriginalita "+bookInfo.averageRatings.originalita+
+                            "\nEdizione "+bookInfo.averageRatings.edizione+
+                            "\nFinale "+bookInfo.averageRatings.finale
+                    );
         }
     }
 

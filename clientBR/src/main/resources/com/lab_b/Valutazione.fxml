@@ -7,14 +7,13 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: grey; -fx-border-color: black; -fx-border-width: 3;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.bookrecommender.client.controller.ValutazioneController">
    <children>
-      <TextField fx:id="tfStile" layoutX="89.0" layoutY="42.0" prefHeight="31.0" prefWidth="271.0" promptText="scrivere un numero da 1 a 5(es 2)" style="-fx-border-color: black; -fx-border-width: 4; -fx-background-radius: 7; -fx-border-radius: 4; -fx-font-size: 14;" />
-      <TextField fx:id="tfOriginalita" layoutX="89.0" layoutY="323.0" prefHeight="31.0" prefWidth="271.0" promptText="scrivere un numero da 1 a 5(es 2)" style="-fx-border-color: black; -fx-border-width: 4; -fx-background-radius: 7; -fx-border-radius: 4; -fx-font-size: 14;" />
-      <TextField fx:id="tfGradevolezza" layoutX="89.0" layoutY="226.0" prefHeight="31.0" prefWidth="271.0" promptText="scrivere un numero da 1 a 5(es 2)" style="-fx-border-color: black; -fx-border-width: 4; -fx-background-radius: 7; -fx-border-radius: 4; -fx-font-size: 14;" />
-      <TextField fx:id="tfContenuto" layoutX="89.0" layoutY="118.0" prefHeight="31.0" prefWidth="271.0" promptText="scrivere un numero da 1 a 5(es 2)" style="-fx-border-color: black; -fx-border-width: 4; -fx-background-radius: 7; -fx-border-radius: 4; -fx-font-size: 14;" />
-      <TextArea fx:id="noteStile" layoutX="403.0" layoutY="15.0" prefHeight="90.0" prefWidth="482.0" promptText="note stile" style="-fx-border-color: black; -fx-border-width: 4; -fx-background-radius: 7; -fx-border-radius: 4;">
+      <TextField fx:id="tfStile" layoutX="89.0" layoutY="42.0" prefHeight="31.0" prefWidth="271.0" promptText="scrivere un numero da 1 a 5(es 2)*" style="-fx-border-color: black; -fx-border-width: 4; -fx-background-radius: 7; -fx-border-radius: 4; -fx-font-size: 14;" />
+      <TextField fx:id="tfOriginalita" layoutX="89.0" layoutY="323.0" prefHeight="31.0" prefWidth="271.0" promptText="scrivere un numero da 1 a 5(es 2)*" style="-fx-border-color: black; -fx-border-width: 4; -fx-background-radius: 7; -fx-border-radius: 4; -fx-font-size: 14;" />
+      <TextField fx:id="tfGradevolezza" layoutX="89.0" layoutY="226.0" prefHeight="31.0" prefWidth="271.0" promptText="scrivere un numero da 1 a 5(es 2)*" style="-fx-border-color: black; -fx-border-width: 4; -fx-background-radius: 7; -fx-border-radius: 4; -fx-font-size: 14;" />
+      <TextField fx:id="tfContenuto" layoutX="89.0" layoutY="118.0" prefHeight="31.0" prefWidth="271.0" promptText="scrivere un numero da 1 a 5(es 2)*" style="-fx-border-color: black; -fx-border-width: 4; -fx-background-radius: 7; -fx-border-radius: 4; -fx-font-size: 14;" />
+      <TextArea fx:id="noteStile" layoutX="403.0" layoutY="15.0" prefHeight="90.0" prefWidth="482.0" promptText="note stile(opzionale)" style="-fx-border-color: black; -fx-border-width: 4; -fx-background-radius: 7; -fx-border-radius: 4;">
          <font>
             <Font size="14.0" />
          </font>
@@ -24,17 +23,17 @@
             <Font size="24.0" />
          </font>
       </Button>
-      <TextArea fx:id="noteContenuto" layoutX="403.0" layoutY="118.0" prefHeight="90.0" prefWidth="482.0" promptText="note contenuto" style="-fx-border-color: black; -fx-border-width: 4; -fx-background-radius: 7; -fx-border-radius: 4;">
+      <TextArea fx:id="noteContenuto" layoutX="403.0" layoutY="118.0" prefHeight="90.0" prefWidth="482.0" promptText="note contenuto(opzionale)" style="-fx-border-color: black; -fx-border-width: 4; -fx-background-radius: 7; -fx-border-radius: 4;">
          <font>
             <Font size="14.0" />
          </font>
       </TextArea>
-      <TextArea fx:id="noteGradevolezza" layoutX="403.0" layoutY="218.0" prefHeight="90.0" prefWidth="482.0" promptText="note gradevolezza" style="-fx-border-color: black; -fx-border-width: 4; -fx-background-radius: 7; -fx-border-radius: 4;">
+      <TextArea fx:id="noteGradevolezza" layoutX="403.0" layoutY="218.0" prefHeight="90.0" prefWidth="482.0" promptText="note gradevolezza(opzionale)" style="-fx-border-color: black; -fx-border-width: 4; -fx-background-radius: 7; -fx-border-radius: 4;">
          <font>
             <Font size="14.0" />
          </font>
       </TextArea>
-      <TextArea fx:id="noteOriginalita" layoutX="403.0" layoutY="316.0" prefHeight="90.0" prefWidth="482.0" promptText="note originalita" style="-fx-border-color: black; -fx-border-width: 4; -fx-background-radius: 7; -fx-border-radius: 4;">
+      <TextArea fx:id="noteOriginalita" layoutX="403.0" layoutY="316.0" prefHeight="90.0" prefWidth="482.0" promptText="note originalita(opzionale)" style="-fx-border-color: black; -fx-border-width: 4; -fx-background-radius: 7; -fx-border-radius: 4;">
          <font>
             <Font size="14.0" />
          </font>
@@ -64,8 +63,8 @@
             <Font size="18.0" />
          </font>
       </Label>
-      <TextField fx:id="tfEdizione" layoutX="89.0" layoutY="421.0" prefHeight="31.0" prefWidth="271.0" promptText="scrivere un numero da 1 a 5(es 2)" style="-fx-border-color: black; -fx-border-width: 4; -fx-background-radius: 7; -fx-border-radius: 4; -fx-font-size: 14;" />
-      <TextArea fx:id="noteEdizione" layoutX="403.0" layoutY="413.0" prefHeight="90.0" prefWidth="482.0" promptText="note edizione" style="-fx-border-color: black; -fx-border-width: 4; -fx-background-radius: 7; -fx-border-radius: 4;">
+      <TextField fx:id="tfEdizione" layoutX="89.0" layoutY="421.0" prefHeight="31.0" prefWidth="271.0" promptText="scrivere un numero da 1 a 5(es 2)*" style="-fx-border-color: black; -fx-border-width: 4; -fx-background-radius: 7; -fx-border-radius: 4; -fx-font-size: 14;" />
+      <TextArea fx:id="noteEdizione" layoutX="403.0" layoutY="413.0" prefHeight="90.0" prefWidth="482.0" promptText="note edizione(opzionale)" style="-fx-border-color: black; -fx-border-width: 4; -fx-background-radius: 7; -fx-border-radius: 4;">
          <font>
             <Font size="14.0" />
          </font>
@@ -75,7 +74,7 @@
             <Font size="15.0" />
          </font>
       </Button>
-      <TextArea fx:id="noteFinali" layoutX="403.0" layoutY="521.0" prefHeight="70.0" prefWidth="482.0" promptText="note finali" style="-fx-border-color: black; -fx-border-width: 4; -fx-background-radius: 7; -fx-border-radius: 4;">
+      <TextArea fx:id="noteFinali" layoutX="403.0" layoutY="521.0" prefHeight="70.0" prefWidth="482.0" promptText="note finali(opzionale)" style="-fx-border-color: black; -fx-border-width: 4; -fx-background-radius: 7; -fx-border-radius: 4;">
          <font>
             <Font size="14.0" />
          </font>

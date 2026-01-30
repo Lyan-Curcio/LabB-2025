@@ -33,12 +33,15 @@ public class LibreriaController
 
     private Hashtable<String, Book> ricercaMapLibri =  new Hashtable<>();
     private Hashtable<String, SuggestionWithBooks> MapSuggerimenti = new Hashtable<>();
+    LinkedList<SuggestionWithBooks> consigliati;
     private Rating valutazione = null;
     private Book libroConsigliato;
+    private boolean confermaEliminazione = false;
 
     public static Book libro;
     public static SuggestionWithBooks consiglio;
     public static boolean consigliando = false;
+
     @FXML
     private void initialize() throws RemoteException
     {
@@ -65,7 +68,9 @@ public class LibreriaController
             public void changed(ObservableValue<? extends String> observableValue, String s, String t1)
             {
                 libro  = ricercaMapLibri.get(listaLibriLibreria.getSelectionModel().getSelectedItem());
-                LinkedList<SuggestionWithBooks> consigliati;
+                confermaEliminazione = false;
+                errorLabel.setText("");
+
                 btnRimuoviLibro.setVisible(true);
                 try
                 {
@@ -94,7 +99,7 @@ public class LibreriaController
                 try
                 {
                     valutazione = App.getInstance().authedBookRepository.getMyValutazione(libro.id);
-                    if(valutazione == null || valutazione.toStringInfo().equals(""))
+                    if(valutazione == null || valutazione.toStringInfo().isEmpty())
                     {
                         btnRimuoviRecensione.setVisible(false);
                         btnValuta.setVisible(true);
@@ -162,26 +167,30 @@ public class LibreriaController
     @FXML
     void rimuoviLibro(ActionEvent event) throws RemoteException
     {
-        RemoveBookFromLibResult result = App.getInstance().authedBookRepository.rimuoviLibroDaLibreria(LibrerieUtenteController.libreria.id, libro.id);
-        if (result == RemoveBookFromLibResult.OK)
+        if(!confermaEliminazione)
         {
-            App.getInstance().changeScene("Libreria.fxml");
-        }
-        else if(result == RemoveBookFromLibResult.BOOK_NOT_IN_LIBRARY)
-        {
-            errorLabel.setText(result.getMessage());
-        }
-        else if(result == RemoveBookFromLibResult.LIBRARY_NOT_FOUND)
-        {
-            errorLabel.setText(result.getMessage());
-        }
-        else if(consiglio == null)
-        {
-            errorLabel.setText("il libro è consigliato, rimuovilo dai consigliati e puoi eliminare il libro");
+            errorLabel.setText("se il libro non è in nessun'altra libreria le sue recensioni e i suoi consigliati verranno eliminati");
+            confermaEliminazione = true;
         }
         else
         {
-            errorLabel.setText(result.getMessage());
+            RemoveBookFromLibResult result = App.getInstance().authedBookRepository.rimuoviLibroDaLibreria(LibrerieUtenteController.libreria.id, libro.id);
+            if (result == RemoveBookFromLibResult.OK)
+            {
+                App.getInstance().changeScene("Libreria.fxml");
+            }
+            else if(result == RemoveBookFromLibResult.BOOK_NOT_IN_LIBRARY)
+            {
+                errorLabel.setText(result.getMessage());
+            }
+            else if(result == RemoveBookFromLibResult.LIBRARY_NOT_FOUND)
+            {
+                errorLabel.setText(result.getMessage());
+            }
+            else
+            {
+                errorLabel.setText(result.getMessage());
+            }
         }
     }
     @FXML

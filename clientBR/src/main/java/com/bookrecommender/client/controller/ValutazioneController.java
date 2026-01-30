@@ -60,13 +60,10 @@ public class ValutazioneController {
     {
         if(
                 tfContenuto.getText().isEmpty() || tfEdizione.getText().isEmpty() || tfGradevolezza.getText().isEmpty()
-                || tfOriginalita.getText().isEmpty() || tfStile.getText().isEmpty() || noteContenuto.getText().isEmpty()
-                || noteEdizione.getText().isEmpty() || noteGradevolezza.getText().isEmpty()
-                || noteOriginalita.getText().isEmpty()
-                || noteStile.getText().isEmpty() || noteFinali.getText().isEmpty()
+                || tfOriginalita.getText().isEmpty() || tfStile.getText().isEmpty()
         )
         {
-            return  "Riempire tutti i campi";
+            return  "Riempire tutti i campi obbligatori(*)";
         }
         return "";
     }
