@@ -24,6 +24,9 @@ import java.util.LinkedList;
  */
 public class SuggestionQueries {
 
+    /** Vieta l'instanziamento */
+    private SuggestionQueries() {}
+
     /**
      * Recupera tutti i suggerimenti creati da un utente specifico partendo da un dato libro sorgente.
      *

@@ -20,6 +20,9 @@ import java.util.NoSuchElementException;
  */
 public class UserQueries {
 
+    /** Vieta l'instanziamento */
+    private UserQueries() {}
+
     /**
      * Recupera le informazioni anagrafiche complete di un utente registrato dato il suo UserID.
      * <p>

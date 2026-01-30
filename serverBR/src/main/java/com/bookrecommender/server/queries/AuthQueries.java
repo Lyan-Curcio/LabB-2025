@@ -24,6 +24,9 @@ import java.util.LinkedList;
  */
 public class AuthQueries {
 
+    /** Vieta l'instanziamento */
+    private AuthQueries() {}
+
     /**
      * Gestisce la registrazione di un nuovo utente nel database.
      * <p>

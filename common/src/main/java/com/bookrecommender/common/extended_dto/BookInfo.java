@@ -34,16 +34,20 @@ public class BookInfo implements Serializable {
     /** Lista dei suggerimenti che collegano questo libro ad altri titoli consigliati. */
     public final LinkedList<SuggestionWithBooks> suggestions;
 
+    /** Media delle valutazioni del libro */
     public final AverageRatings averageRatings;
 
+    /** Lista dei top consigliati per questo libro in ordine decrescente */
     public final LinkedList<SuggestionCount> suggestionCounts;
 
     /**
      * Costruisce un nuovo oggetto aggregatore {@link BookInfo}.
      *
-     * @param book        l'oggetto libro principale
-     * @param ratings      la lista delle valutazioni associate al libro
-     * @param suggestions la lista dei suggerimenti associati al libro
+     * @param book              l'oggetto libro principale
+     * @param ratings           la lista delle valutazioni associate al libro
+     * @param suggestions       la lista dei suggerimenti associati al libro
+     * @param averageRatings    la media delle valutazioni del libro
+     * @param suggestionCounts  la lista dei top consigliati per questo libro in ordine decrescente
      */
     public BookInfo(
         Book book,

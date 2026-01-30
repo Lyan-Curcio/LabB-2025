@@ -22,6 +22,9 @@ import java.util.NoSuchElementException;
  */
 public class BookQueries {
 
+    /** Vieta l'instanziamento */
+    private BookQueries() {}
+
     /**
      * Recupera le informazioni di un libro con l'id richiesto
      *

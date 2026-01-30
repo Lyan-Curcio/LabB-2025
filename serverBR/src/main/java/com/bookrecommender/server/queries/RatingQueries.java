@@ -24,6 +24,9 @@ import java.util.NoSuchElementException;
  */
 public class RatingQueries {
 
+    /** Vieta l'instanziamento */
+    private RatingQueries() {}
+
     /**
      * Recupera una specifica valutazione dal database data la coppia Utente-Libro.
      *

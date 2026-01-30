@@ -28,6 +28,9 @@ import java.util.LinkedList;
  */
 public class LibraryQueries {
 
+    /** Vieta l'instanziamento */
+    private LibraryQueries() {}
+
     /**
      * Cerca nel database tutte le librerie associate a un determinato UserID.
      *

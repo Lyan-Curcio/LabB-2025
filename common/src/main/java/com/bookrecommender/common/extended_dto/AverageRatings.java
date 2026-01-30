@@ -5,21 +5,57 @@ import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Classe che rappresenta le valutazioni medie di un libro.
+ */
 public class AverageRatings implements Serializable {
 
-    /** Versione della classe per la serializzazione. */
+    /**
+     * Versione della classe per la serializzazione.
+     */
     @Serial
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Numero totale di valutazioni.
+     */
     public final int ratingsCount;
 
+    /**
+     * Valutazione media dello stile.
+     */
     public final float stile;
+
+    /**
+     * Valutazione media del contenuto.
+     */
     public final float contenuto;
+
+    /**
+     * Valutazione media della gradevolezza.
+     */
     public final float gradevolezza;
+
+    /**
+     * Valutazione media dell'originalità.
+     */
     public final float originalita;
+
+    /**
+     * Valutazione media dell'edizione.
+     */
     public final float edizione;
+
+    /**
+     * Valutazione media finale.
+     */
     public final float finale;
 
+    /**
+     * Costruisce un {@code AverageRatings} a partire da un {@link ResultSet}.
+     *
+     * @param rs {@link ResultSet} contenente i valori medi delle valutazioni
+     */
     public AverageRatings(ResultSet rs) {
         int _ratingsCount;
         float _stile;
@@ -39,7 +75,9 @@ public class AverageRatings implements Serializable {
             _finale = rs.getFloat("finale");
         }
         catch (SQLException e) {
-            System.err.println("Impossibile costruire un 'AverageRatings' con il 'ResultSet': " + rs);
+            System.err.println(
+                "Impossibile costruire un 'AverageRatings' con il 'ResultSet': " + rs
+            );
             _ratingsCount = 0;
             _stile = 0;
             _contenuto = 0;
