@@ -158,8 +158,17 @@ public class InfoLibroController
     private void ospite() throws RemoteException
     {
         bookInfo = App.getInstance().bookRepository.getBookInfo(BenController.libro.id);
-        infoLibro.setText(bookInfo.book.toStringInfo()+"\n" + bookInfo.book.editore + "\n" + Arrays.toString(bookInfo.book.categorie));
-        caricaListeComuni();
+        if (bookInfo.book.categorie.length == 0)
+        {
+            infoLibro.setText(bookInfo.book.toStringInfo()+"\n - " + bookInfo.book.editore + "\n");
+            caricaListeComuni();
+        }
+        else
+        {
+            infoLibro.setText(bookInfo.book.toStringInfo()+"\n - " + bookInfo.book.editore + "\n - " + Arrays.toString(bookInfo.book.categorie));
+            caricaListeComuni();
+        }
+
     }
 
     /**
