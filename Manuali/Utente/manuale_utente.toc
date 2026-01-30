@@ -1,0 +1,34 @@
+\babel@toc {italian}{}\relax 
+\babel@toc {italian}{}\relax 
+\contentsline {chapter}{\numberline {1}Introduzione}{2}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Scopo del documento}{2}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Descrizione del prodotto}{2}{section.1.2}%
+\contentsline {chapter}{\numberline {2}Installazione}{3}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Requisiti di sistema}{3}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}Sistema Operativo}{3}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}Software richiesto}{3}{subsection.2.1.2}%
+\contentsline {section}{\numberline {2.2}Setup ambiente e Installazione}{3}{section.2.2}%
+\contentsline {chapter}{\numberline {3}Esecuzione ed Uso}{4}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Setup e lancio del programma}{4}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}Avvio su Windows}{4}{subsection.3.1.1}%
+\contentsline {subsection}{\numberline {3.1.2}Avvio su Linux / macOS}{4}{subsection.3.1.2}%
+\contentsline {chapter}{\numberline {4}Uso delle funzionalità (Utenti non registrati)}{6}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Ricerca Libri}{6}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Visualizzazione Dettagli Libro}{6}{section.4.2}%
+\contentsline {chapter}{\numberline {5}Uso delle funzionalità (Utenti registrati)}{8}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Registrazione}{8}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Login e Area Utente}{8}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Gestione Librerie Personali}{9}{section.5.3}%
+\contentsline {subsection}{\numberline {5.3.1}Creazione di una libreria}{9}{subsection.5.3.1}%
+\contentsline {subsection}{\numberline {5.3.2}Aggiungere un libro a una libreria}{9}{subsection.5.3.2}%
+\contentsline {subsection}{\numberline {5.3.3}Gestione interna della Libreria}{9}{subsection.5.3.3}%
+\contentsline {section}{\numberline {5.4}Valutazione dei Libri}{9}{section.5.4}%
+\contentsline {chapter}{\numberline {6}Risoluzione Problemi Comuni}{11}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Il programma non si avvia}{11}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Impossibile connettersi al Server}{11}{section.6.2}%
+\contentsline {section}{\numberline {6.3}Nessun libro trovato nella ricerca}{11}{section.6.3}%
+\contentsline {chapter}{\numberline {7}Data set, Limiti e Conclusioni}{12}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Data set di test}{12}{section.7.1}%
+\contentsline {section}{\numberline {7.2}Limiti della soluzione sviluppata}{12}{section.7.2}%
+\contentsline {section}{\numberline {7.3}Conclusioni}{12}{section.7.3}%
+\contentsline {section}{\numberline {7.4}Contatti}{12}{section.7.4}%

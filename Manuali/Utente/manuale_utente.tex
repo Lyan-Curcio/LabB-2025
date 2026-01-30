@@ -1,0 +1,369 @@
+\documentclass[10pt, a4paper]{report}
+
+% --- PREAMBOLO ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[italian]{babel}
+\usepackage{graphicx} 
+%\graphicspath{{images/}} % Decommenta se le immagini sono in una sottocartella
+\usepackage{float}    
+\usepackage{geometry} 
+\usepackage{xcolor}   
+\usepackage{listings} 
+\usepackage{hyperref} 
+
+% Margini
+\geometry{top=1.5cm, bottom=1.5cm, left=1.5cm, right=1.5cm}
+
+% Setup Link
+\hypersetup{
+	colorlinks=true,
+	linkcolor=black,
+	filecolor=magenta,      
+	urlcolor=blue,
+	pdftitle={Manuale Utente - BookRecommender},
+}
+
+% Comandi specifici per il contenuto del Manuale Utente
+\newcommand{\gui}[1]{\textbf{\textit{#1}}} 
+\newcommand{\filename}[1]{\texttt{#1}}     
+
+% Intestazione
+
+\title{\textbf{Documentazione di Progetto}\\Manuale Utente}
+\author{
+	\textbf{Book Recommender} \\ \\
+	Lorenzo Monachino - 757393 - VA \\
+	Lyan Curcio - 757579 - VA \\
+	Sergio Saldarriaga - 757394 - VA\\
+	Nash Guizzardi - 756941 - VA
+}
+\date{Anno Accademico 2024/2025}
+
+\begin{document}
+	
+	% Generazione Titolo
+	\maketitle
+	
+	% -------------------------------------------------------------------
+	% INDICE
+	% -------------------------------------------------------------------
+	\tableofcontents
+	\newpage
+	
+	% -------------------------------------------------------------------
+	% CAPITOLO 1: INTRODUZIONE
+	% -------------------------------------------------------------------
+	\chapter{Introduzione}
+	
+	\section{Scopo del documento}
+	Questo documento rappresenta il \textbf{Manuale Utente} per l'applicazione \textit{BookRecommender}. Il manuale è strutturato per guidare l'utente dall'installazione dell'ambiente fino all'utilizzo delle funzionalità avanzate, distinguendo tra utenti non registrati e registrati.
+	
+	\section{Descrizione del prodotto}
+	``Book Recommender'' è una soluzione software implementabile in svariati contesti che permette sia agli amministratori che agli utenti di avere un rapporto diretto con i libri disponibili nel database.
+	
+	L'interfaccia grafica è stata progettata con uno stile moderno e minimale (palette colori: \textit{Dark Blue} e \textit{White}), garantendo un'esperienza utente intuitiva grazie a una barra laterale di navigazione sempre presente.
+	
+	L'applicazione è destinata principalmente a:
+	\begin{itemize}
+		\item \textbf{Imprese:} Per la gestione delle librerie e il miglioramento della \textit{customer experience} tramite sistemi di valutazione e consigli.
+		\item \textbf{Utenti privati:} Per curare la propria esperienza di lettura e consultare i pareri della community.
+	\end{itemize}
+	
+	% -------------------------------------------------------------------
+	% CAPITOLO 2: INSTALLAZIONE
+	% -------------------------------------------------------------------
+	\chapter{Installazione}
+	
+	\section{Requisiti di sistema}
+	Per garantire il corretto funzionamento di \textit{BookRecommender}, è necessario soddisfare i seguenti requisiti.
+	
+	\subsection{Sistema Operativo}
+	L'applicazione è stata progettata e testata sui seguenti sistemi operativi:
+	\begin{itemize}
+		\item Windows 10 / 11
+		\item ArchLinux (HyperLand 053)
+		\item Linux Fedora 43 (KDE Plasma 6.5.4)
+		\item ArchLinux (KDE Plasma 6.5.5)
+	\end{itemize}
+	\textit{Nota: Il funzionamento su piattaforme differenti (es. macOS o altre versioni Linux) non è garantito.}
+	
+	\subsection{Software richiesto}
+	\begin{itemize}
+		\item \textbf{Java:} È essenziale avere installato correttamente \textbf{Java 25}. Versioni precedenti non sono state testate.
+		\item \textbf{PostgreSQL:} Necessario per il funzionamento del database (gestito tramite gli script di inizializzazione).
+		\item \textbf{Connessione di rete:} Necessaria per la comunicazione Client-Server.
+	\end{itemize}
+	
+	\section{Setup ambiente e Installazione}
+	L'applicazione non richiede un wizard di installazione classico. Il software è distribuito tramite archivi compressi contenenti gli eseguibili.
+	
+	\begin{enumerate}
+		\item Scaricare e decomprimere la cartella del progetto in una posizione locale (es. \filename{Documenti/BookRecommender}).
+		\item Assicurarsi che all'interno siano presenti i file di avvio (\filename{.bat} per Windows o \filename{.sh} per Linux/Mac).
+	\end{enumerate}
+	
+	% -------------------------------------------------------------------
+	% CAPITOLO 3: ESECUZIONE ED USO
+	% -------------------------------------------------------------------
+	\chapter{Esecuzione ed Uso}
+	
+	\section{Setup e lancio del programma}
+	L'applicazione segue un'architettura Client-Server. La procedura di avvio deve seguire un ordine preciso per garantire che i componenti comunichino correttamente.
+	
+	\subsection{Avvio su Windows}
+	\begin{enumerate}
+		\item Aprire la cartella contenente il software.
+		\item \textbf{Primo avvio (Inizializzazione Database):} Fare doppio clic sul file \filename{InitDB.bat}. Questo passaggio va eseguito \textbf{una sola volta} per creare e popolare il database.
+		\item \textbf{Avvio Server:} Fare doppio clic su \filename{Server.bat}. Attendere che il server sia attivo.
+		\item \textbf{Avvio Client:} Dopo aver avviato il server, fare doppio clic su \filename{Client.bat}.
+	\end{enumerate}
+	\textit{Nota: Per chiudere il server, digitare \texttt{Ctrl+C} nel terminale e confermare con ``S''.}
+	
+	\subsection{Avvio su Linux / macOS}
+	Si consiglia di eseguire i comandi da terminale per visualizzare eventuali errori grafici o di permessi.
+	\begin{enumerate}
+		\item Aprire il terminale e spostarsi nella cartella del progetto:
+		\begin{verbatim}
+			$ cd path/to/BookRecommender
+		\end{verbatim}
+		\item \textbf{Primo avvio (Inizializzazione Database):}
+		\begin{verbatim}
+			$ ./InitDB.sh
+		\end{verbatim}
+		\item \textbf{Avvio Server:}
+		\begin{verbatim}
+			$ ./Server.sh
+		\end{verbatim}
+		\item \textbf{Avvio Client:} Aprire un nuovo terminale ed eseguire:
+		\begin{verbatim}
+			$ ./Client.sh
+		\end{verbatim}
+	\end{enumerate}
+	
+	All'avvio, si presenterà la schermata principale (Home).
+	
+	\begin{figure}[H]
+		\centering
+		\fbox{\begin{minipage}{0.8\textwidth}\centering \vspace{3cm} [Inserire Screenshot Benvenuto.fxml - Home] \vspace{3cm} \end{minipage}}
+		\caption{Schermata iniziale ``Catalogo Libri''.}
+		\label{fig:home}
+	\end{figure}
+	
+	% -------------------------------------------------------------------
+	% CAPITOLO 4: USO DELLE FUNZIONALITÀ (Tutti gli utenti)
+	% -------------------------------------------------------------------
+	\chapter{Uso delle funzionalità (Utenti non registrati)}
+	Dalla schermata iniziale, chiunque può ricercare libri nel catalogo e visualizzarne i dettagli.
+	
+	\section{Ricerca Libri}
+	La schermata \textbf{Catalogo Libri} presenta una barra di ricerca avanzata.
+	\begin{enumerate}
+		\item \textbf{Selezione Filtro:} Utilizzare il menu a tendina (SplitMenuButton) per scegliere il criterio:
+		\begin{itemize}
+			\item \gui{Titolo}: Abilita solo il campo di testo principale.
+			\item \gui{Autore}: Cerca tutti i libri di uno specifico autore.
+			\item \gui{Autore e Anno}: Abilita sia il campo di ricerca principale (per l'autore) che il campo secondario \gui{Anno}.
+		\end{itemize}
+		\item \textbf{Inserimento:} Digitare i termini di ricerca.
+		\item \textbf{Avvio:} Cliccare sul pulsante \gui{Cerca}.
+	\end{enumerate}
+	I risultati appariranno nella lista centrale.
+	
+	\section{Visualizzazione Dettagli Libro}
+	Per visualizzare informazioni approfondite:
+	\begin{enumerate}
+		\item Selezionare un libro dalla lista dei risultati.
+		\item Premere il pulsante \gui{Info Libro} situato in basso a destra.
+	\end{enumerate}
+	
+	La schermata \textbf{Informazioni Libro} è suddivisa in aree tematiche:
+	\begin{itemize}
+		\item \textbf{Intestazione:} Titolo, Autore e Anno di pubblicazione.
+		\item \textbf{Colonna Sinistra (Recensioni):} Mostra la lista delle recensioni lasciate dagli utenti e un pannello riepilogativo con le \textit{Statistiche Voti}.
+		\item \textbf{Colonna Destra (Consigli):}
+		\begin{itemize}
+			\item \textit{Consigliati dagli utenti:} Lista dei libri suggeriti spontaneamente dalla community.
+			\item \textit{Top Consigliati:} Una classifica dei suggerimenti più popolari.
+		\end{itemize}
+	\end{itemize}
+	
+	\begin{figure}[H]
+		\centering
+		\fbox{\begin{minipage}{0.8\textwidth}\centering \vspace{3cm} [Inserire Screenshot InformazioniLibro.fxml] \vspace{3cm} \end{minipage}}
+		\caption{Schermata dettagli libro con statistiche e consigli.}
+		\label{fig:infolibro}
+	\end{figure}
+	
+	% -------------------------------------------------------------------
+	% CAPITOLO 5: USO DELLE FUNZIONALITÀ (Utenti registrati)
+	% -------------------------------------------------------------------
+	\chapter{Uso delle funzionalità (Utenti registrati)}
+	Per accedere alle funzioni avanzate (creazione librerie, recensioni, consigli), è necessario autenticarsi.
+	
+	\section{Registrazione}
+	\begin{enumerate}
+		\item Dalla barra laterale, cliccare su \gui{Registrati}.
+		\item Compilare il modulo \textbf{Crea il tuo Account} con:
+		\begin{itemize}
+			\item \gui{Nome} e \gui{Cognome}
+			\item \gui{UserID} (identificativo univoco)
+			\item \gui{Codice Fiscale}
+			\item \gui{Email}
+			\item \gui{Password} e \gui{Conferma Password}
+		\end{itemize}
+		\item Cliccare su \gui{Registrati}. Il sistema notificherà eventuali errori di validazione nei campi.
+	\end{enumerate}
+	
+	\begin{figure}[H]
+		\centering
+		\fbox{\begin{minipage}{0.8\textwidth}\centering \vspace{3cm} [Inserire Screenshot Registrazione.fxml] \vspace{3cm} \end{minipage}}
+		\caption{Modulo di registrazione utente.}
+		\label{fig:registrazione}
+	\end{figure}
+	
+	\section{Login e Area Utente}
+	Cliccando su \gui{Accedi} e inserendo \gui{UserID} e \gui{Password}, si effettua il login.
+	La barra laterale cambierà stato, mostrando il nome dell'utente e sbloccando i pulsanti:
+	\begin{itemize}
+		\item \gui{Crea Libreria} (Accesso rapido)
+		\item \gui{Le tue Librerie}
+		\item \gui{Logout}
+	\end{itemize}
+	
+	\section{Gestione Librerie Personali}
+	
+	\subsection{Creazione di una libreria}
+	Dalla sezione \gui{Le tue Librerie}:
+	\begin{enumerate}
+		\item Localizzare il box \textbf{Crea Nuova Libreria} in alto.
+		\item Inserire il nome desiderato nel campo di testo.
+		\item Cliccare su \gui{Crea}. La nuova libreria apparirà immediatamente nell'\textit{Elenco Librerie Esistenti}.
+	\end{enumerate}
+	
+	\subsection{Aggiungere un libro a una libreria}
+	\begin{enumerate}
+		\item Cercare un libro e aprire la scheda \gui{Info Libro}.
+		\item Cliccare sul pulsante espandibile \gui{Aggiungi a una Libreria} situato in basso.
+		\item Selezionare la libreria di destinazione dal menu a tendina.
+		\item Cliccare su \gui{Conferma Aggiunta}.
+	\end{enumerate}
+	
+	\subsection{Gestione interna della Libreria}
+	Selezionando una libreria dall'elenco e cliccando \gui{Apri Libreria}, si accede alla vista dettagliata.
+	Qui è possibile:
+	\begin{itemize}
+		\item Vedere la lista dei libri salvati.
+		\item \textbf{Rimuovere un libro:} Selezionarlo e premere \gui{Rimuovi}.
+		\item \textbf{Consigliare:} Selezionare un libro e premere \gui{Consiglia} per suggerirlo ad altri utenti.
+		\item \textbf{Monitorare i propri dati:} La barra laterale destra mostra automaticamente:
+		\begin{itemize}
+			\item \textit{I tuoi Consigliati:} Libri che hai suggerito correlati al libro selezionato.
+			\item \textit{La tua Recensione:} Il testo della tua valutazione, se presente.
+		\end{itemize}
+	\end{itemize}
+	
+	\begin{figure}[H]
+		\centering
+		\fbox{\begin{minipage}{0.8\textwidth}\centering \vspace{3cm} [Inserire Screenshot Libreria.fxml] \vspace{3cm} \end{minipage}}
+		\caption{Vista interna di una libreria personale.}
+		\label{fig:libreria}
+	\end{figure}
+	
+	\section{Valutazione dei Libri}
+	Un utente registrato può recensire i libri presenti nelle proprie librerie.
+	\begin{enumerate}
+		\item All'interno della propria libreria, selezionare un libro.
+		\item Cliccare su \gui{Valuta}.
+		\item Compilare la scheda \textbf{Scrivi la tua Recensione} assegnando un voto da 1 a 5 per i seguenti parametri:
+		\begin{itemize}
+			\item \textbf{Stile}
+			\item \textbf{Contenuto}
+			\item \textbf{Gradevolezza}
+			\item \textbf{Originalità}
+			\item \textbf{Edizione}
+		\end{itemize}
+		\item Per ogni parametro è possibile aggiungere una nota testuale opzionale.
+		\item È presente anche un campo per \textbf{Note Finali} complessive.
+		\item Cliccare su \gui{Conferma Recensione} per salvare.
+	\end{enumerate}
+	
+	\begin{figure}[H]
+		\centering
+		\fbox{\begin{minipage}{0.8\textwidth}\centering \vspace{3cm} [Inserire Screenshot Valutazione.fxml] \vspace{3cm} \end{minipage}}
+		\caption{Schermata di valutazione con i 5 criteri.}
+		\label{fig:valutazione}
+	\end{figure}
+	
+	% -------------------------------------------------------------------
+	% CAPITOLO 6: RISOLUZIONE PROBLEMI (NUOVO per principianti)
+	% -------------------------------------------------------------------
+	\chapter{Risoluzione Problemi Comuni}
+	In caso di difficoltà durante l'uso dell'applicazione, consultare questa sezione per le soluzioni ai problemi più frequenti.
+	
+	\section{Il programma non si avvia}
+	\begin{itemize}
+		\item \textbf{Causa:} Java non è installato correttamente o la versione è obsoleta.
+		\item \textbf{Soluzione:} Verificare di aver installato \textbf{Java 25} aprendo il terminale e digitando \texttt{java -version}.
+	\end{itemize}
+	
+	\section{Impossibile connettersi al Server}
+	\begin{itemize}
+		\item \textbf{Sintomo:} Il Client mostra messaggi di "Connessione rifiutata" all'avvio.
+		\item \textbf{Soluzione:} Assicurarsi di aver avviato il file \filename{Server.bat} (o \filename{.sh}) \textit{prima} di avviare il Client. Controllare che la finestra del Server sia aperta e non mostri errori.
+	\end{itemize}
+	
+	\section{Nessun libro trovato nella ricerca}
+	\begin{itemize}
+		\item \textbf{Causa:} Il database potrebbe essere vuoto.
+		\item \textbf{Soluzione:} Se è il primo utilizzo, assicurarsi di aver eseguito lo script \filename{InitDB} per popolare il catalogo iniziale.
+	\end{itemize}
+	
+	% -------------------------------------------------------------------
+	% CAPITOLO 7: CONCLUSIONI
+	% -------------------------------------------------------------------
+	\chapter{Data set, Limiti e Conclusioni}
+	
+	\section{Data set di test}
+	Al fine di facilitare la valutazione del software e l'esperienza utente immediata, il sistema include un data set di test predefinito.
+	L'esecuzione dello script di inizializzazione (\filename{InitDB}) popola il database con una selezione di libri, autori e utenti di prova. Questo permette di effettuare ricerche e visualizzare dettagli senza la necessità di inserire manualmente un catalogo iniziale.
+	
+	\section{Limiti della soluzione sviluppata}
+	Come indicato nella sezione di installazione, l'applicazione è garantita solo sui sistemi operativi specificamente testati (Windows 10/11, ArchLinux, Fedora).
+	L'uso su macOS o altre distribuzioni Linux potrebbe comportare instabilità, errori grafici o problemi nell'apertura dei file, dovuti alla gestione delle finestre o dei percorsi di sistema (file system).
+	
+	\section{Conclusioni}
+	Il sistema ``Book Recommender'' si presenta come una soluzione efficace per la gestione e la valorizzazione dell'esperienza di lettura. Unendo funzionalità di ricerca, catalogazione e recensione dettagliata, favorisce il coinvolgimento degli utenti e offre alle aziende uno strumento per monitorare il gradimento delle opere letterarie.
+	
+	\section{Contatti}
+	Per supporto tecnico o segnalazioni, fare riferimento al team di sviluppo:
+	\begin{itemize}
+		\item \textbf{Nash Guizzardi} (Project Manager): \href{mailto:nguizzardi@studenti.uninsubria.it}{nguizzardi@studenti.uninsubria.it}
+		\item \textbf{Lyan Curcio}: \href{mailto:lcurcio@studenti.uninsubria.it}{lcurcio@studenti.uninsubria.it}
+		\item \textbf{Sergio Saldarriaga}: \href{mailto:ssaldarriaga@studenti.uninsubria.it}{ssaldarriaga@studenti.uninsubria.it}
+		\item \textbf{Lorenzo Monachino}: \href{mailto:lmonachino@studenti.uninsubria.it}{lmonachino@studenti.uninsubria.it}
+	\end{itemize}
+	
+	% -------------------------------------------------------------------
+	% BIBLIOGRAFIA (Aggiornata stile Manuale Tecnico)
+	% -------------------------------------------------------------------
+	\begin{thebibliography}{9}
+		
+		\bibitem{java}
+		Oracle,
+		\textit{Java Documentation},
+		\url{https://docs.oracle.com/en/java/}
+		
+		\bibitem{postgresql}
+		PostgreSQL Global Development Group,
+		\textit{PostgreSQL Documentation},
+		\url{https://www.postgresql.org/docs/}
+		
+		\bibitem{latex}
+		The LaTeX Project,
+		\textit{LaTeX Project Documentation},
+		\url{https://www.latex-project.org/}
+		
+	\end{thebibliography}
+	
+\end{document}
